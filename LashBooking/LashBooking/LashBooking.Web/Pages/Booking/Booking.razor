@@ -1,0 +1,244 @@
+﻿@page "/booking"
+@using LashBooking.Domain.Entities
+@using LashBooking.Domain.Interfaces
+
+@inject IRepository<Service> ServiceRepo
+@inject IRepository<Client> ClientRepo
+@inject IRepository<Appointment> AppointmentRepo
+
+<h3>Онлайн запись</h3>
+
+<div class="mb-2">
+    <label>Имя</label>
+    <input class="form-control" @bind="clientName" />
+</div>
+
+<div class="mb-2">
+    <label>Телефон</label>
+    <input class="form-control" @bind="clientPhone" />
+</div>
+
+<div class="mb-2">
+    <label>Услуга</label>
+    <select class="form-control" @onchange="OnServiceChanged">
+    @foreach (var s in services)
+    {
+        <option value="@s.Id" selected="@(s.Id == selectedServiceId)">@s.Name (@s.Price.ToString("C"))</option>
+    }
+</select>
+
+</div>
+
+<div class="mb-2">
+    <label>Дата</label>
+    <select class="form-control" @onchange="OnDateChanged">
+        @foreach (var d in availableDates)
+        {
+            <option value="@d" selected="@(d == selectedDate)">@d.ToString("dd.MM.yyyy")</option>
+        }
+    </select>
+</div>
+
+<div class="mb-2">
+    <label>Время</label>
+    <select class="form-control" @bind="selectedTime">
+        @foreach (var slot in allSlots)
+        {
+            <option value="@slot.Time"
+                    disabled="@slot.IsBusy"
+                    style="@GetSlotStyle(slot)">
+                @slot.Time.ToString("HH:mm") @((slot.IsBusy) ? "(занято)" : "")
+            </option>
+        }
+    </select>
+</div>
+
+<button class="btn btn-primary mt-3" @onclick="Save">Записаться</button>
+
+@if (!string.IsNullOrEmpty(message))
+{
+    <div class="alert @(isSuccess ? "alert-success" : "alert-danger") mt-2">@message</div>
+}
+
+@code {
+    List<Service> services = new();
+    List<DateTime> availableDates = new();
+    List<Slot> allSlots = new();
+
+    string clientName = "";
+    string clientPhone = "";
+    int selectedServiceId;
+    DateTime selectedDate = DateTime.Today;
+    DateTime selectedTime;
+
+    string? message;
+    bool isSuccess;
+
+    private int bookingDays = 14;
+    private int startHour = 9;
+    private int endHour = 18;
+    private int stepMinutes = 120;
+
+    class Slot
+    {
+        public DateTime Time { get; set; }
+        public bool IsBusy { get; set; }
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        services = (await ServiceRepo.GetAllAsync()).ToList();
+        selectedServiceId = services.FirstOrDefault()?.Id ?? 0;
+        await LoadAvailableDatesAndSlots();
+    }
+
+    private async Task LoadAvailableDatesAndSlots()
+    {
+        availableDates.Clear();
+        var today = DateTime.Today;
+        var service = services.FirstOrDefault(x => x.Id == selectedServiceId);
+        if (service == null) return;
+
+        DateTime? firstAvailableDate = null;
+
+        for (int i = 0; i < bookingDays; i++)
+        {
+            var date = today.AddDays(i);
+
+            var appointments = (await AppointmentRepo.FindAsync(a =>
+                a.ServiceId == selectedServiceId &&
+                a.DateStart.Date == date.Date)).ToList();
+
+            bool hasSlot = false;
+            for (int h = startHour; h < endHour && !hasSlot; h++)
+            {
+                for (int m = 0; m < 60 && !hasSlot; m += stepMinutes)
+                {
+                    var slotTime = date.AddHours(h).AddMinutes(m);
+                    var slotEnd = slotTime.AddMinutes(service.DurationMinutes);
+
+                    var conflict = appointments.Any(a =>
+                        (slotTime >= a.DateStart && slotTime < a.DateEnd) ||
+                        (slotEnd > a.DateStart && slotEnd <= a.DateEnd));
+
+                    if (!conflict && slotTime >= DateTime.Now)
+                    {
+                        hasSlot = true;
+                        if (firstAvailableDate == null)
+                            firstAvailableDate = date;
+                    }
+                }
+            }
+
+            if (hasSlot)
+                availableDates.Add(date);
+        }
+
+        selectedDate = firstAvailableDate ?? today;
+        await LoadSlotsForSelectedDate();
+    }
+
+    private async Task LoadSlotsForSelectedDate()
+    {
+        allSlots.Clear();
+        if (selectedServiceId == 0 || selectedDate == default) return;
+
+        var service = services.First(x => x.Id == selectedServiceId);
+        var appointments = (await AppointmentRepo.FindAsync(a =>
+            a.ServiceId == selectedServiceId &&
+            a.DateStart.Date == selectedDate.Date)).ToList();
+
+        for (int h = startHour; h < endHour; h++)
+        {
+            for (int m = 0; m < 60; m += stepMinutes)
+            {
+                var slotTime = selectedDate.AddHours(h).AddMinutes(m);
+                var slotEnd = slotTime.AddMinutes(service.DurationMinutes);
+
+                var conflict = appointments.Any(a =>
+                    (slotTime >= a.DateStart && slotTime < a.DateEnd) ||
+                    (slotEnd > a.DateStart && slotEnd <= a.DateEnd));
+
+                allSlots.Add(new Slot
+                {
+                    Time = slotTime,
+                    IsBusy = conflict || slotTime < DateTime.Now
+                });
+            }
+        }
+
+        selectedTime = allSlots.FirstOrDefault(s => !s.IsBusy)?.Time ?? default;
+    }
+
+    private string GetSlotStyle(Slot slot)
+    {
+        return slot.IsBusy ? "color: gray;" : "color: black; font-weight: bold;";
+    }
+
+    private async Task OnServiceChanged(ChangeEventArgs e)
+    {
+        selectedServiceId = int.Parse(e.Value.ToString()!);
+        await LoadAvailableDatesAndSlots();
+    }
+
+    private async Task OnDateChanged(ChangeEventArgs e)
+    {
+        selectedDate = DateTime.Parse(e.Value.ToString()!);
+        await LoadSlotsForSelectedDate();
+    }
+
+    async Task Save()
+    {
+        message = null;
+        isSuccess = false;
+
+        if (string.IsNullOrWhiteSpace(clientName) || string.IsNullOrWhiteSpace(clientPhone))
+        {
+            message = "Имя и телефон обязательны.";
+            return;
+        }
+
+        if (selectedServiceId == 0)
+        {
+            message = "Пожалуйста, выберите услугу.";
+            return;
+        }
+
+        if (selectedTime == default)
+        {
+            message = "Нет доступного времени для выбранной даты и услуги.";
+            return;
+        }
+
+        var service = services.First(x => x.Id == selectedServiceId);
+        var dateEnd = selectedTime.AddMinutes(service.DurationMinutes);
+
+        var client = (await ClientRepo.FindAsync(c => c.Phone == clientPhone)).FirstOrDefault();
+        if (client == null)
+        {
+            client = new Client
+            {
+                Name = clientName,
+                Phone = clientPhone
+            };
+            await ClientRepo.AddAsync(client);
+            await ClientRepo.SaveChangesAsync();
+        }
+
+        var appointment = new Appointment
+        {
+            ClientId = client.Id,
+            ServiceId = selectedServiceId,
+            DateStart = selectedTime,
+            DateEnd = dateEnd
+        };
+
+        await AppointmentRepo.AddAsync(appointment);
+        await AppointmentRepo.SaveChangesAsync();
+
+        message = $"Вы успешно записаны на {service.Name} {selectedTime:dd.MM.yyyy HH:mm}.";
+        isSuccess = true;
+
+        await LoadAvailableDatesAndSlots();
+    }
+}

@@ -1,0 +1,51 @@
+{
+  "version": 2,
+  "dgSpecHash": "k8fPWy7FHk8=",
+  "success": false,
+  "projectFilePath": "C:\\Users\\Дарья\\Desktop\\LashBooking\\LashBooking\\LashBooking.Web\\LashBooking.Web.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\Дарья\\.nuget\\packages\\matblazor\\2.10.0\\matblazor.2.10.0.nupkg.sha512",
+    "C:\\Users\\Дарья\\.nuget\\packages\\microsoft.aspnetcore.authorization\\6.0.14\\microsoft.aspnetcore.authorization.6.0.14.nupkg.sha512",
+    "C:\\Users\\Дарья\\.nuget\\packages\\microsoft.aspnetcore.components\\6.0.14\\microsoft.aspnetcore.components.6.0.14.nupkg.sha512",
+    "C:\\Users\\Дарья\\.nuget\\packages\\microsoft.aspnetcore.components.analyzers\\6.0.14\\microsoft.aspnetcore.components.analyzers.6.0.14.nupkg.sha512",
+    "C:\\Users\\Дарья\\.nuget\\packages\\microsoft.aspnetcore.components.forms\\6.0.14\\microsoft.aspnetcore.components.forms.6.0.14.nupkg.sha512",
+    "C:\\Users\\Дарья\\.nuget\\packages\\microsoft.aspnetcore.components.web\\6.0.14\\microsoft.aspnetcore.components.web.6.0.14.nupkg.sha512",
+    "C:\\Users\\Дарья\\.nuget\\packages\\microsoft.aspnetcore.html.abstractions\\2.3.0\\microsoft.aspnetcore.html.abstractions.2.3.0.nupkg.sha512",
+    "C:\\Users\\Дарья\\.nuget\\packages\\microsoft.aspnetcore.metadata\\6.0.14\\microsoft.aspnetcore.metadata.6.0.14.nupkg.sha512",
+    "C:\\Users\\Дарья\\.nuget\\packages\\microsoft.aspnetcore.razor\\2.3.0\\microsoft.aspnetcore.razor.2.3.0.nupkg.sha512",
+    "C:\\Users\\Дарья\\.nuget\\packages\\microsoft.entityframeworkcore.tools\\9.0.13\\microsoft.entityframeworkcore.tools.9.0.13.nupkg.sha512",
+    "C:\\Users\\Дарья\\.nuget\\packages\\microsoft.extensions.dependencyinjection\\6.0.1\\microsoft.extensions.dependencyinjection.6.0.1.nupkg.sha512",
+    "C:\\Users\\Дарья\\.nuget\\packages\\microsoft.extensions.dependencyinjection.abstractions\\6.0.0\\microsoft.extensions.dependencyinjection.abstractions.6.0.0.nupkg.sha512",
+    "C:\\Users\\Дарья\\.nuget\\packages\\microsoft.extensions.logging.abstractions\\6.0.3\\microsoft.extensions.logging.abstractions.6.0.3.nupkg.sha512",
+    "C:\\Users\\Дарья\\.nuget\\packages\\microsoft.extensions.options\\6.0.0\\microsoft.extensions.options.6.0.0.nupkg.sha512",
+    "C:\\Users\\Дарья\\.nuget\\packages\\microsoft.extensions.primitives\\6.0.0\\microsoft.extensions.primitives.6.0.0.nupkg.sha512",
+    "C:\\Users\\Дарья\\.nuget\\packages\\microsoft.jsinterop\\6.0.14\\microsoft.jsinterop.6.0.14.nupkg.sha512",
+    "C:\\Users\\Дарья\\.nuget\\packages\\system.io.pipelines\\6.0.3\\system.io.pipelines.6.0.3.nupkg.sha512",
+    "C:\\Users\\Дарья\\.nuget\\packages\\system.runtime.compilerservices.unsafe\\6.0.0\\system.runtime.compilerservices.unsafe.6.0.0.nupkg.sha512",
+    "C:\\Users\\Дарья\\.nuget\\packages\\system.text.encodings.web\\8.0.0\\system.text.encodings.web.8.0.0.nupkg.sha512"
+  ],
+  "logs": [
+    {
+      "code": "NU1201",
+      "level": "Error",
+      "message": "Проект LashBooking.Infrastructure несовместим с net6.0 (.NETCoreApp,Version=v6.0). Проект LashBooking.Infrastructure поддерживает: net9.0 (.NETCoreApp,Version=v9.0)",
+      "projectPath": "C:\\Users\\Дарья\\Desktop\\LashBooking\\LashBooking\\LashBooking.Web\\LashBooking.Web.csproj",
+      "filePath": "C:\\Users\\Дарья\\Desktop\\LashBooking\\LashBooking\\LashBooking.Web\\LashBooking.Web.csproj",
+      "libraryId": "LashBooking.Infrastructure",
+      "targetGraphs": [
+        "net6.0"
+      ]
+    },
+    {
+      "code": "NU1201",
+      "level": "Error",
+      "message": "Проект LashBooking.Application несовместим с net6.0 (.NETCoreApp,Version=v6.0). Проект LashBooking.Application поддерживает: net9.0 (.NETCoreApp,Version=v9.0)",
+      "projectPath": "C:\\Users\\Дарья\\Desktop\\LashBooking\\LashBooking\\LashBooking.Web\\LashBooking.Web.csproj",
+      "filePath": "C:\\Users\\Дарья\\Desktop\\LashBooking\\LashBooking\\LashBooking.Web\\LashBooking.Web.csproj",
+      "libraryId": "LashBooking.Application",
+      "targetGraphs": [
+        "net6.0"
+      ]
+    }
+  ]
+}

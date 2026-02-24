@@ -1,0 +1,656 @@
+﻿@page "/booking"                             
+@using LashBooking.Domain.Entities               <!-- Подключение пространств имен с сущностями -->
+@using LashBooking.Domain.Interfaces             <!-- Подключение пространств имен с интерфейсами -->
+
+@inject IRepository<Service> ServiceRepo
+@inject IRepository<Client> ClientRepo
+@inject IRepository<Appointment> AppointmentRepo
+@inject IJSRuntime JSRuntime
+@inject NavigationManager NavigationManager
+
+<!-- Кнопка назад -->
+<div class="back-button-container">
+    <button class="back-btn" @onclick="GoBack">
+        <span class="back-icon">←</span> Назад
+    </button>
+</div>
+
+<!-- Основная карточка записи -->
+<div class="booking-card">
+    <h2 class="booking-title">✏️ Онлайн запись</h2>
+
+    <!-- Форма -->
+    <!-- Группа поля ввода имени -->
+    <div class="form-group">
+        <label class="form-label">Имя</label>
+        <!-- Текст метки над полем ввода -->
+        <input class="form-input" @bind="clientName"
+               placeholder="Ваше имя" @bind:event="oninput" />
+        <!-- Двустороннее связывание с переменной clientName, подсказка внутри поля, обновление при каждом вводе -->
+    </div>
+
+    <!-- Группа поля ввода телефона -->
+    <div class="form-group">
+        <label class="form-label">Телефон</label>
+        <!-- Текст метки над полем ввода -->
+        <input class="form-input" @bind="clientPhone"
+               placeholder="+7 (999) 123-45-67"
+               @bind:event="oninput" />
+        <!-- Двустороннее связывание с переменной clientPhone, пример формата номера как подсказка, обновление при каждом вводе -->
+    </div>
+
+    <!-- Группа выбора услуги -->
+    <div class="form-group">
+        <label class="form-label">Услуга</label>
+        <!-- Текст метки над выпадающим списком -->
+        <select class="form-select" @onchange="OnServiceChanged">
+            <!-- При изменении выбора вызывается метод OnServiceChanged -->
+            @if (services.Any())
+            {
+                @foreach (var s in services)
+                {
+                    <option value="@s.Id" selected="@(s.Id == selectedServiceId)">
+                        <!-- value = ID услуги, selected = true если это выбранная услуга -->
+                        @s.Name — @s.Price.ToString("C")
+                        <!-- Отображаем название и цену в формате валюты -->
+                    </option>
+                }
+            }
+            else
+            {
+                <option disabled>Загрузка услуг...</option>
+                <!-- Если услуги еще не загрузились, показываем неактивный пункт -->
+            }
+        </select>
+    </div>
+
+    <!-- Группа выбора даты с выпадающим календарем -->
+    <div class="form-group relative" @ref="dateContainer">
+        <!-- relative для позиционирования календаря, @ref для JS-доступа к элементу -->
+        <label class="form-label">Дата</label>
+        <!-- Текст метки над полем даты -->
+        <div class="date-input-wrapper" @onclick="ToggleCalendar">
+            <!-- Контейнер-обертка, при клике вызывает ToggleCalendar -->
+            <input class="form-input date-input"
+                   readonly
+                   value="@selectedDate.ToString("dd.MM.yyyy")" />
+            <!-- Поле только для чтения, отображает выбранную дату в формате ДД.ММ.ГГГГ -->
+            <span class="calendar-icon">📅</span>
+            <!-- Иконка календаря справа в поле ввода -->
+        </div>
+
+        @if (showCalendar)
+        {
+            <!-- Если showCalendar = true, показываем мини-календарь -->
+            <div class="mini-calendar">
+                <!-- Контейнер мини-календаря -->
+                <!-- Заголовок календаря с навигацией по месяцам -->
+                <div class="calendar-header">
+                    <button class="calendar-nav" @onclick="PrevMonth" type="button">←</button>
+                    <!-- Кнопка предыдущий месяц -->
+                    <span class="calendar-month">@selectedDate.ToString("MMMM yyyy")</span>
+                    <!-- Отображение текущего месяца и года -->
+                    <button class="calendar-nav" @onclick="NextMonth" type="button">→</button>
+                    <!-- Кнопка следующий месяц -->
+                </div>
+
+                <!-- Сетка календаря с днями -->
+                <div class="calendar-grid">
+                    <!-- Заголовки дней недели (одна строка) -->
+                    @foreach (var day in new[] { "Пн", "Вт", "Ср", "Чт", "Пт", "Сб", "Вс" })
+                    {
+                        <div class="calendar-weekday">@day</div>
+                        <!-- Отображаем каждый день недели -->
+                    }
+
+                    <!-- Дни месяца (все ячейки календаря) -->
+                    @foreach (var d in calendarDays)
+                    {
+                        <!-- Цикл по всем дням в calendarDays (42 дня - 6 недель) -->
+                        <!-- Определяем состояние дня для стилизации и логики -->
+                        var isAvailable = availableDates.Any(x => x.Date == d.Date);
+                        <!-- true если есть свободные слоты -->
+                        var isSelected = d.Date == selectedDate.Date;
+                        <!-- true если это выбранный пользователем день -->
+                        var isPast = d.Date < DateTime.Today;
+                        <!-- true если день уже прошел -->
+                        var isCurrentMonth = d.Month == selectedDate.Month;
+                        <!-- true если день из текущего месяца -->
+                        <!-- Кнопка дня с динамическими CSS-классами -->
+                        <button class="calendar-day
+                                   @(isAvailable && isCurrentMonth ? "available" : "unavailable")
+                                   @(isSelected ? "active" : "")
+                                   @(isPast ? "past" : "")
+                                   @(!isCurrentMonth ? "other-month" : "")"
+                                @onclick="() => SelectCalendarDate(d)"
+                                disabled="@(!isAvailable || isPast || !isCurrentMonth)"
+                                type="button">
+                            <!--
+                                Классы:
+                                - available/unavailable - доступность слота
+                                - active - выбранный день
+                                - past - прошедший день
+                                - other-month - день из другого месяца
+                                disabled - отключаем если нет слотов, день прошел или не текущий месяц
+                                @onclick - при клике вызываем SelectCalendarDate с этим днем
+                            -->
+                            @d.Day
+                            <!-- Отображаем число месяца -->
+                        </button>
+                    }
+                </div>
+            </div>
+        }
+    </div>
+
+    <!-- Группа выбора времени -->
+    <div class="form-group">
+        <label class="form-label">Время</label>
+        <!-- Метка над выпадающим списком времени -->
+
+        <select class="form-select" @onchange="OnTimeChanged" value="@selectedTime">
+            <!--
+                Выпадающий список для выбора времени записи
+                @onchange - при изменении вызывает метод OnTimeChanged
+                value="@selectedTime" - привязка выбранного значения к переменной selectedTime
+            -->
+            @if (allSlots.Any())
+            {
+                <!-- Если есть слоты времени, отображаем их -->
+                @foreach (var slot in allSlots.OrderBy(s => s.Time))
+                {
+                    <!-- Сортируем слоты по времени и перебираем каждый -->
+                    var timeStr = slot.Time.ToString("HH:mm");
+                    <!-- Форматируем время в строку вида "14:30" -->
+                    var isAvailable = !slot.IsBusy && slot.Time >= DateTime.Now;
+                    <!--
+                        Проверяем доступность слота:
+                        - !slot.IsBusy - слот не занят
+                        - slot.Time >= DateTime.Now - время еще не наступило
+                    -->
+
+                    <option value="@slot.Time"
+                            selected="@(slot.Time == selectedTime)"
+                            disabled="@(!isAvailable)">
+                        <!--
+                            value - значение опции (время слота)
+                            selected - если это выбранный слот, помечаем как выбранный
+                            disabled - если слот недоступен, делаем опцию неактивной
+                        -->
+                        @timeStr @(slot.IsBusy ? "❌ занято" : "✅ свободно")
+                        <!-- Отображаем время и статус (занято/свободно) с эмодзи -->
+                    </option>
+                }
+            }
+            else
+            {
+                <!-- Если слотов нет, показываем заглушку -->
+                <option disabled>Нет доступного времени</option>
+                <!-- Неактивная опция с сообщением об отсутствии времени -->
+            }
+        </select>
+    </div>
+
+    <!-- Кнопка отправки формы -->
+    <button class="btn-primary" @onclick="Save" disabled="@isLoading">
+        <!--
+            Основная кнопка для записи
+            @onclick="Save" - при клике вызывает метод Save
+            disabled="@isLoading" - блокируется во время загрузки (isLoading = true)
+        -->
+        @if (isLoading)
+        {
+            <!-- Если идет загрузка/отправка данных -->
+            <span class="spinner"></span>
+            <!-- Анимированный спиннер (крутилка) -->
+            <span>Запись...</span>
+            <!-- Текст "Запись..." вместо обычного -->
+        }
+        else
+        {
+            <!-- Если не в процессе загрузки -->
+            <span>Записаться</span>
+            <!-- Обычный текст кнопки -->
+        }
+    </button>
+
+    <!-- Блок уведомлений (сообщения об успехе/ошибке) -->
+@if (!string.IsNullOrEmpty(message))
+{
+        <!-- Если переменная message не пустая, показываем уведомление -->
+
+        <div class="alert @(isSuccess ? "alert-success" : "alert-danger")">
+            <!--
+                Динамический класс уведомления:
+                - alert-success (зеленый) если isSuccess = true
+                - alert-danger (красный) если isSuccess = false
+            -->
+
+            <span class="alert-icon">@(isSuccess ? "✅" : "⚠️")</span>
+            <!-- Иконка: галочка ✅ для успеха, восклицательный знак ⚠️ для ошибки -->
+            @message
+            <!-- Текст сообщения об ошибке или успехе -->
+        </div>
+}
+</div>
+
+@code {
+        // Ссылки на элементы 
+    private ElementReference dateContainer;     // Хранит ссылку на DOM-элемент контейнера с датой для обнаружения кликов вне календаря
+
+    // Данные для отображения
+    List<Service> services = new();                // Список услуг, загруженных из базы данных
+    List<DateTime> availableDates = new();         // Список дат, на которые есть хотя бы один свободный слот
+    List<Slot> allSlots = new();                   // Все слоты времени для выбранной даты (и свободные, и занятые)
+    List<DateTime> calendarDays = new();           // Дни для отображения в календаре (42 дня - 6 недель по 7 дней)
+
+    // Поля формы (связаны с элементами ввода через @bind)
+    string clientName = "";                        // Имя клиента, введенное в форму
+    string clientPhone = "";                       // Телефон клиента, введенный в форму
+    int selectedServiceId;                         // ID выбранной услуги из выпадающего списка
+    DateTime selectedDate = DateTime.Today;        // Выбранная пользователем дата (по умолчанию - сегодня)
+    DateTime selectedTime;                         // Выбранное пользователем время
+    bool showCalendar = false;                     // Флаг отображения мини-календаря (true - показать, false - скрыть)
+    bool isLoading = false;                        // Флаг загрузки (true - показать спиннер и заблокировать кнопку)
+
+    // Сообщения пользователю
+    string? message;                               // Текст сообщения об ошибке или успехе (может быть null)
+    bool isSuccess;                                // Флаг типа сообщения: true - успех (зеленый), false - ошибка (красный)
+
+    // Настройки записи
+    private int bookingDays = 30;                  // Количество дней вперед, доступных для предварительной записи
+    private int startHour = 9;                     // Час начала рабочего дня (например, 9:00)
+    private int endHour = 18;                      // Час окончания рабочего дня (например, 18:00)
+    private int stepMinutes = 60;                  // Шаг времени между слотами в минутах (например, 60 минут = 1 час)
+
+    // Внутренний класс для представления временного слота записи
+    class Slot
+    {
+        public DateTime Time { get; set; }     // Время начала слота (полная дата и время)
+
+        public bool IsBusy { get; set; }       // Флаг занятости слота
+    }
+
+    // Переход на главную страницу
+    void GoBack() => NavigationManager.NavigateTo("/");     // Вызов метода NavigateTo с корневым маршрутом "/" для возврата на главную страницу
+
+    // Жизненный цикл компонента Blazor
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadServices();                 // Загружаем список услуг из базы данных
+
+        await GenerateCalendarDays();         // Генерируем дни для отображения календаря (42 дня - 6 недель)
+
+        await LoadAvailableDatesAndSlots();   // Загружаем доступные даты и слоты для выбранной услуги
+    }
+
+    // Метод жизненного цикла Blazor, вызывается после каждого рендеринга компонента
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        // Проверяем, первый ли это рендер компонента
+        if (firstRender)
+        {
+            // Добавляем JavaScript функцию для закрытия календаря при клике вне его
+            await JSRuntime.InvokeVoidAsync("eval", @"
+            // Глобальная функция для отслеживания кликов вне элемента
+            window.addClickOutsideListener = (element, dotNetHelper, methodName) => {
+
+                // Создаем обработчик кликов
+                const handler = (e) => {
+                    // Проверяем: если элемент существует И клик был не внутри элемента
+                    if (element && !element.contains(e.target)) {
+                        // Вызываем C# метод через .NET ссылку
+                        dotNetHelper.invokeMethodAsync(methodName);
+                    }
+                };
+
+                // Добавляем обработчик на всё окно браузера
+                document.addEventListener('click', handler);
+
+                // Возвращаем объект с методом для очистки
+                return {
+                    // Функция для удаления обработчика (освобождение ресурсов)
+                    dispose: () => document.removeEventListener('click', handler)
+                };
+            };
+        ");
+
+            // Регистрируем слушатель кликов вне календаря
+            await JSRuntime.InvokeVoidAsync("addClickOutsideListener",
+                dateContainer,                                         // DOM-элемент контейнера с датой
+                DotNetObjectReference.Create(this),                    // Ссылка на текущий C# объект
+                "CloseCalendar");                                      // Имя C# метода для вызова
+        }
+    }
+
+    // Метод, вызываемый из JavaScript при клике вне календаря
+    [JSInvokable]                                                      // Атрибут, разрешающий вызов этого метода из JavaScript
+    public void CloseCalendar()
+    {
+        showCalendar = false;                                          // Скрываем календарь
+        StateHasChanged();                                             // Уведомляем Blazor о необходимости перерендеринга
+    }
+
+    // Загружает список услуг из базы данных
+    async Task LoadServices()
+    {
+        try
+        {
+            services = (await ServiceRepo.GetAllAsync()).ToList();    // Получаем все услуги из репозитория и преобразуем в список
+            selectedServiceId = services.FirstOrDefault()?.Id ?? 0;   // Выбираем первую услугу как выбранную по умолчанию: Если услуг нет, устанавливаем ID = 0
+        }
+        catch (Exception ex)
+        {
+            message = "Ошибка загрузки услуг";                        // В случае ошибки показываем сообщение пользователю
+            Console.WriteLine(ex.Message);                            // Логируем ошибку в консоль для отладки
+        }
+    }
+
+    // Генерирует 42 дня для отображения календаря (6 недель по 7 дней)
+    async Task GenerateCalendarDays()
+    {
+        calendarDays.Clear();                                                           // Очищаем предыдущий список дней
+
+        var firstDayOfMonth = new DateTime(selectedDate.Year, selectedDate.Month, 1);   // Получаем первый день текущего месяца
+
+        int daysToSubtract = ((int)firstDayOfMonth.DayOfWeek + 6) % 7;                  // Вычисляем смещение для начала недели с понедельника
+
+        var startDay = firstDayOfMonth.AddDays(-daysToSubtract);                        // Находим первый день для отображения в календаре, отнимаем смещение от первого дня месяца
+
+        for (int i = 0; i < 42; i++)                                                    // Генерируем 42 дня (6 полных недель)
+        {
+            calendarDays.Add(startDay.AddDays(i));                                      // Добавляем каждый последующий день в список
+        }
+    }
+
+    // Переключает календарь на предыдущий месяц
+    async Task PrevMonth()
+    {
+        selectedDate = selectedDate.AddMonths(-1);                        // Уменьшаем текущую дату на 1 месяц
+        await GenerateCalendarDays();                                     // Генерируем новые дни для отображения в календаре
+    }
+
+    // Переключает календарь на следующий месяц
+    async Task NextMonth()
+    {
+        selectedDate = selectedDate.AddMonths(1);                         // Увеличиваем текущую дату на 1 месяц
+
+        await GenerateCalendarDays();                                     // Генерируем новые дни для отображения в календаре
+    }
+
+    // Переключает видимость мини-календаря
+    void ToggleCalendar()
+    {
+        showCalendar = !showCalendar;                                     // Инвертируем значение showCalendar: true -> false, false -> true
+    }
+
+    // Выбирает дату в календаре и загружает слоты для неё
+    async Task SelectCalendarDate(DateTime d)
+    {
+        if (d.Date >= DateTime.Today)                  // Проверяем, что выбранная дата не в прошлом
+        {
+            selectedDate = d;                          // Устанавливаем выбранную дату
+            showCalendar = false;                      // Закрываем календарь после выбора
+            await LoadSlotsForSelectedDate();          // Загружаем доступные слоты для выбранной даты
+            StateHasChanged();                         // Уведомляем Blazor о необходимости перерендеринга
+        }
+    }
+
+    // Обрабатывает изменение выбранного времени в выпадающем списке
+    async Task OnTimeChanged(ChangeEventArgs e)
+    {
+        if (DateTime.TryParse(e.Value?.ToString(), out var time))      // Пытаемся преобразовать выбранное значение в DateTime
+        {
+            selectedTime = time;                                       // Если преобразование успешно, сохраняем выбранное время
+            StateHasChanged();                                         // Уведомляем Blazor о необходимости обновить интерфейс
+        }
+    }
+
+    // Загружает доступные даты и слоты для выбранной услуги
+    async Task LoadAvailableDatesAndSlots()
+    {
+        try
+        {
+            availableDates.Clear();                                                   // Очищаем предыдущий список доступных дат
+            var today = DateTime.Today;                                               // Получаем текущую дату (без времени)
+            var service = services.FirstOrDefault(x => x.Id == selectedServiceId);    // Находим выбранную услугу по ID
+            if (service == null) return;                                              // Если услуга не найдена, выходим из метода
+            for (int i = 0; i < bookingDays; i++)                                     // Перебираем дни от сегодня до bookingDays вперед
+            {
+                var date = today.AddDays(i);                                          // Вычисляем дату для проверки
+                var appointments = await GetAppointmentsForDate(date);                // Получаем все записи на эту дату для выбранной услуги
+                if (await HasAvailableSlots(date, service, appointments))             // Проверяем, есть ли хотя бы один свободный слот в этот день
+                {
+                    availableDates.Add(date);                                         // Если есть свободные слоты, добавляем дату в список доступных
+                }
+            }
+            selectedDate = availableDates.FirstOrDefault();                           // Выбираем первую доступную дату из списка
+
+            if (selectedDate == default)                                              // Если нет доступных дат, устанавливаем сегодняшнюю дату
+                selectedDate = today;
+
+            await LoadSlotsForSelectedDate();                                         // Загружаем слоты для выбранной даты
+            await GenerateCalendarDays();                                             // Обновляем отображение календаря
+        }
+        catch (Exception ex)
+        {
+            message = "Ошибка загрузки дат";                                          // В случае ошибки показываем сообщение пользователю
+            Console.WriteLine(ex.Message);                                            // Логируем ошибку в консоль для отладки
+        }
+    }
+
+    // Получает список записей (appointments) на указанную дату для выбранной услуги
+    async Task<List<Appointment>> GetAppointmentsForDate(DateTime date)
+    {
+        return (await AppointmentRepo.FindAsync(a =>                             // Выполняем асинхронный поиск в репозитории записей
+            a.ServiceId == selectedServiceId &&                                  // Условие 1: ID услуги должен совпадать с выбранной услугой
+            a.DateStart.Date == date.Date))                                      // Условие 2: Дата начала записи должна совпадать с указанной датой
+            .ToList();                                                           // Преобразуем результат в список
+    }
+
+    // Проверяет, есть ли хотя бы один свободный слот в указанную дату для выбранной услуги
+    async Task<bool> HasAvailableSlots(DateTime date, Service service, List<Appointment> appointments)
+    {
+        for (int h = startHour; h < endHour; h++)                                // Перебираем все часы рабочего дня
+        {
+            for (int m = 0; m < 120; m += stepMinutes)                           // Перебираем минуты с заданным шагом (stepMinutes)
+            {
+                var slotTime = date.AddHours(h).AddMinutes(m);                   // Вычисляем время начала слота
+
+                var slotEnd = slotTime.AddMinutes(service.DurationMinutes);      // Вычисляем время окончания слота: Добавляем длительность услуги к времени начала
+                if (slotTime < DateTime.Now)                                     // Проверка 1: слот не должен быть в прошлом
+                    continue;                                                    // Пропускаем этот слот, переходим к следующему
+
+                var conflict = appointments.Any(a =>                             // Проверка 2: нет ли пересечений с существующими записями
+                    slotTime < a.DateEnd && slotEnd > a.DateStart);              // Условие пересечения: Слот начинается до окончания существующей записи И Слот заканчивается после начала существующей записи
+
+                if (!conflict)                                                   // Если конфликтов нет (слот свободен)
+                    return true;                                                 // Немедленно возвращаем true - нашли свободный слот
+            }
+        }
+        return false;                                                            // Если после всех проверок не нашли свободных слотов: Все слоты заняты
+    }
+
+    // Загружает все слоты времени для выбранной даты и определяет, какие из них заняты
+    async Task LoadSlotsForSelectedDate()
+    {
+        try
+        {
+            allSlots.Clear();                                                       // Очищаем предыдущий список слотов
+
+            if (selectedServiceId == 0 || selectedDate == default)                  // Проверяем, выбрана ли услуга и дата
+            {
+                selectedTime = default;                                             // Если нет - сбрасываем выбранное время и выходим
+                return;
+            }
+            var service = services.FirstOrDefault(x => x.Id == selectedServiceId);  // Находим выбранную услугу по ID
+
+            if (service == null) return;                                            // Если услуга не найдена, выходим
+
+            var appointments = await GetAppointmentsForDate(selectedDate);          // Получаем все существующие записи на выбранную дату
+
+            for (int h = startHour; h < endHour; h++)                               // Перебираем часы
+            {
+                for (int m = 0; m < 120; m += stepMinutes)                          // Перебираем минуты с заданным шагом
+                {
+                    var slotTime = selectedDate.AddHours(h).AddMinutes(m);          // Вычисляем время начала слота
+
+                    var slotEnd = slotTime.AddMinutes(service.DurationMinutes);     // Вычисляем время окончания слота (начало + длительность услуги)
+
+                    var conflict = appointments.Any(a =>                            // Проверяем, пересекается ли этот слот с существующими записями
+                        slotTime < a.DateEnd && slotEnd > a.DateStart);
+
+                    allSlots.Add(new Slot                                           // Добавляем слот в список со статусом занятости
+                    {
+                        Time = slotTime,
+                        IsBusy = conflict                                           // true - занят, false - свободен
+                    });
+                }
+            }
+
+            // Выбираем первый доступный слот для автоматического выбора
+            selectedTime = allSlots
+                .Where(s => !s.IsBusy && s.Time >= DateTime.Now)                   // Только свободные и не в прошлом
+                .OrderBy(s => s.Time)                                              // Сортируем по времени
+                .FirstOrDefault()?.Time ?? default;                                // Берем первый или default
+
+            StateHasChanged();                                                     // Обновляем интерфейс
+        }
+        catch (Exception ex)
+        {
+            message = "Ошибка загрузки времени";                                   // В случае ошибки показываем сообщение пользователю
+            Console.WriteLine(ex.Message);                                         // Логируем ошибку в консоль
+        }
+    }
+
+    /// Обрабатывает изменение выбранной услуги в выпадающем списке
+    async Task OnServiceChanged(ChangeEventArgs e)
+    {
+        if (int.TryParse(e.Value?.ToString(), out int serviceId))          // Пытаемся преобразовать выбранное значение в целое число (ID услуги)
+        {
+            selectedServiceId = serviceId;                                 // Если преобразование успешно, сохраняем ID выбранной услуги
+            await LoadAvailableDatesAndSlots();                            // Перезагружаем доступные даты и слоты для новой услуги
+
+            StateHasChanged();                                             // Уведомляем Blazor о необходимости обновить интерфейс
+        }
+    }
+
+    /// Сохраняет новую запись клиента в базу данных
+    async Task Save()
+    {
+        try
+        {
+            // Устанавливаем состояние загрузки
+            isLoading = true;                                               // Показываем спиннер на кнопке
+            message = null;                                                 // Очищаем предыдущие сообщения
+            isSuccess = false;                                              // Сбрасываем флаг успеха
+
+            // ===== ВАЛИДАЦИЯ ФОРМЫ =====
+
+            // Проверка имени
+            if (string.IsNullOrWhiteSpace(clientName))
+            {
+                message = "Пожалуйста, введите имя";
+                return;                                                    // Прерываем выполнение, но finally выполнится
+            }
+
+            // Проверка телефона
+            if (string.IsNullOrWhiteSpace(clientPhone))
+            {
+                message = "Пожалуйста, введите телефон";
+                return;
+            }
+
+            // Проверка выбора услуги
+            if (selectedServiceId == 0)
+            {
+                message = "Пожалуйста, выберите услугу";
+                return;
+            }
+
+            // Проверка выбора времени (не default и не в прошлом)
+            if (selectedTime == default || selectedTime < DateTime.Now)
+            {
+                message = "Пожалуйста, выберите доступное время";
+                return;
+            }
+
+            // Получаем объект выбранной услуги
+            var service = services.First(x => x.Id == selectedServiceId);
+
+            // Вычисляем время окончания записи
+            var dateEnd = selectedTime.AddMinutes(service.DurationMinutes);
+
+            // ===== ПРОВЕРКА НА ДУБЛИКАТ =====
+
+            // Ищем существующую запись клиента на этот день
+            var existingAppointment = await AppointmentRepo.FindAsync(a =>
+                a.Client != null &&                                          // У записи есть клиент
+                a.Client.Phone == clientPhone &&                             // Телефон совпадает
+                a.DateStart.Date == selectedTime.Date);                      // Та же дата
+
+            if (existingAppointment.Any())
+            {
+                message = "У вас уже есть запись на этот день";
+                return;                                                      // Предотвращаем двойную запись
+            }
+
+            // ===== РАБОТА С КЛИЕНТОМ =====
+
+            // Ищем существующего клиента по телефону
+            var client = (await ClientRepo.FindAsync(c => c.Phone == clientPhone))
+                        .FirstOrDefault();
+
+            // Если клиент не найден - создаем нового
+            if (client == null)
+            {
+                client = new Client
+                    {
+                        Name = clientName,                        // Имя из формы
+                        Phone = clientPhone,                      // Телефон из формы
+                        CreatedAt = DateTime.Now                  // Текущее время создания
+                    };
+                await ClientRepo.AddAsync(client);                // Добавляем в БД
+                await ClientRepo.SaveChangesAsync();              // Сохраняем изменения
+            }
+
+            // ===== СОЗДАНИЕ ЗАПИСИ =====
+
+            var appointment = new Appointment
+                {
+                    ClientId = client.Id,                  // ID клиента (нового или существующего)
+                    ServiceId = selectedServiceId,         // ID выбранной услуги
+                    DateStart = selectedTime,              // Время начала
+                    DateEnd = dateEnd,                     // Время окончания
+                    CreatedAt = DateTime.Now               // Время создания записи
+                };
+
+            await AppointmentRepo.AddAsync(appointment);     // Добавляем запись
+            await AppointmentRepo.SaveChangesAsync();        // Сохраняем в БД
+
+            // ===== УСПЕШНОЕ ЗАВЕРШЕНИЕ =====
+
+            // Формируем сообщение об успехе
+            message = $"✅ Вы успешно записаны!\n{service.Name}\n{selectedTime:dd.MM.yyyy HH:mm}";
+            isSuccess = true;  // Зеленый цвет уведомления
+
+            // Очищаем поля формы для нового ввода
+            clientName = "";
+            clientPhone = "";
+
+            // Обновляем доступные даты и слоты
+            await LoadAvailableDatesAndSlots();
+        }
+        catch (Exception ex)
+        {
+            // ===== ОБРАБОТКА ОШИБОК =====
+            message = "❌ Произошла ошибка при записи";
+            Console.WriteLine(ex.Message); // Логируем для отладки
+        }
+        finally
+        {
+            // ===== ВЫПОЛНЯЕТСЯ ВСЕГДА =====
+            isLoading = false; // Убираем спиннер с кнопки
+        }
+    }
+}

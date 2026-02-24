@@ -1,0 +1,174 @@
+﻿@page "/reviews"                              
+@using LashBooking.Domain.Entities             
+@using LashBooking.Domain.Interfaces           
+@inject IRepository<Review> ReviewRepo    
+@inject IRepository<Client> ClientRepo         
+@inject IRepository<Appointment> AppointmentRepo
+
+<div class="container mt-5">
+
+    <!-- Заголовок страницы -->
+    <h2 class="text-center mb-4">Отзывы клиентов</h2>  
+
+    <!-- Средний рейтинг -->
+    <div class="text-center mb-4">
+        <h4>Средняя оценка: @AverageRating ⭐</h4>      <!-- Отображение среднего рейтинга -->
+    </div>
+
+    <!-- Список отзывов -->
+    <div class="row">                                   
+        @foreach (var review in reviews)                 
+        {
+            <div class="col-md-6 mb-4">                  <!-- По 2 отзыва в ряд на desktop -->
+                <div class="card shadow p-3 review-card">  <!-- Карточка отзыва с тенью -->
+                    <h5>@review.Client.Name</h5>          <!-- Имя клиента -->
+                    
+                    <!-- Звезды рейтинга -->
+                    <div class="stars">
+                        @for (int i = 1; i <= 5; i++)    
+                        {
+                            <!-- Класс: star-filled (закрашенная) или star (пустая) -->
+                            <span class="@(i <= review.Rating ? "star-filled" : "star")">★</span>
+                        }
+                    </div>
+                    
+                    <p class="mt-2">@review.Text</p>      <!-- Текст отзыва -->
+                    <small class="text-muted">@review.CreatedAt.ToLocalTime().ToString("dd.MM.yyyy")</small>  <!-- Дата -->
+                </div>
+            </div>
+        }
+    </div>
+
+    <hr class="my-5" />                                   <!-- Разделитель -->
+
+    <h4>Оставить отзыв</h4>                               <!-- Заголовок формы -->
+
+    <!-- Поле ввода телефона -->
+    <div class="mb-2">
+        <input class="form-control" placeholder="Телефон"
+               @bind="phone" />                           <!-- Двустороннее связывание -->
+    </div>
+
+    <!-- Выбор рейтинга -->
+    <div class="mb-2">
+        <select class="form-control" @bind="rating">      <!-- Привязка к переменной rating -->
+            <option value="5">5 ⭐</option>
+            <option value="4">4 ⭐</option>
+            <option value="3">3 ⭐</option>
+            <option value="2">2 ⭐</option>
+            <option value="1">1 ⭐</option>
+        </select>
+    </div>
+
+    <!-- Поле ввода текста отзыва -->
+    <div class="mb-2">
+        <textarea class="form-control"
+                  placeholder="Ваш отзыв"
+                  @bind="text"></textarea>                <!-- Двустороннее связывание -->
+    </div>
+
+    <!-- Кнопка отправки -->
+    <button class="btn btn-primary mt-2" @onclick="AddReview">
+        Отправить
+    </button>
+
+    <!-- Уведомление об успехе/ошибке -->
+    @if (!string.IsNullOrEmpty(message))
+    {
+        <div class="alert mt-3 @(isSuccess ? "alert-success" : "alert-danger")">
+            @message
+        </div>
+    }
+
+</div>
+
+@code {
+    // ===== ПОЛЯ КОМПОНЕНТА =====
+    
+    List<Review> reviews = new();           // Список всех одобренных отзывов
+    string phone = "";                      // Телефон из формы
+    string text = "";                       // Текст отзыва из формы
+    int rating = 5;                         // Выбранный рейтинг (по умолчанию 5)
+
+    string message;                         // Сообщение для пользователя
+    bool isSuccess;                         // Флаг успеха (для цвета уведомления)
+
+    // ===== СВОЙСТВА =====
+    
+    // Вычисляет средний рейтинг всех отзывов
+    double AverageRating =>
+        reviews.Count == 0 ? 0 : Math.Round(reviews.Average(x => x.Rating), 1);
+
+    // ===== ЖИЗНЕННЫЙ ЦИКЛ =====
+    
+    // Загружает одобренные отзывы при инициализации страницы
+    protected override async Task OnInitializedAsync()
+    {
+        reviews = (await ReviewRepo.FindAsync(r => r.IsApproved))  // Только одобренные
+            .OrderByDescending(r => r.CreatedAt)                   // Сначала новые
+            .ToList();
+    }
+
+    // ===== МЕТОДЫ =====
+    
+    // Добавляет новый отзыв после проверок
+    async Task AddReview()
+    {
+        // Сбрасываем предыдущие сообщения
+        message = "";
+        isSuccess = false;
+
+        // ===== ПРОВЕРКА 1: Существует ли клиент с таким телефоном =====
+        var client = (await ClientRepo.FindAsync(c => c.Phone == phone))
+            .FirstOrDefault();
+
+        if (client == null)
+        {
+            message = "Клиент не найден.";
+            return;
+        }
+
+        // ===== ПРОВЕРКА 2: Было ли у клиента завершенное посещение =====
+        var hasCompleted = (await AppointmentRepo.FindAsync(a =>
+            a.ClientId == client.Id &&
+            a.Status == AppointmentStatus.Completed)).Any();  // Статус "Завершено"
+
+        if (!hasCompleted)
+        {
+            message = "Отзыв можно оставить только после посещения.";
+            return;
+        }
+
+        // ===== ПРОВЕРКА 3: Не оставлял ли клиент отзыв ранее =====
+        var alreadyReviewed = (await ReviewRepo.FindAsync(r =>
+            r.ClientId == client.Id)).Any();
+
+        if (alreadyReviewed)
+        {
+            message = "Вы уже оставляли отзыв.";
+            return;
+        }
+
+        // ===== СОЗДАНИЕ НОВОГО ОТЗЫВА =====
+        var review = new Review
+        {
+            ClientId = client.Id,           // ID существующего клиента
+            Rating = rating,                // Выбранная оценка (1-5)
+            Text = text,                    // Текст отзыва
+            IsApproved = false              // Не одобрен (ждет модерации)
+        };
+
+        // Сохраняем в базу данных
+        await ReviewRepo.AddAsync(review);
+        await ReviewRepo.SaveChangesAsync();
+
+        // ===== УСПЕШНОЕ ЗАВЕРШЕНИЕ =====
+        message = "Отзыв отправлен на модерацию 💖";
+        isSuccess = true;
+
+        // Очищаем форму
+        phone = "";
+        text = "";
+        // rating не сбрасываем - пусть остается 5 для удобства
+    }
+}

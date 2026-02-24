@@ -1,0 +1,17 @@
+C:\Users\Дарья\Desktop\LashBooking\LashBooking\LashBooking.Infrastructure\bin\Debug\net9.0\LashBooking.Infrastructure.deps.json
+C:\Users\Дарья\Desktop\LashBooking\LashBooking\LashBooking.Infrastructure\bin\Debug\net9.0\LashBooking.Infrastructure.runtimeconfig.json
+C:\Users\Дарья\Desktop\LashBooking\LashBooking\LashBooking.Infrastructure\bin\Debug\net9.0\LashBooking.Infrastructure.dll
+C:\Users\Дарья\Desktop\LashBooking\LashBooking\LashBooking.Infrastructure\bin\Debug\net9.0\LashBooking.Infrastructure.pdb
+C:\Users\Дарья\Desktop\LashBooking\LashBooking\LashBooking.Infrastructure\bin\Debug\net9.0\LashBooking.Domain.dll
+C:\Users\Дарья\Desktop\LashBooking\LashBooking\LashBooking.Infrastructure\bin\Debug\net9.0\LashBooking.Domain.pdb
+C:\Users\Дарья\Desktop\LashBooking\LashBooking\LashBooking.Infrastructure\obj\Debug\net9.0\LashBooking.Infrastructure.csproj.AssemblyReference.cache
+C:\Users\Дарья\Desktop\LashBooking\LashBooking\LashBooking.Infrastructure\obj\Debug\net9.0\LashBooking.Infrastructure.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\Дарья\Desktop\LashBooking\LashBooking\LashBooking.Infrastructure\obj\Debug\net9.0\LashBooking.Infrastructure.AssemblyInfoInputs.cache
+C:\Users\Дарья\Desktop\LashBooking\LashBooking\LashBooking.Infrastructure\obj\Debug\net9.0\LashBooking.Infrastructure.AssemblyInfo.cs
+C:\Users\Дарья\Desktop\LashBooking\LashBooking\LashBooking.Infrastructure\obj\Debug\net9.0\LashBooking.Infrastructure.csproj.CoreCompileInputs.cache
+C:\Users\Дарья\Desktop\LashBooking\LashBooking\LashBooking.Infrastructure\obj\Debug\net9.0\LashBook.941BC1A9.Up2Date
+C:\Users\Дарья\Desktop\LashBooking\LashBooking\LashBooking.Infrastructure\obj\Debug\net9.0\LashBooking.Infrastructure.dll
+C:\Users\Дарья\Desktop\LashBooking\LashBooking\LashBooking.Infrastructure\obj\Debug\net9.0\refint\LashBooking.Infrastructure.dll
+C:\Users\Дарья\Desktop\LashBooking\LashBooking\LashBooking.Infrastructure\obj\Debug\net9.0\LashBooking.Infrastructure.pdb
+C:\Users\Дарья\Desktop\LashBooking\LashBooking\LashBooking.Infrastructure\obj\Debug\net9.0\LashBooking.Infrastructure.genruntimeconfig.cache
+C:\Users\Дарья\Desktop\LashBooking\LashBooking\LashBooking.Infrastructure\obj\Debug\net9.0\ref\LashBooking.Infrastructure.dll

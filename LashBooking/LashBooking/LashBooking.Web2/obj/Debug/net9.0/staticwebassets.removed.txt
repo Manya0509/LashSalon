@@ -1,0 +1,8 @@
+C:\Users\Дарья\Desktop\LashBooking\LashBooking\LashBooking.Web2\wwwroot\css\site.css
+C:\Users\Дарья\Desktop\LashBooking\LashBooking\LashBooking.Web2\wwwroot\css\open-iconic\font\fonts\open-iconic.otf
+C:\Users\Дарья\Desktop\LashBooking\LashBooking\LashBooking.Web2\wwwroot\css\open-iconic\README.md
+C:\Users\Дарья\Desktop\LashBooking\LashBooking\LashBooking.Web2\wwwroot\css\open-iconic\font\fonts\open-iconic.svg
+C:\Users\Дарья\Desktop\LashBooking\LashBooking\LashBooking.Web2\wwwroot\css\bootstrap\bootstrap.min.css.map
+C:\Users\Дарья\Desktop\LashBooking\LashBooking\LashBooking.Web2\wwwroot\css\bootstrap\bootstrap.min.css
+C:\Users\Дарья\Desktop\LashBooking\LashBooking\LashBooking.Web2\wwwroot\css\open-iconic\font\css\open-iconic-bootstrap.min.css
+C:\Users\Дарья\Desktop\LashBooking\LashBooking\LashBooking.Web2\wwwroot\favicon.ico

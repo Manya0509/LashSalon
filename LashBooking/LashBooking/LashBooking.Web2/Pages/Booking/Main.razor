@@ -1,0 +1,100 @@
+﻿@page "/"            
+@page "/main"          
+
+<!-- Блок с аватаром на весь экран -->
+<div class="avatar-wrapper-fullscreen">
+    <img src="/images/avatar.jpg" class="avatar-img-fullscreen" />  <!-- Изображение аватара -->
+    <div class="overlay bottom-text">                               <!-- Наложение с текстом поверх изображения -->
+        <h2 class="name">Дарья Лукина</h2>                          <!-- Имя мастера -->
+        <h5 class="studio">Студия LashLukina</h5>                   <!-- Название студии -->
+    </div>
+</div>
+
+<!-- Основное содержимое страницы -->
+<div class="main-content text-center mt-3">
+    <p>г. Чита, ул. Журавлева, д. 72</p>                              <!-- Адрес студии -->
+
+    <!-- Навигационные кнопки по разделам -->
+    <div class="d-flex justify-content-center mb-4 flex-wrap gap-2">
+        <button class="btn btn-outline-primary" @onclick="@(() => NavigateTo("calendar"))">Календарь</button>
+        <button class="btn btn-outline-primary" @onclick="@(() => NavigateTo("gallery"))">Фото работ</button>
+        <button class="btn btn-outline-primary" @onclick="@(() => NavigateTo("reviews"))">Отзывы</button>
+        <button class="btn btn-outline-primary" @onclick="@(() => NavigateTo("about"))">Обо мне</button>
+    </div>
+
+    <h4>Добро пожаловать, запишитесь онлайн:</h4>                     <!-- Приветствие и призыв к действию -->
+    <button class="btn btn-success mt-2 mb-4" @onclick="@(() => NavigateTo("booking"))">
+        Записаться онлайн                                              <!-- Основная кнопка записи -->
+    </button>
+
+    <h5 class="mt-4 mb-3">Связаться со мной:</h5>                     <!-- Заголовок блока контактов -->
+
+    <!-- Блок кнопок для связи -->
+    <div class="contact-buttons">
+        <!-- Кнопка WhatsApp -->
+        <button class="contact-btn whatsapp" @onclick="OpenWhatsApp">
+            <i class="bi bi-whatsapp"></i>                            <!-- Иконка WhatsApp -->
+            <span>WhatsApp</span>
+        </button>
+
+        <!-- Кнопка Telegram -->
+        <button class="contact-btn telegram" @onclick="OpenTelegram">
+            <i class="bi bi-telegram"></i>                            <!-- Иконка Telegram -->
+            <span>Telegram</span>
+        </button>
+
+        <!-- Кнопка звонка -->
+        <button class="contact-btn phone" @onclick="ShowPhone">
+            <i class="bi bi-telephone-fill"></i>                      <!-- Иконка телефона -->
+            <span>Позвонить</span>
+        </button>
+
+        <!-- Всплывающее окно с номером телефона (показывается условно) -->
+        @if (showPhonePopup)
+        {
+            <div class="phone-popup @(showPhonePopup ? "show" : "")">
+                <div class="phone-popup-content">
+                    <i class="bi bi-telephone-fill"></i>
+                    <span class="phone-number">@phoneNumber</span>    <!-- Отображение номера телефона -->
+                    <button class="phone-popup-close" @onclick="HidePhone">✕</button>  <!-- Кнопка закрытия -->
+                </div>
+            </div>
+        }
+    </div>
+</div>
+
+@code {
+    private string phoneNumber = "+7 (999) 410-38-01";    <!-- Номер телефона для отображения -->
+    private bool showPhonePopup = false;                   <!-- Флаг отображения всплывающего окна с телефоном -->
+
+    <!-- Показать всплывающее окно с телефоном -->
+    void ShowPhone()
+    {
+        showPhonePopup = true;
+    }
+
+    <!-- Скрыть всплывающее окно с телефоном -->
+    void HidePhone()
+    {
+        showPhonePopup = false;
+    }
+
+    <!-- Навигация на указанную страницу -->
+    void NavigateTo(string page) => NavigationManager.NavigateTo($"/{page}");
+
+    <!-- Инъекция сервиса навигации Blazor -->
+    [Inject]
+    private NavigationManager NavigationManager { get; set; } = default!;
+
+    <!-- Открыть WhatsApp в новой вкладке -->
+    void OpenWhatsApp()
+    {
+        NavigationManager.NavigateTo("https://wa.me/79994103801", true);
+    }
+
+    <!-- Открыть Telegram в новой вкладке -->
+    void OpenTelegram()
+    {
+        NavigationManager.NavigateTo("https://t.me/79994103801", true);
+    }
+}

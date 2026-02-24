@@ -1,0 +1,19 @@
+﻿.header-banner{
+    width:100%;
+    height:300px;
+    background-image:url('/images/header.jpg');
+    background-size:cover;
+    background-position:center;
+}
+
+.avatar-wrapper{
+    margin-top:-60px;
+}
+
+.avatar-img{
+    width:120px;
+    height:120px;
+    border-radius:50%;
+    border:4px solid white;
+    object-fit:cover;
+}

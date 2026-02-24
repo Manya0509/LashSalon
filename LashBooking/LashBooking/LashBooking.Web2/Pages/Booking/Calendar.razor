@@ -1,0 +1,184 @@
+﻿@page "/calendar"
+
+@using LashBooking.Domain.Entities
+@using LashBooking.Domain.Interfaces
+
+@inject IRepository<Service> ServiceRepo
+@inject IRepository<Appointment> AppointmentRepo
+@inject NavigationManager NavigationManager
+
+<!-- Кнопка назад -->
+<div class="back-button-container">
+    <button class="back-btn" @onclick="GoBack">
+        <span class="back-icon">←</span> Назад
+    </button>
+</div>
+
+<h3 class="title">Календарь записи</h3>
+
+<div class="calendar-nav">
+    <button @onclick="PrevMonth" class="nav-btn">← Предыдущий</button>   @* показывает прошлый месяц *@
+    <span class="month-label">@currentMonth.ToString("MMMM yyyy")</span> @* текущий месяц *@
+    <button @onclick="NextMonth" class="nav-btn">Следующий →</button>    @* показывает следующий месяц *@
+</div>
+
+<div class="calendar-grid">
+    @* сетка календаря *@
+    @foreach (var wd in new[] { "Пн", "Вт", "Ср", "Чт", "Пт", "Сб", "Вс" })   @* заголовки дней недели *@
+    {
+        <div class="weekday">@wd</div>
+    }
+    @foreach (var week in Weeks)  @* строки календаря *@
+    {
+        @foreach (var day in week)
+        {
+            <button class="day-btn @GetDayClass(day)" @onclick="() => SelectDate(day)">
+                @* GetDayClass(day) → добавляет цвет для дня: свободный, занятой, прошлый
+                onclick="() => SelectDate(day)" → при нажатии выбираем день и показываем доступные слоты.*@
+                @day.Day     @* day.Day -> это дни месяца, на которые можно нажать *@
+            </button>
+        }
+    }
+</div>
+@* Доступное время для выбранного дня *@
+@if (selectedDate.HasValue) @* проверяем, выбрал ли пользователь день *@
+{
+    <h4 class="slots-title">Доступное время на @selectedDate.Value.ToString("dd MMMM yyyy")</h4>
+    <div class="slots-grid">
+        @if (freeSlots.Count == 0) @* список свободного времени *@
+        {
+            <span class="no-slots">Нет свободного времени</span>  @* Если пусто → выводим текст: “Нет свободного времени” *@
+        }
+        else
+        {
+            @foreach (var slot in freeSlots) @* Если есть → для каждого времени создаём кнопку, по которой можно перейти к записи *@
+            {
+                <button class="slot-btn" @onclick="() => GoToBooking(slot)">
+                    @slot.ToString("HH:mm")
+                </button>
+            }
+        }
+    </div>
+}
+
+@code {
+    DateTime currentMonth = DateTime.Today;   // текущий месяц
+    DateTime? selectedDate;   // выбранный день
+    List<DateTime> freeSlots = new();   // свободное время на выбранный день
+    List<Service> services = new(); //список услуг
+    Dictionary<DateTime, string> dayStates = new(); // состояние дня: free, partial, full, past
+
+    public List<List<DateTime>> Weeks { get; set; } = new(); // календарь разбит на недели
+
+    int startHour = 9;
+    int endHour = 18;
+
+    protected override async Task OnInitializedAsync()
+    {
+        services = (await ServiceRepo.GetAllAsync()).ToList();
+        await Generate();
+    }
+
+    // Генерация календаря
+    async Task Generate()
+    {
+        dayStates.Clear();  // dayStates — это словарь, который хранит состояние каждого дня (free, partial, full, past).  .Clear() → очищает старые данные, чтобы начать заново.
+        Weeks.Clear();      // это список недель для календаря (каждая неделя — 7 дней).  .Clear() → очищает старые данные, чтобы начать заново.
+
+        var first = new DateTime(currentMonth.Year, currentMonth.Month, 1);  // Создаём объект first, который хранит первый день текущего месяца.
+
+        // Смещение для начала недели с понедельника
+        int shift = ((int)first.DayOfWeek + 6) % 7; // shift — это количество пустых дней перед первым числом месяца.
+                                                    // Мы хотим, чтобы календарь начинался с понедельника, поэтому делаем сдвиг: +6 → сдвигаем воскресенье в конец.
+                                                    // % 7 → чтобы всегда оставалось число от 0 до 6.
+
+        var allDays = new List<DateTime>(); // Создаём список всех дней, которые будут в календаре. Сюда попадут дни текущего месяца,
+                                            //а также дни из прошлого и следующего месяца, чтобы календарь был ровной таблицей 6x7 (6 недель × 7 дней).
+
+        // Добавляем дни месяца + предыдущие/следующие для полного 6x7 календаря
+        for (int i = -shift; i < 42 - shift; i++)  // Цикл от -shift до 42 - shift. 42 = 6 недель × 7 дней → это полный календарь.
+                                                   // -shift → начиная с дней предыдущего месяца, чтобы первая неделя была полной.
+        {
+            var d = first.AddDays(i);  // берём день, сдвинутый на i дней относительно первого дня месяца.
+            allDays.Add(d);            // добавляем этот день в список всех дней для календаря.
+
+            if (d < DateTime.Today)
+            {
+                dayStates[d.Date] = "past";   // Если день d меньше сегодняшнего (т.е. уже прошёл) → помечаем его как past.
+                continue;                     // пропускаем остальные действия цикла для этого дня (не проверяем занятость).
+            }
+
+            var appts = (await AppointmentRepo.FindAsync(a => a.DateStart.Date == d.Date)).ToList(); // Берём из базы данных все записи на этот день d.
+            int totalSlots = (endHour - startHour); // totalSlots → общее количество возможных слотов в день.
+            int busy = appts.Count;                 // busy → сколько слотов уже занято (по количеству записей в appts).
+
+            if (busy == 0)                          // Если busy == 0 → все слоты свободны → помечаем как free.
+                dayStates[d.Date] = "free";
+            else if (busy >= totalSlots)            // Если busy >= totalSlots → все слоты заняты → full.
+                dayStates[d.Date] = "full";
+            else                                    // Иначе → занято частично → partial.
+                dayStates[d.Date] = "partial";
+        }
+
+        // Разбиваем все дни на недели (по 7 дней)
+        for (int i = 0; i < 6; i++)
+        {
+            Weeks.Add(allDays.Skip(i * 7).Take(7).ToList());
+        }
+    }
+
+    // Функции для кнопок
+    string GetDayClass(DateTime d)  // возвращает CSS класс для дня (цвет кнопки)
+    {
+        if (!dayStates.ContainsKey(d.Date)) return "";   // Проверяем: есть ли у нас запись о состоянии этого дня (free, full, partial, past) в словаре dayStates.
+                                                         // Если нет → возвращаем пустую строку "" → кнопка будет обычной, без специальных цветов.
+        var state = dayStates[d.Date];                   // Берём состояние дня из словаря dayStates.
+
+        return $"{state} {(selectedDate?.Date == d.Date ? "selected" : "")}";  // Сначала идёт state → это цвет дня (free, partial, full, past).
+                                                                               // Потом проверяем, выбран ли этот день пользователем:
+                                                                               // selectedDate?.Date == d.Date → если выбран → добавляем класс "selected".
+                                                                               // Если нет → ничего не добавляем("").
+    }
+
+    async Task PrevMonth() // переход по месяцам (Прошлый)
+    {
+        currentMonth = currentMonth.AddMonths(-1);  // currentMonth — это переменная, которая хранит текущий отображаемый месяц.
+                                                    // AddMonths(-1) → отнимает один месяц от текущего.
+        await Generate(); // Generate() — метод, который создаёт все дни месяца, их состояния (free, full, partial, past) и делит их на недели.
+    }
+
+    async Task NextMonth() // переход по месяцам (Следующий)
+    {
+        currentMonth = currentMonth.AddMonths(1);
+        await Generate();
+    }
+
+    async Task SelectDate(DateTime date) // выбираем день и находим свободное время. DateTime date — это день, который выбрал пользователь
+    {
+        if (date < DateTime.Today) return; // Проверяем, не выбрал ли пользователь прошлый день.
+                                           // Если день уже прошёл, мы ничего не делаем (return) — нельзя записываться в прошлое.
+        selectedDate = date;               // Сохраняем выбранный день в переменную selectedDate. Она нужна, чтобы показать пользователю, какой день выбран и для подсчёта слотов.
+        freeSlots.Clear();                 // Очищаем список freeSlots, потому что мы начинаем считать заново для нового выбранного дня.
+
+        var appts = (await AppointmentRepo.FindAsync(a => a.DateStart.Date == date.Date)).ToList(); // Берём из базы данных все записи (appointments) на выбранный день.
+                                                                                                    // await → ждём результата запроса.
+                                                                                                    // .ToList() → превращаем результат в список, чтобы потом удобно проверять, заняты ли слоты.
+                                                                                                    // Теперь appts содержит все записи на этот день.
+
+        for (int h = startHour; h < endHour; h++)   // Цикл перебирает все часы работы салона для этого дня.
+                                                    // startHour → начало рабочего дня
+                                                    // endHour → конец рабочего дня;  h — текущий час, который мы проверяем на свободность.
+        {
+            var slot = date.Date.AddHours(h);       // Создаём объект slot, который хранит время конкретного часа на выбранный день.
+            bool busy = appts.Any(a => slot >= a.DateStart && slot < a.DateEnd); // Проверяем, занят ли этот час:
+                                                                                 // appts.Any(...) → возвращает true, если хотя бы одна запись пересекается с этим часом.
+                                                                                 // Условие slot >= a.DateStart && slot < a.DateEnd → проверяет, находится ли текущий час внутри уже записанного времени.
+            if (!busy) freeSlots.Add(slot); // Если час свободен (!busy) → добавляем его в список freeSlots.
+            // Эти слоты потом будут показаны пользователю, чтобы он мог выбрать удобное время для записи
+        }
+    }
+
+    void GoToBooking(DateTime t) => NavigationManager.NavigateTo($"/booking?date={t:yyyy-MM-ddTHH:mm:ss}");  // переходим на страницу бронирования с выбранной датой и временем
+
+    void GoBack() => NavigationManager.NavigateTo("/");  // переход на главную страницу
+}

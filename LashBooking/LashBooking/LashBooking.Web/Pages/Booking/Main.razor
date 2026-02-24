@@ -1,0 +1,56 @@
+﻿@page "/main"
+
+ <div class="header-banner">
+</div> 
+
+<!-- АВАТАР -->
+ <div class="avatar-wrapper text-center">
+    <img src="images/avatar.jpg" class="avatar-img" />
+</div> 
+
+<div class="container text-center mt-2">
+
+    <h2>Дарья Лукина</h2>
+    <h5 class="text-muted">Студия LashLukina</h5>
+    <p>г. Чита, ул. Журавлева, д. 72</p>
+
+    <!-- НАВИГАЦИЯ -->
+    <div class="d-flex justify-content-center mb-4 flex-wrap gap-2">
+        <button class="btn btn-outline-primary" @onclick="@(() => NavigateTo("calendar"))">Календарь</button>
+        <button class="btn btn-outline-primary" @onclick="@(() => NavigateTo("gallery"))">Фото работ</button>
+        <button class="btn btn-outline-primary" @onclick="@(() => NavigateTo("reviews"))">Отзывы</button>
+        <button class="btn btn-outline-primary" @onclick="@(() => NavigateTo("about"))">Обо мне</button>
+    </div>
+
+    <h4>Добро пожаловать, запишитесь онлайн:</h4>
+    <button class="btn btn-success mt-2 mb-4" @onclick="@(() => NavigateTo("booking"))">
+        Записаться онлайн
+    </button>
+
+    <h5>Связаться со мной</h5>
+    <button class="btn btn-outline-info mt-2" @onclick="@ShowPhone">Позвонить</button>
+
+    @if (!string.IsNullOrEmpty(phoneNumber))
+    {
+        <p class="mt-2">@phoneNumber</p>
+    }
+
+</div>
+
+@code {
+
+    private string phoneNumber = "";
+
+    void ShowPhone()
+    {
+        phoneNumber = "+7 (999) 410-38-01";
+    }
+
+    void NavigateTo(string page)
+    {
+        NavigationManager.NavigateTo($"/{page}");
+    }
+
+    [Inject]
+    private NavigationManager NavigationManager { get; set; } = default!;
+}
