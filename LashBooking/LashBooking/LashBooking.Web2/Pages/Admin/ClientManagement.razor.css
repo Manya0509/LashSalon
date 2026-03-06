@@ -1,0 +1,288 @@
+﻿/* Client Management Styles - Light Gray Theme */
+
+.management-section {
+    background: #ffffff;
+    border-radius: 12px;
+    padding: 20px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    margin-bottom: 20px;
+}
+
+/* Заголовок */
+.section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid #eaeaea;
+}
+
+    .section-header h2 {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        margin: 0;
+        font-size: 1.4rem;
+        color: #333;
+        font-weight: 500;
+    }
+
+        .section-header h2 i {
+            color: #666;
+            font-size: 1.6rem;
+        }
+
+/* Кнопка обновления */
+.refresh-btn {
+    background: none;
+    border: 1px solid #ddd;
+    font-size: 1rem;
+    color: #666;
+    cursor: pointer;
+    width: 36px;
+    height: 36px;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s;
+}
+
+    .refresh-btn:hover {
+        background: #f5f5f5;
+        border-color: #999;
+    }
+
+/* Поиск */
+.search-section {
+    margin-bottom: 20px;
+}
+
+.search-input {
+    width: 100%;
+    max-width: 350px;
+    padding: 10px 15px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    font-size: 0.95rem;
+    background: #fafafa;
+}
+
+    .search-input:focus {
+        outline: none;
+        border-color: #888;
+        background: #fff;
+        box-shadow: 0 0 0 2px rgba(0,0,0,0.05);
+    }
+
+/* Статистика */
+.stats-summary {
+    background: #f8f8f8;
+    border-radius: 8px;
+    padding: 12px 16px;
+    margin-bottom: 20px;
+    border: 1px solid #eee;
+}
+
+    .stats-summary p {
+        margin: 0;
+        color: #555;
+        font-size: 0.95rem;
+    }
+
+    .stats-summary strong {
+        color: #333;
+        font-weight: 600;
+    }
+
+/* Таблица */
+.table-responsive {
+    overflow-x: auto;
+    border: 1px solid #eee;
+    border-radius: 8px;
+}
+
+.appointments-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.95rem;
+    background: white;
+}
+
+    .appointments-table th {
+        background: #f8f8f8;
+        padding: 14px 16px;
+        text-align: left;
+        font-weight: 500;
+        color: #444;
+        border-bottom: 1px solid #ddd;
+        white-space: nowrap;
+    }
+
+    .appointments-table td {
+        padding: 12px 16px;
+        border-bottom: 1px solid #eee;
+        color: #333;
+    }
+
+    .appointments-table tbody tr:hover {
+        background-color: #f8f8f8;
+    }
+
+    .appointments-table tbody tr:last-child td {
+        border-bottom: none;
+    }
+
+/* Счетчик записей */
+.stat-value {
+    background: #e8e8e8;
+    color: #333;
+    padding: 3px 8px;
+    border-radius: 4px;
+    font-size: 0.85rem;
+    display: inline-block;
+}
+
+/* Пустое состояние */
+.empty-state {
+    text-align: center;
+    padding: 40px 20px;
+    background: #fafafa;
+    border-radius: 8px;
+    border: 1px dashed #ccc;
+}
+
+.empty-icon {
+    font-size: 3rem;
+    margin-bottom: 12px;
+    opacity: 0.5;
+}
+
+.empty-state h4 {
+    font-size: 1.2rem;
+    color: #333;
+    margin-bottom: 8px;
+    font-weight: 500;
+}
+
+.empty-state p {
+    color: #666;
+    margin-bottom: 8px;
+}
+
+.empty-state strong {
+    color: #333;
+    background: #e8e8e8;
+    padding: 2px 6px;
+    border-radius: 4px;
+}
+
+/* Кнопка возврата */
+.back-btn {
+    background: #666;
+    color: white;
+    border: none;
+    padding: 8px 20px;
+    border-radius: 6px;
+    font-size: 0.95rem;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    transition: background 0.2s;
+}
+
+    .back-btn:hover {
+        background: #444;
+    }
+
+.back-icon {
+    font-size: 1.1rem;
+}
+
+/* Загрузка */
+.loading-spinner {
+    text-align: center;
+    padding: 40px 20px;
+    background: #fafafa;
+    border-radius: 8px;
+}
+
+.spinner {
+    width: 40px;
+    height: 40px;
+    border: 3px solid #e0e0e0;
+    border-top: 3px solid #666;
+    border-radius: 50%;
+    margin: 0 auto 15px;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+.loading-spinner p {
+    color: #666;
+    margin: 0;
+}
+
+/* Адаптивность */
+@media (max-width: 768px) {
+    .management-section {
+        padding: 15px;
+    }
+
+    .section-header h2 {
+        font-size: 1.2rem;
+    }
+
+    .search-input {
+        max-width: 100%;
+    }
+
+    .appointments-table th,
+    .appointments-table td {
+        padding: 10px 12px;
+        font-size: 0.9rem;
+    }
+
+    .empty-state {
+        padding: 30px 15px;
+    }
+}
+
+@media (max-width: 480px) {
+    .section-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+    }
+
+    .refresh-btn {
+        align-self: flex-end;
+    }
+
+    .stats-summary p {
+        font-size: 0.9rem;
+    }
+}
+
+/* Подсказка для мобильной прокрутки */
+.table-responsive::after {
+    content: '← Проведите для просмотра всех колонок →';
+    display: block;
+    text-align: center;
+    padding: 8px;
+    font-size: 0.8rem;
+    color: #666;
+    background: #f8f8f8;
+    border-top: 1px solid #eee;
+}

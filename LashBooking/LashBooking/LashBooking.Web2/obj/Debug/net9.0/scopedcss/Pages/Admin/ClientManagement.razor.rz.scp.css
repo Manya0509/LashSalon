@@ -1,0 +1,288 @@
+/* Client Management Styles - Light Gray Theme */
+
+.management-section[b-gk2ezv0qzl] {
+    background: #ffffff;
+    border-radius: 12px;
+    padding: 20px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    margin-bottom: 20px;
+}
+
+/* Заголовок */
+.section-header[b-gk2ezv0qzl] {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid #eaeaea;
+}
+
+    .section-header h2[b-gk2ezv0qzl] {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        margin: 0;
+        font-size: 1.4rem;
+        color: #333;
+        font-weight: 500;
+    }
+
+        .section-header h2 i[b-gk2ezv0qzl] {
+            color: #666;
+            font-size: 1.6rem;
+        }
+
+/* Кнопка обновления */
+.refresh-btn[b-gk2ezv0qzl] {
+    background: none;
+    border: 1px solid #ddd;
+    font-size: 1rem;
+    color: #666;
+    cursor: pointer;
+    width: 36px;
+    height: 36px;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s;
+}
+
+    .refresh-btn:hover[b-gk2ezv0qzl] {
+        background: #f5f5f5;
+        border-color: #999;
+    }
+
+/* Поиск */
+.search-section[b-gk2ezv0qzl] {
+    margin-bottom: 20px;
+}
+
+.search-input[b-gk2ezv0qzl] {
+    width: 100%;
+    max-width: 350px;
+    padding: 10px 15px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    font-size: 0.95rem;
+    background: #fafafa;
+}
+
+    .search-input:focus[b-gk2ezv0qzl] {
+        outline: none;
+        border-color: #888;
+        background: #fff;
+        box-shadow: 0 0 0 2px rgba(0,0,0,0.05);
+    }
+
+/* Статистика */
+.stats-summary[b-gk2ezv0qzl] {
+    background: #f8f8f8;
+    border-radius: 8px;
+    padding: 12px 16px;
+    margin-bottom: 20px;
+    border: 1px solid #eee;
+}
+
+    .stats-summary p[b-gk2ezv0qzl] {
+        margin: 0;
+        color: #555;
+        font-size: 0.95rem;
+    }
+
+    .stats-summary strong[b-gk2ezv0qzl] {
+        color: #333;
+        font-weight: 600;
+    }
+
+/* Таблица */
+.table-responsive[b-gk2ezv0qzl] {
+    overflow-x: auto;
+    border: 1px solid #eee;
+    border-radius: 8px;
+}
+
+.appointments-table[b-gk2ezv0qzl] {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.95rem;
+    background: white;
+}
+
+    .appointments-table th[b-gk2ezv0qzl] {
+        background: #f8f8f8;
+        padding: 14px 16px;
+        text-align: left;
+        font-weight: 500;
+        color: #444;
+        border-bottom: 1px solid #ddd;
+        white-space: nowrap;
+    }
+
+    .appointments-table td[b-gk2ezv0qzl] {
+        padding: 12px 16px;
+        border-bottom: 1px solid #eee;
+        color: #333;
+    }
+
+    .appointments-table tbody tr:hover[b-gk2ezv0qzl] {
+        background-color: #f8f8f8;
+    }
+
+    .appointments-table tbody tr:last-child td[b-gk2ezv0qzl] {
+        border-bottom: none;
+    }
+
+/* Счетчик записей */
+.stat-value[b-gk2ezv0qzl] {
+    background: #e8e8e8;
+    color: #333;
+    padding: 3px 8px;
+    border-radius: 4px;
+    font-size: 0.85rem;
+    display: inline-block;
+}
+
+/* Пустое состояние */
+.empty-state[b-gk2ezv0qzl] {
+    text-align: center;
+    padding: 40px 20px;
+    background: #fafafa;
+    border-radius: 8px;
+    border: 1px dashed #ccc;
+}
+
+.empty-icon[b-gk2ezv0qzl] {
+    font-size: 3rem;
+    margin-bottom: 12px;
+    opacity: 0.5;
+}
+
+.empty-state h4[b-gk2ezv0qzl] {
+    font-size: 1.2rem;
+    color: #333;
+    margin-bottom: 8px;
+    font-weight: 500;
+}
+
+.empty-state p[b-gk2ezv0qzl] {
+    color: #666;
+    margin-bottom: 8px;
+}
+
+.empty-state strong[b-gk2ezv0qzl] {
+    color: #333;
+    background: #e8e8e8;
+    padding: 2px 6px;
+    border-radius: 4px;
+}
+
+/* Кнопка возврата */
+.back-btn[b-gk2ezv0qzl] {
+    background: #666;
+    color: white;
+    border: none;
+    padding: 8px 20px;
+    border-radius: 6px;
+    font-size: 0.95rem;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    transition: background 0.2s;
+}
+
+    .back-btn:hover[b-gk2ezv0qzl] {
+        background: #444;
+    }
+
+.back-icon[b-gk2ezv0qzl] {
+    font-size: 1.1rem;
+}
+
+/* Загрузка */
+.loading-spinner[b-gk2ezv0qzl] {
+    text-align: center;
+    padding: 40px 20px;
+    background: #fafafa;
+    border-radius: 8px;
+}
+
+.spinner[b-gk2ezv0qzl] {
+    width: 40px;
+    height: 40px;
+    border: 3px solid #e0e0e0;
+    border-top: 3px solid #666;
+    border-radius: 50%;
+    margin: 0 auto 15px;
+    animation: spin-b-gk2ezv0qzl 1s linear infinite;
+}
+
+@keyframes spin-b-gk2ezv0qzl {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+.loading-spinner p[b-gk2ezv0qzl] {
+    color: #666;
+    margin: 0;
+}
+
+/* Адаптивность */
+@media (max-width: 768px) {
+    .management-section[b-gk2ezv0qzl] {
+        padding: 15px;
+    }
+
+    .section-header h2[b-gk2ezv0qzl] {
+        font-size: 1.2rem;
+    }
+
+    .search-input[b-gk2ezv0qzl] {
+        max-width: 100%;
+    }
+
+    .appointments-table th[b-gk2ezv0qzl],
+    .appointments-table td[b-gk2ezv0qzl] {
+        padding: 10px 12px;
+        font-size: 0.9rem;
+    }
+
+    .empty-state[b-gk2ezv0qzl] {
+        padding: 30px 15px;
+    }
+}
+
+@media (max-width: 480px) {
+    .section-header[b-gk2ezv0qzl] {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+    }
+
+    .refresh-btn[b-gk2ezv0qzl] {
+        align-self: flex-end;
+    }
+
+    .stats-summary p[b-gk2ezv0qzl] {
+        font-size: 0.9rem;
+    }
+}
+
+/* Подсказка для мобильной прокрутки */
+.table-responsive[b-gk2ezv0qzl]::after {
+    content: '← Проведите для просмотра всех колонок →';
+    display: block;
+    text-align: center;
+    padding: 8px;
+    font-size: 0.8rem;
+    color: #666;
+    background: #f8f8f8;
+    border-top: 1px solid #eee;
+}

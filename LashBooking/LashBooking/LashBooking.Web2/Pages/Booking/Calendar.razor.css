@@ -1,154 +1,550 @@
-﻿/* Заголовки */
+﻿/* ===== ЗАГОЛОВКИ ===== */
 .title {
-    font-size: 2rem;                          /* Размер шрифта заголовка (относительно корневого элемента) */
-    color: #333;                              /* Цвет текста (темно-серый) */
-    margin-bottom: 15px;                      /* Отступ снизу от заголовка до следующего элемента */
-    text-align: center;                       /* Выравнивание текста по центру */
-    font-family: 'Segoe UI', sans-serif;      /* Шрифт заголовка: Segoe UI, если недоступен - любой беззасечный */
+    font-size: 2rem;
+    color: #333;
+    margin-bottom: 15px;
+    text-align: center;
+    font-family: 'Segoe UI', sans-serif;
+    line-height: 1.3;
 }
 
 /* Контейнер для кнопки назад */
 .back-button-container {
-    margin-bottom: 15px;                      /* Отступ снизу от кнопки до заголовка */
+    margin-bottom: 15px;
 }
 
 /* Кнопка назад */
 .back-btn {
-    background: transparent;                  /* Прозрачный фон */
-    color: #444;                              /* Фиолетово-синий цвет текста (как в теме) */
-    border: 2px solid #333;                   /* Граница того же цвета */
-    border-radius: 30px;                      /* Сильное скругление углов */
-    padding: 8px 20px;                        /* Внутренние отступы: 8px сверху/снизу, 20px слева/справа */
-    font-size: 1rem;                          /* Размер шрифта */
-    font-weight: 600;                         /* Полужирное начертание */
-    cursor: pointer;                          /* Курсор-указатель при наведении */
-    display: inline-flex;                     /* Flex для выравнивания иконки и текста */
-    align-items: center;                      /* Выравнивание по центру по вертикали */
-    gap: 8px;                                 /* Отступ между иконкой и текстом */
-    transition: all 0.3s ease;                /* Плавное изменение всех свойств */
+    background: transparent;
+    color: #444;
+    border: 2px solid #333;
+    border-radius: 30px;
+    padding: 8px 20px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    transition: all 0.3s ease;
 }
 
+    .back-btn:hover {
+        background: #4f46e5;
+        color: white;
+        transform: translateX(-3px);
+        box-shadow: 0 4px 10px rgba(79, 70, 229, 0.3);
+    }
+
+.back-icon {
+    font-size: 1.2rem;
+    line-height: 1;
+}
+
+/* Заголовок слотов */
 .slots-title {
-    margin-top: 20px;                         /* Отступ сверху от предыдущего элемента (в пикселях) */
-    font-size: 1.3rem;                        /* Размер шрифта (1.3rem ≈ 20.8px, зависит от базового размера браузера) */
-    color: #555;                              /* Цвет текста (серый, светлее чем #333) */
+    margin-top: 20px;
+    font-size: 1.3rem;
+    color: #555;
+    font-weight: 500;
 }
 
 /* Навигация месяца */
 .calendar-nav {
-    display: flex;                           /* Включаем Flexbox для гибкого расположения дочерних элементов */
-    justify-content: space-between;          /* Распределяем элементы равномерно по горизонтали: первый слева, последний справа */
-    align-items: center;                     /* Выравниваем элементы по вертикали по центру */
-    margin-bottom: 15px;                     /* Отступ снизу от навигации до следующего элемента */
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+    background: #f8f8f8;
+    padding: 10px 15px;
+    border-radius: 50px;
+    border: 1px solid #eee;
 }
 
 .nav-btn {
-    background: #ccc;                        /* Цвет фона кнопки (светло-серый) */
-    color: #333;                             /* Цвет текста кнопки (темно-серый) */
-    border: none;                            /* Убираем стандартную границу кнопки */
-    border-radius: 12px;                     /* Скругляем углы на 12 пикселей */
-    padding: 8px 16px;                       /* Внутренние отступы: 8px сверху/снизу, 16px слева/справа */
-    font-weight: 600;                        /* Полужирное начертание текста (600 = semi-bold) */
-    cursor: pointer;                         /* При наведении курсор меняется на указатель (руку) */
-    transition: all 0.3s;                    /* Плавное изменение всех свойств за 0.3 секунды при наведении/нажатии */
+    background: #ccc;
+    color: #333;
+    border: none;
+    border-radius: 12px;
+    padding: 8px 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s;
+    min-width: 70px;
+    text-align: center;
 }
 
-.nav-btn:hover {
-     background: #bbb;                       /* Цвет фона при наведении (более темный серый) */
-     transform: translateY(-2px);            /* Сдвигаем кнопку вверх на 2 пикселя (эффект поднятия) */
-     box-shadow: 0 4px 10px rgba(0,0,0,0.1); /* Добавляем тень: смещение по Y 4px, размытие 10px, полупрозрачный черный цвет */
-}
+    .nav-btn:hover {
+        background: #bbb;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    }
 
 .month-label {
-    font-size: 1.2rem;                       /* Размер шрифта (1.2rem ≈ 19.2px, зависит от базового размера браузера) */
-    font-weight: 600;                        /* Полужирное начертание текста (600 = semi-bold) */
-    color: #444;                             /* Цвет текста (темно-серый, средний между #333 и #555) */
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: #444;
+    text-transform: capitalize;
 }
 
 /* Календарь */
 .calendar-grid {
-    display: grid;                           /* Включаем Grid layout для создания сетки */
-    grid-template-columns: repeat(7, 1fr);   /* Создаем 7 колонок равной ширины (для дней недели) */
-    gap: 8px;                                /* Отступы между ячейками сетки (по вертикали и горизонтали) */
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 8px;
+    margin-bottom: 20px;
 }
 
 /* Заголовки дней недели */
 .weekday {
-    text-align: center;                      /* Выравнивание текста по центру ячейки */
-    font-weight: 600;                        /* Полужирное начертание текста (600 = semi-bold) */
-    padding: 8px 0;                          /* Внутренние отступы: 8px сверху/снизу, 0 слева/справа */
-    color: #555;                             /* Цвет текста (серый) */
-    font-family: 'Segoe UI', sans-serif;     /* Шрифт: Segoe UI, если недоступен - любой беззасечный */
-    border-bottom: 1px solid #ddd;           /* Нижняя граница: толщина 1px, сплошная линия, светло-серый цвет */
+    text-align: center;
+    font-weight: 600;
+    padding: 8px 0;
+    color: #555;
+    font-family: 'Segoe UI', sans-serif;
+    border-bottom: 1px solid #ddd;
+    font-size: 0.95rem;
 }
 
 /* Кнопки дней */
 .day-btn {
-    padding: 12px 0;                         /* Внутренние отступы: 12px сверху/снизу, 0 слева/справа */
-    border-radius: 12px;                     /* Скругляем углы на 12 пикселей */
-    border: none;                            /* Убираем стандартную границу кнопки */
-    font-weight: 600;                        /* Полужирное начертание текста (600 = semi-bold) */
-    cursor: pointer;                         /* При наведении курсор меняется на указатель (руку) */
-    transition: all 0.2s;                    /* Плавное изменение всех свойств за 0.2 секунды при наведении/нажатии */
+    padding: 12px 0;
+    border-radius: 12px;
+    border: none;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-size: 0.95rem;
+    width: 100%;
+    text-align: center;
 }
 
     /* Свободный день — светлый серый градиент */
     .day-btn.free {
-        background: linear-gradient(135deg, #f5f5f5, #e0e0e0);   /* Градиент под углом 135°: от очень светлого серого к светло-серому */
-        color: #333;                                             /* Цвет текста (темно-серый) */
+        background: linear-gradient(135deg, #f5f5f5, #e0e0e0);
+        color: #333;
     }
+
+        .day-btn.free:hover {
+            background: linear-gradient(135deg, #e0e0e0, #d0d0d0);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
 
     /* Частично занятый день — средний серый градиент */
     .day-btn.partial {
-        background: linear-gradient(135deg, #dcdcdc, #bfbfbf);   /* Градиент под углом 135°: от светло-серого к более темному серому */
-        color: #222;                                             /* Цвет текста (очень темно-серый, почти черный) */
+        background: linear-gradient(135deg, #dcdcdc, #bfbfbf);
+        color: #222;
     }
+
+        .day-btn.partial:hover {
+            background: linear-gradient(135deg, #bfbfbf, #a0a0a0);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
 
     /* Полностью занятой день — тёмный серый градиент */
     .day-btn.full {
-        background: linear-gradient(135deg, #a0a0a0, #808080);   /* Градиент под углом 135°: от средне-серого к темно-серому */
-        color: #fff;                                             /* Цвет текста (белый) для контраста с темным фоном */
+        background: linear-gradient(135deg, #a0a0a0, #808080);
+        color: #fff;
     }
+
+        .day-btn.full:hover {
+            background: linear-gradient(135deg, #808080, #666666);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
 
     /* Прошедший день — светло-серый, неактивный */
     .day-btn.past {
-        background: #f5f5f5;                 /* Цвет фона (очень светло-серый) */
-        color: #aaa;                         /* Цвет текста (светло-серый, низкая контрастность) */
-        cursor: default;                     /* Курсор по умолчанию (стрелочка), указывает что кнопка неактивна */
+        background: #f5f5f5;
+        color: #aaa;
+        cursor: default;
     }
+
+        .day-btn.past:hover {
+            transform: none;
+            box-shadow: none;
+        }
 
     /* Выделенный день */
     .day-btn.selected {
-        box-shadow: 0 0 8px #888;            /* Внешняя тень: без смещения, размытие 8px, цвет серый (эффект свечения) */
-        transform: scale(1.05);              /* Увеличиваем размер кнопки на 5% (эффект выделения) */
+        box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.3);
+        transform: scale(1.05);
+        position: relative;
+        z-index: 2;
     }
 
 /* Слоты */
 .slots-grid {
-    display: flex;                           /* Включаем Flexbox для гибкого расположения слотов */
-    flex-wrap: wrap;                         /* Разрешаем перенос элементов на новую строку при нехватке места */
-    gap: 10px;                               /* Отступы между элементами сетки (по вертикали и горизонтали) */
-    margin-top: 10px;                        /* Отступ сверху от предыдущего элемента */
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 10px;
+    margin-bottom: 20px;
 }
 
 .slot-btn {
-    background: #ccc;                        /* Цвет фона кнопки (светло-серый) */
-    color: #333;                             /* Цвет текста кнопки (темно-серый) */
-    border: none;                            /* Убираем стандартную границу кнопки */
-    border-radius: 20px;                     /* Скругляем углы на 20 пикселей (овальная форма) */
-    padding: 10px 16px;                      /* Внутренние отступы: 10px сверху/снизу, 16px слева/справа */
-    font-weight: 600;                        /* Полужирное начертание текста (600 = semi-bold) */
-    cursor: pointer;                         /* При наведении курсор меняется на указатель (руку) */
-    transition: all 0.3s;                    /* Плавное изменение всех свойств за 0.3 секунды при наведении/нажатии */
+    background: #ccc;
+    color: #333;
+    border: none;
+    border-radius: 20px;
+    padding: 10px 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s;
+    font-size: 0.95rem;
+    flex: 0 0 auto;
 }
 
     .slot-btn:hover {
-        background: #bbb;                                 /* Цвет фона при наведении (более темный серый) */
-        transform: translateY(-3px);                      /* Сдвигаем кнопку вверх на 3 пикселя (эффект поднятия) */
-        box-shadow: 0 6px 12px rgba(0,0,0,0.1);           /* Добавляем тень: смещение по Y 6px, размытие 12px, полупрозрачный черный цвет */
+        background: #bbb;
+        transform: translateY(-3px);
+        box-shadow: 0 6px 12px rgba(0,0,0,0.1);
     }
 
 .no-slots {
-    color: #999;                             /* Цвет текста (светло-серый, для сообщения об отсутствии слотов) */
-    font-style: italic;                      /* Курсивное начертание текста */
+    color: #999;
+    font-style: italic;
+    padding: 20px;
+    text-align: center;
+    width: 100%;
+    background: #f8f8f8;
+    border-radius: 12px;
+}
+
+/* ===== АДАПТАЦИЯ ДЛЯ МОБИЛЬНЫХ УСТРОЙСТВ ===== */
+
+/* Планшеты (до 992px) */
+@media (max-width: 992px) {
+    .title {
+        font-size: 1.8rem;
+    }
+
+    .calendar-grid {
+        gap: 6px;
+    }
+
+    .day-btn {
+        padding: 10px 0;
+        font-size: 0.9rem;
+    }
+
+    .weekday {
+        font-size: 0.9rem;
+        padding: 6px 0;
+    }
+
+    .slots-title {
+        font-size: 1.2rem;
+    }
+}
+
+/* Мобильные устройства (до 768px) */
+@media (max-width: 768px) {
+    .title {
+        font-size: 1.6rem;
+        margin-bottom: 12px;
+    }
+
+    .back-btn {
+        padding: 6px 16px;
+        font-size: 0.9rem;
+    }
+
+    .back-icon {
+        font-size: 1rem;
+    }
+
+    .calendar-nav {
+        padding: 8px 12px;
+        margin-bottom: 12px;
+    }
+
+    .nav-btn {
+        padding: 6px 12px;
+        min-width: 60px;
+        font-size: 0.9rem;
+    }
+
+    .month-label {
+        font-size: 1rem;
+    }
+
+    .calendar-grid {
+        gap: 4px;
+    }
+
+    .weekday {
+        font-size: 0.85rem;
+        padding: 5px 0;
+    }
+
+    .day-btn {
+        padding: 8px 0;
+        font-size: 0.85rem;
+        border-radius: 8px;
+    }
+
+    .slots-title {
+        font-size: 1.1rem;
+        margin-top: 15px;
+    }
+
+    .slots-grid {
+        gap: 8px;
+    }
+
+    .slot-btn {
+        padding: 8px 14px;
+        font-size: 0.9rem;
+    }
+}
+
+/* Маленькие мобильные (до 480px) */
+@media (max-width: 480px) {
+    .title {
+        font-size: 1.4rem;
+        margin-bottom: 10px;
+    }
+
+    .back-btn {
+        padding: 5px 14px;
+        font-size: 0.85rem;
+        border-width: 1.5px;
+    }
+
+    .calendar-nav {
+        padding: 6px 10px;
+    }
+
+    .nav-btn {
+        padding: 5px 10px;
+        min-width: 50px;
+        font-size: 0.85rem;
+        border-radius: 8px;
+    }
+
+    .month-label {
+        font-size: 0.95rem;
+    }
+
+    .weekday {
+        font-size: 0.8rem;
+        padding: 4px 0;
+    }
+
+    .calendar-grid {
+        gap: 3px;
+    }
+
+    .day-btn {
+        padding: 6px 0;
+        font-size: 0.8rem;
+        border-radius: 6px;
+    }
+
+    .slots-title {
+        font-size: 1rem;
+        margin-top: 12px;
+    }
+
+    .slots-grid {
+        gap: 6px;
+    }
+
+    .slot-btn {
+        padding: 6px 12px;
+        font-size: 0.85rem;
+        border-radius: 16px;
+    }
+
+        .slot-btn:hover {
+            transform: translateY(-2px);
+        }
+
+    .no-slots {
+        padding: 15px;
+        font-size: 0.9rem;
+    }
+}
+
+/* Очень маленькие экраны (до 360px) */
+@media (max-width: 360px) {
+    .title {
+        font-size: 1.2rem;
+    }
+
+    .calendar-nav {
+        flex-wrap: wrap;
+        gap: 8px;
+        justify-content: center;
+    }
+
+    .nav-btn {
+        flex: 1;
+        min-width: 40px;
+        padding: 5px 8px;
+        font-size: 0.8rem;
+    }
+
+    .month-label {
+        order: -1;
+        width: 100%;
+        text-align: center;
+        margin-bottom: 5px;
+    }
+
+    .weekday {
+        font-size: 0.7rem;
+    }
+
+    .day-btn {
+        padding: 5px 0;
+        font-size: 0.7rem;
+    }
+
+    .slots-grid {
+        justify-content: center;
+    }
+
+    .slot-btn {
+        flex: 1 1 calc(50% - 6px);
+        text-align: center;
+    }
+}
+
+/* Для устройств с тач-экраном (убираем hover эффекты) */
+@media (hover: none) and (pointer: coarse) {
+    .back-btn:hover,
+    .nav-btn:hover,
+    .day-btn.free:hover,
+    .day-btn.partial:hover,
+    .day-btn.full:hover,
+    .slot-btn:hover {
+        transform: none;
+        box-shadow: none;
+    }
+
+    .back-btn:active,
+    .nav-btn:active,
+    .day-btn.free:active,
+    .day-btn.partial:active,
+    .day-btn.full:active,
+    .slot-btn:active {
+        transform: translateY(-1px);
+        box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    }
+
+    .day-btn.selected {
+        transform: scale(1.05);
+    }
+}
+
+/* Для устройств в ландшафтной ориентации */
+@media (max-height: 500px) and (orientation: landscape) {
+    .title {
+        font-size: 1.3rem;
+        margin-bottom: 8px;
+    }
+
+    .calendar-nav {
+        margin-bottom: 8px;
+    }
+
+    .calendar-grid {
+        gap: 3px;
+    }
+
+    .day-btn {
+        padding: 4px 0;
+    }
+
+    .slots-grid {
+        max-height: 150px;
+        overflow-y: auto;
+        padding-right: 5px;
+    }
+
+    .slot-btn {
+        padding: 5px 10px;
+    }
+}
+
+/* Для устройств с высоким разрешением */
+@media (min-width: 1440px) {
+    .title {
+        font-size: 2.2rem;
+    }
+
+    .calendar-grid {
+        gap: 10px;
+    }
+
+    .day-btn {
+        padding: 15px 0;
+        font-size: 1.1rem;
+        border-radius: 14px;
+    }
+
+    .weekday {
+        font-size: 1rem;
+        padding: 10px 0;
+    }
+
+    .slot-btn {
+        padding: 12px 20px;
+        font-size: 1rem;
+    }
+}
+
+/* Анимации */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.calendar-grid,
+.slots-grid {
+    animation: fadeIn 0.3s ease;
+}
+
+/* Дополнительные улучшения */
+.calendar-grid {
+    position: relative;
+}
+
+/* Подсказка для дней */
+.day-btn[title] {
+    position: relative;
+}
+
+    .day-btn[title]:hover::after {
+        content: attr(title);
+        position: absolute;
+        bottom: 100%;
+        left: 50%;
+        transform: translateX(-50%);
+        background: #333;
+        color: white;
+        padding: 4px 8px;
+        border-radius: 4px;
+        font-size: 0.7rem;
+        white-space: nowrap;
+        margin-bottom: 5px;
+        z-index: 10;
+    }
+
+/* Для мобильных убираем подсказки */
+@media (max-width: 768px) {
+    .day-btn[title]:hover::after {
+        display: none;
+    }
 }

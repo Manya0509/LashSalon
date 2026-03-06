@@ -1,222 +1,805 @@
-﻿/* Баннер с фото */
+﻿/* ===== БАННЕР С ФОТО ===== */
 .avatar-wrapper-fullscreen {
-    position: relative;                              /* Создает контекст позиционирования для абсолютного позиционирования дочерних элементов */
-    width: 100%;                                     /* Занимает всю доступную ширину родительского контейнера */
-    height: 400px;                                   /* Фиксированная высота блока с аватаром */
-    overflow: hidden;                                /* Обрезает все, что выходит за пределы блока (чтобы изображение не вылезало) */
+    position: relative;
+    width: 100%;
+    height: 400px;
+    overflow: hidden;
 }
 
 .avatar-img-fullscreen {
-    width: 100%;                                     /* Изображение занимает всю ширину родительского контейнера */
-    height: 100%;                                    /* Изображение занимает всю высоту родительского контейнера */
-    object-fit: cover;                               /* Изображение масштабируется с сохранением пропорций, заполняя всю область (обрезается по краям) */
-    object-position: center top;                     /* Фокусировка изображения: по центру по горизонтали, по верхнему краю по вертикали */
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center top;
 }
 
 .overlay.bottom-text {
-    position: absolute;                             /* Абсолютное позиционирование относительно родителя (.avatar-wrapper-fullscreen) */
-    bottom: 0;                                      /* Прижимаем к нижнему краю родительского блока */
-    left: 0;                                        /* Выравниваем по левому краю */
-    width: 100%;                                    /* Растягиваем на всю ширину родительского блока */
-    padding: 20px;                                  /* Внутренние отступы со всех сторон для текста */
-    display: flex;                                  /* Используем Flexbox для управления дочерними элементами */
-    flex-direction: column;                         /* Располагаем дочерние элементы вертикально (в колонку) */
-    align-items: center;                            /* Выравниваем дочерние элементы по центру по горизонтали */
-    justify-content: flex-end;                      /* Прижимаем дочерние элементы к нижней части контейнера */
-    color: white;                                   /* Цвет текста (белый) */
-    text-shadow: 1px 1px 6px rgba(0,0,0,0.6);       /* Тень текста для лучшей читаемости на светлом фоне */
-    background: linear-gradient(to top, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0) 60%);    /* Градиент снизу вверх: от черного полупрозрачного к прозрачному */
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-end;
+    color: white;
+    text-shadow: 1px 1px 6px rgba(0,0,0,0.6);
+    background: linear-gradient(to top, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0) 60%);
 }
 
 .overlay .name {
-    font-size: 2.5rem;                              /* Размер шрифта имени (2.5rem ≈ 40px, зависит от базового размера браузера) */
-    margin: 0;                                      /* Убираем внешние отступы у заголовка */
+    font-size: 2.5rem;
+    margin: 0;
+    text-align: center;
 }
 
 .overlay .studio {
-    font-size: 1.5rem;                              /* Размер шрифта названия студии (1.5rem ≈ 24px) */
-    margin: 0;                                      /* Убираем внешние отступы у подзаголовка */
-    opacity: 0.9;                                   /* Небольшая прозрачность (90% видимости) для более мягкого вида */
+    font-size: 1.5rem;
+    margin: 0;
+    opacity: 0.9;
+    text-align: center;
 }
 
+/* ===== КНОПКИ В ШАПКЕ ===== */
+
+/* Кнопка для администратора (слева) */
+.admin-login-header {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    z-index: 20;
+}
+
+.btn-admin-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 16px;
+    background: rgba(0, 0, 0, 0.3);
+    backdrop-filter: blur(5px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 30px;
+    color: white;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+}
+
+    .btn-admin-header:hover {
+        background: rgba(0, 0, 0, 0.5);
+        border-color: rgba(255, 255, 255, 0.4);
+        transform: translateY(-2px);
+    }
+
+    .btn-admin-header i {
+        font-size: 18px;
+    }
+
+/* Кнопка входа для клиента (справа) */
+.admin-login-btn {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    z-index: 20;
+}
+
+.btn-login {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 16px;
+    background-color: rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(5px);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    border-radius: 30px;
+    color: white;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+}
+
+    .btn-login:hover {
+        background-color: rgba(255, 255, 255, 0.3);
+        border-color: rgba(255, 255, 255, 0.5);
+        transform: translateY(-2px);
+        box-shadow: 0 6px 15px rgba(0, 0, 0, 0.3);
+    }
+
+    .btn-login i {
+        font-size: 18px;
+    }
+
+/* Кнопка "Мои записи" */
+.profile-btn {
+    position: absolute;
+    top: 20px;
+    right: 100px;
+    z-index: 20;
+}
+
+.btn-profile {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 16px;
+    background: rgba(16, 185, 129, 0.2);
+    backdrop-filter: blur(5px);
+    border: 1px solid rgba(16, 185, 129, 0.3);
+    border-radius: 30px;
+    color: white;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+}
+
+    .btn-profile:hover {
+        background: rgba(16, 185, 129, 0.4);
+        border-color: rgba(16, 185, 129, 0.6);
+        transform: translateY(-2px);
+    }
+
+    .btn-profile i {
+        font-size: 18px;
+    }
+
+/* Имя клиента */
+.client-name-header {
+    position: absolute;
+    top: 20px;
+    right: 100px;
+    z-index: 20;
+}
+
+.client-name-badge {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 16px;
+    background: rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(5px);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    border-radius: 30px;
+    color: white;
+    font-size: 14px;
+    font-weight: 500;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+}
+
+    .client-name-badge i {
+        font-size: 18px;
+    }
+
+/* ===== ОСНОВНОЕ СОДЕРЖИМОЕ ===== */
 .main-content {
-    padding: 20px;                                  /* Внутренние отступы со всех сторон для основного содержимого */
+    padding: 20px;
+    max-width: 900px;
+    margin: 0 auto;
 }
 
     .main-content > p:first-of-type {
-        margin-top: -10px;                          /* Отрицательный отступ сверху для первого параграфа (поднимает его выше) */
-        font-weight: 500;                           /* Средняя жирность текста (500 = medium) */
+        margin-top: -10px;
+        font-weight: 500;
     }
 
-/* Общие стили для всех кнопок с классом btn */
+/* Общие стили для кнопок */
 button.btn {
-    border-radius: 12px;                            /* Скругление углов кнопки на 12 пикселей */
-    padding: 10px 20px;                             /* Внутренние отступы: 10px сверху/снизу, 20px слева/справа */
-    font-weight: 500;                               /* Средняя жирность текста (500 = medium) */
-    transition: all 0.3s ease;                      /* Плавное изменение всех свойств за 0.3 секунды с эффектом ease */
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);       /* Тень: смещение по Y 4px, размытие 6px, полупрозрачная черная */
-    color: black;                                   /* Цвет текста (черный) */
+    border-radius: 12px;
+    padding: 10px 20px;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    color: black;
 }
 
-/* Стили для кнопок с контурным оформлением */
 button.btn-outline-primary {
-    border: 2px solid #6c757d;                      /* Сплошная граница толщиной 2px серого цвета */
-    background: transparent;                        /* Прозрачный фон */
-    color: black;                                   /* Черный цвет текста */
+    border: 2px solid #6c757d;
+    background: transparent;
+    color: black;
 }
 
-    /* Стили для контурных кнопок при наведении */
     button.btn-outline-primary:hover {
-        background-color: #6c757d;                  /* Серый цвет фона при наведении */
-        color: white;                               /* Белый цвет текста для контраста */
-        transform: translateY(-2px);                /* Сдвиг кнопки вверх на 2 пикселя (эффект поднятия) */
-        box-shadow: 0 6px 10px rgba(0,0,0,0.15);    /* Увеличенная тень при наведении */
+        background-color: #6c757d;
+        color: white;
+        transform: translateY(-2px);
+        box-shadow: 0 6px 10px rgba(0,0,0,0.15);
     }
 
-/* Зелёная кнопка записи */
 button.btn-success {
-    background-color: #28a745;                      /* Зеленый цвет фона (стандартный Bootstrap успех) */
-    border: none;                                   /* Убираем границу у кнопки */
-    color: white;                                   /* Белый цвет текста для контраста с зеленым фоном */
+    background-color: #28a745;
+    border: none;
+    color: white;
 }
 
-    /* Стили для зеленой кнопки при наведении */
     button.btn-success:hover {
-        background-color: #218838;                  /* Более темный зеленый цвет фона при наведении */
-        transform: translateY(-2px);                /* Сдвиг кнопки вверх на 2 пикселя (эффект поднятия) */
-        box-shadow: 0 6px 10px rgba(0,0,0,0.15);    /* Увеличенная тень при наведении для глубины */
+        background-color: #218838;
+        transform: translateY(-2px);
+        box-shadow: 0 6px 10px rgba(0,0,0,0.15);
     }
 
-/* КНОПКИ СВЯЗИ */
+/* ===== КНОПКИ СВЯЗИ ===== */
 .contact-buttons {
-    display: flex;                                  /* Включаем Flexbox для расположения кнопок связи */
-    flex-direction: row;                            /* Располагаем кнопки в ряд (горизонтально) */
-    justify-content: center;                        /* Выравниваем кнопки по центру по горизонтали */
-    align-items: center;                            /* Выравниваем кнопки по центру по вертикали */
-    flex-wrap: wrap;                                /* Разрешаем перенос кнопок на новую строку при нехватке места */
-    gap: 8px;                                       /* Отступы между кнопками 8px */
-    margin: 20px 0;                                 /* Внешние отступы: 20px сверху и снизу, 0 слева и справа */
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin: 20px 0;
 }
 
 .contact-btn {
-    display: inline-flex;                           /* Встроенный flex-контейнер для размещения иконки и текста в одну линию */
-    align-items: center;                            /* Выравниваем содержимое (иконку и текст) по центру по вертикали */
-    justify-content: center;                        /* Выравниваем содержимое по центру по горизонтали */
-    gap: 6px;                                       /* Отступ между иконкой и текстом 6px */
-    padding: 8px 16px;                              /* Внутренние отступы: 8px сверху/снизу, 16px слева/справа */
-    border-radius: 12px;                            /* Скругление углов кнопки на 12 пикселей */
-    border: 2px solid #6c757d;                      /* Сплошная серая граница толщиной 2px */
-    font-size: 14px;                                /* Размер шрифта 14 пикселей */
-    font-weight: 500;                               /* Средняя жирность текста (500 = medium) */
-    color: #000;                                    /* Черный цвет текста */
-    background: transparent;                        /* Прозрачный фон */
-    cursor: pointer;                                /* Курсор-указатель при наведении */
-    transition: all 0.3s ease;                      /* Плавное изменение всех свойств за 0.3 секунды */
-    box-shadow: 0 4px 6px rgba(0,0,0,0.1);          /* Тень: смещение по Y 4px, размытие 6px, полупрозрачная черная */
-    min-width: auto;                                /* Минимальная ширина автоматическая (не принудительно) */
-    height: auto;                                   /* Высота автоматическая (подстраивается под содержимое) */
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    padding: 8px 16px;
+    border-radius: 12px;
+    border: 2px solid #6c757d;
+    font-size: 14px;
+    font-weight: 500;
+    color: #000;
+    background: transparent;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
 }
 
     .contact-btn i {
-        font-size: 16px;                            /* Размер иконки внутри кнопки связи */
+        font-size: 16px;
     }
 
-    /* Стили для кнопки WhatsApp */
     .contact-btn.whatsapp {
-        border-color: #25D366;                      /* Цвет границы кнопки (фирменный зеленый WhatsApp) */
-        color: #000;                                /* Черный цвет текста */
+        border-color: #25D366;
+        color: #000;
     }
 
-        /* Стили для кнопки WhatsApp при наведении */
         .contact-btn.whatsapp:hover {
-            background-color: #25D366;                       /* Фон становится фирменным зеленым WhatsApp */
-            color: white;                                    /* Белый цвет текста для контраста */
-            transform: translateY(-2px);                     /* Сдвиг кнопки вверх на 2 пикселя (эффект поднятия) */
-            box-shadow: 0 6px 10px rgba(0,0,0,0.15);         /* Увеличенная тень при наведении */
+            background-color: #25D366;
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 10px rgba(0,0,0,0.15);
         }
 
-    /* Стили для кнопки Telegram */
-    .contact-btn.telegram { 
-        border-color: #2AABEE;                               /* Цвет границы кнопки (фирменный голубой Telegram) */
-        color: #000;                                         /* Черный цвет текста */
+    .contact-btn.telegram {
+        border-color: #2AABEE;
+        color: #000;
     }
 
-        /* Стили для кнопки Telegram при наведении */
         .contact-btn.telegram:hover {
-            background-color: #2AABEE;                       /* Фон становится фирменным голубым Telegram */
-            color: white;                                    /* Белый цвет текста для контраста */
-            transform: translateY(-2px);                     /* Сдвиг кнопки вверх на 2 пикселя (эффект поднятия) */
-            box-shadow: 0 6px 10px rgba(0,0,0,0.15);         /* Увеличенная тень при наведении */
+            background-color: #2AABEE;
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 10px rgba(0,0,0,0.15);
         }
 
-    /* Стили для кнопки телефона */
     .contact-btn.phone {
-        border-color: #6c757d;                               /* Цвет границы кнопки (серый, как у обычных кнопок) */
-        color: #000;                                         /* Черный цвет текста */
+        border-color: #6c757d;
+        color: #000;
     }
 
-        /* Стили для кнопки телефона при наведении */
         .contact-btn.phone:hover {
-            background-color: #6c757d;                       /* Серый цвет фона при наведении (соответствует цвету границы) */
-            color: white;                                    /* Белый цвет текста для контраста с темным фоном */
-            transform: translateY(-2px);                     /* Сдвиг кнопки вверх на 2 пикселя (эффект поднятия) */
-            box-shadow: 0 6px 10px rgba(0,0,0,0.15);         /* Увеличенная тень при наведении для глубины */
+            background-color: #6c757d;
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 10px rgba(0,0,0,0.15);
         }
 
-.phone-popup { 
-    position: fixed;                                                /* Фиксированное позиционирование относительно окна браузера */
-    bottom: 30px;                                                   /* Отступ от нижнего края окна на 30px */
-    left: 50%;                                                      /* Смещаем от левого края на 50% ширины окна */
-    transform: translateX(-50%) translateY(100px);                  /* Сдвигаем влево на 50% своей ширины (центрирование) и вниз на 100px (скрытое состояние) */
-    background-color: white;                                        /* Белый фон всплывающего окна */
-    border-radius: 50px;                                            /* Сильное скругление углов (овальная форма) */
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);                     /* Тень: большое размытие для эффекта парения */
-    padding: 12px 24px;                                             /* Внутренние отступы: 12px сверху/снизу, 24px слева/справа */
-    z-index: 1000;                                                  /* Высокий z-index для отображения поверх всех элементов */
-    opacity: 0;                                                     /* Полная прозрачность (скрытое состояние) */
-    transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);    /* Плавная анимация с нестандартной кривой (эффект пружины) */
-    border: 1px solid #e0e0e0;                                      /* Тонкая светло-серая граница */
+/* ===== ВСПЛЫВАЮЩЕЕ ОКНО С ТЕЛЕФОНОМ ===== */
+.phone-popup {
+    position: fixed;
+    bottom: 30px;
+    left: 50%;
+    transform: translateX(-50%) translateY(100px);
+    background-color: white;
+    border-radius: 50px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+    padding: 12px 24px;
+    z-index: 1000;
+    opacity: 0;
+    transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+    border: 1px solid #e0e0e0;
 }
 
-    /* Состояние показа всплывающего окна */
     .phone-popup.show {
-        opacity: 1;                                      /* Полная видимость */
-        transform: translateX(-50%) translateY(0);       /* Возвращаем в исходное положение (без смещения вниз) */
+        opacity: 1;
+        transform: translateX(-50%) translateY(0);
     }
 
 .phone-popup-content {
-    display: flex;                                       /* Включаем Flexbox для расположения элементов в строку */
-    align-items: center;                                 /* Выравниваем элементы по центру по вертикали */
-    gap: 12px;                                           /* Отступ между элементами 12px */
+    display: flex;
+    align-items: center;
+    gap: 12px;
 }
 
-    /* Стили для иконки внутри всплывающего окна */
     .phone-popup-content i {
-        color: #28a745;                                  /* Зеленый цвет иконки (как у кнопки записи) */
-        font-size: 20px;                                 /* Размер иконки 20 пикселей */
+        color: #28a745;
+        font-size: 20px;
     }
 
-/* Стили для номера телефона */
 .phone-number {
-    font-size: 18px;                                     /* Размер шрифта номера 18 пикселей */
-    font-weight: 600;                                    /* Полужирное начертание (600 = semi-bold) */
-    color: #333;                                         /* Темно-серый цвет текста */
-    letter-spacing: 0.5px;                               /* Небольшой интервал между буквами/цифрами для лучшей читаемости */
+    font-size: 18px;
+    font-weight: 600;
+    color: #333;
 }
 
 .phone-popup-close {
-    background: none;                                    /* Убираем фон кнопки (прозрачный) */
-    border: none;                                        /* Убираем границу кнопки */
-    color: #999;                                         /* Светло-серый цвет крестика */
-    font-size: 18px;                                     /* Размер крестика 18 пикселей */
-    cursor: pointer;                                     /* Курсор-указатель при наведении */
-    padding: 0 5px;                                      /* Внутренние отступы: 0 сверху/снизу, 5px слева/справа */
-    transition: color 0.2s;                              /* Плавное изменение цвета за 0.2 секунды при наведении */
-    line-height: 1;                                      /* Высота строки равна размеру шрифта (чтобы крестик не растягивался) */
+    background: none;
+    border: none;
+    color: #999;
+    font-size: 18px;
+    cursor: pointer;
+    padding: 0 5px;
+    transition: color 0.2s;
 }
 
-    /* Стили для кнопки закрытия при наведении */
     .phone-popup-close:hover {
-        color: #333;                                     /* Темно-серый цвет крестика при наведении (более контрастный) */
+        color: #333;
     }
 
+/* ===== СКРЫТАЯ ССЫЛКА ДЛЯ АДМИНИСТРАТОРА ===== */
+.admin-hidden-link {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    background: rgba(0, 0, 0, 0.1);
+    backdrop-filter: blur(5px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    opacity: 0.2;
+    transition: all 0.3s ease;
+    z-index: 100;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+    .admin-hidden-link:hover {
+        opacity: 1;
+        background: rgba(0, 0, 0, 0.3);
+        transform: rotate(90deg) scale(1.1);
+    }
+
+.admin-icon {
+    font-size: 20px;
+    color: white;
+}
+
+.admin-tooltip {
+    position: absolute;
+    bottom: 100%;
+    right: 0;
+    background: #333;
+    color: white;
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    white-space: nowrap;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(10px);
+    transition: all 0.3s ease;
+    pointer-events: none;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    margin-bottom: 8px;
+}
+
+    .admin-tooltip::after {
+        content: '';
+        position: absolute;
+        top: 100%;
+        right: 15px;
+        border-width: 5px;
+        border-style: solid;
+        border-color: #333 transparent transparent transparent;
+    }
+
+.admin-hidden-link:hover .admin-tooltip {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+}
+
+/* ===== АДАПТИВНОСТЬ ===== */
+
+/* Планшеты (до 992px) */
+@media (max-width: 992px) {
+    .avatar-wrapper-fullscreen {
+        height: 350px;
+    }
+
+    .overlay .name {
+        font-size: 2.2rem;
+    }
+
+    .overlay .studio {
+        font-size: 1.3rem;
+    }
+
+    .main-content {
+        max-width: 800px;
+    }
+}
+
+/* Мобильные устройства (до 768px) */
+@media (max-width: 768px) {
+    /* Кнопки в шапке */
+    .admin-login-header {
+        top: 10px;
+        left: 10px;
+    }
+
+    .btn-admin-header {
+        padding: 6px 12px;
+    }
+
+        .btn-admin-header span {
+            display: none;
+        }
+
+        .btn-admin-header i {
+            font-size: 20px;
+        }
+
+    .admin-login-btn {
+        top: 10px;
+        right: 10px;
+    }
+
+    .btn-login {
+        padding: 6px 12px;
+    }
+
+        .btn-login span {
+            display: none;
+        }
+
+        .btn-login i {
+            font-size: 20px;
+        }
+
+    .profile-btn {
+        top: 10px;
+        right: 70px;
+    }
+
+    .btn-profile {
+        padding: 6px 12px;
+    }
+
+        .btn-profile span {
+            display: none;
+        }
+
+        .btn-profile i {
+            font-size: 20px;
+        }
+
+    .client-name-header {
+        top: 10px;
+        right: 70px;
+    }
+
+    .client-name-badge {
+        padding: 6px 12px;
+    }
+
+        .client-name-badge span {
+            display: none;
+        }
+
+        .client-name-badge i {
+            font-size: 20px;
+        }
+
+    /* Баннер */
+    .avatar-wrapper-fullscreen {
+        height: 300px;
+    }
+
+    .overlay.bottom-text {
+        padding: 15px;
+    }
+
+    .overlay .name {
+        font-size: 1.8rem;
+    }
+
+    .overlay .studio {
+        font-size: 1.1rem;
+    }
+
+    /* Основной контент */
+    .main-content {
+        padding: 15px;
+    }
+
+        .main-content > p:first-of-type {
+            font-size: 0.95rem;
+            margin-top: -5px;
+        }
+
+    /* Кнопки связи */
+    .contact-buttons {
+        gap: 6px;
+    }
+
+    .contact-btn {
+        padding: 6px 12px;
+        font-size: 13px;
+    }
+
+        .contact-btn i {
+            font-size: 14px;
+        }
+
+    /* Общие кнопки */
+    button.btn {
+        padding: 8px 16px;
+        font-size: 0.9rem;
+    }
+
+    /* Скрытая ссылка */
+    .admin-hidden-link {
+        bottom: 15px;
+        right: 15px;
+        width: 40px;
+        height: 40px;
+    }
+
+    .admin-icon {
+        font-size: 18px;
+    }
+}
+
+/* Маленькие мобильные (до 480px) */
+@media (max-width: 480px) {
+    /* Баннер */
+    .avatar-wrapper-fullscreen {
+        height: 250px;
+    }
+
+    .overlay .name {
+        font-size: 1.5rem;
+    }
+
+    .overlay .studio {
+        font-size: 1rem;
+    }
+
+    /* Кнопки в шапке - еще компактнее */
+    .btn-admin-header,
+    .btn-login,
+    .btn-profile,
+    .client-name-badge {
+        padding: 5px 10px;
+    }
+
+        .btn-admin-header i,
+        .btn-login i,
+        .btn-profile i,
+        .client-name-badge i {
+            font-size: 18px;
+        }
+
+    .profile-btn {
+        right: 65px;
+    }
+
+    .client-name-header {
+        right: 65px;
+    }
+
+    /* Основной контент */
+    .main-content {
+        padding: 12px;
+    }
+
+        .main-content > p:first-of-type {
+            font-size: 0.9rem;
+            line-height: 1.4;
+        }
+
+    /* Кнопки связи */
+    .contact-buttons {
+        flex-direction: column;
+        gap: 8px;
+    }
+
+    .contact-btn {
+        width: 100%;
+        justify-content: center;
+        padding: 8px 12px;
+    }
+
+    /* Всплывающее окно с телефоном */
+    .phone-popup {
+        width: 90%;
+        padding: 10px 16px;
+        bottom: 20px;
+    }
+
+    .phone-popup-content {
+        gap: 8px;
+    }
+
+        .phone-popup-content i {
+            font-size: 18px;
+        }
+
+    .phone-number {
+        font-size: 16px;
+    }
+
+    .phone-popup-close {
+        font-size: 16px;
+    }
+
+    /* Скрытая ссылка */
+    .admin-hidden-link {
+        bottom: 10px;
+        right: 10px;
+        width: 36px;
+        height: 36px;
+    }
+
+    .admin-icon {
+        font-size: 16px;
+    }
+
+    .admin-tooltip {
+        font-size: 0.7rem;
+        padding: 4px 8px;
+        right: 0;
+    }
+}
+
+/* Очень маленькие экраны (до 360px) */
+@media (max-width: 360px) {
+    .avatar-wrapper-fullscreen {
+        height: 200px;
+    }
+
+    .overlay .name {
+        font-size: 1.3rem;
+    }
+
+    .overlay .studio {
+        font-size: 0.9rem;
+    }
+
+    .profile-btn {
+        right: 60px;
+    }
+
+    .client-name-header {
+        right: 60px;
+    }
+
+    .main-content > p:first-of-type {
+        font-size: 0.85rem;
+    }
+
+    button.btn {
+        padding: 6px 12px;
+        font-size: 0.85rem;
+    }
+}
+
+/* Для устройств с тач-экраном (убираем hover эффекты) */
+@media (hover: none) and (pointer: coarse) {
+    .btn-admin-header:hover,
+    .btn-login:hover,
+    .btn-profile:hover,
+    .contact-btn:hover,
+    button.btn:hover,
+    button.btn-outline-primary:hover,
+    button.btn-success:hover,
+    .admin-hidden-link:hover {
+        transform: none;
+        box-shadow: none;
+    }
+
+    .btn-admin-header:active,
+    .btn-login:active,
+    .btn-profile:active,
+    .contact-btn:active,
+    button.btn:active,
+    button.btn-outline-primary:active,
+    button.btn-success:active {
+        transform: translateY(-1px);
+        box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    }
+
+    .admin-hidden-link:active {
+        transform: rotate(90deg) scale(1.05);
+    }
+}
+
+/* Для устройств в ландшафтной ориентации */
+@media (max-height: 500px) and (orientation: landscape) {
+    .avatar-wrapper-fullscreen {
+        height: 180px;
+    }
+
+    .overlay .name {
+        font-size: 1.3rem;
+    }
+
+    .overlay .studio {
+        font-size: 0.9rem;
+    }
+
+    .overlay.bottom-text {
+        padding: 10px;
+    }
+
+    .admin-login-header,
+    .admin-login-btn,
+    .profile-btn,
+    .client-name-header {
+        top: 5px;
+    }
+
+    .main-content {
+        padding: 10px;
+    }
+}
+
+/* Для устройств с высоким разрешением */
+@media (min-width: 1440px) {
+    .avatar-wrapper-fullscreen {
+        height: 500px;
+    }
+
+    .overlay .name {
+        font-size: 3rem;
+    }
+
+    .overlay .studio {
+        font-size: 2rem;
+    }
+
+    .main-content {
+        max-width: 1100px;
+    }
+
+    .contact-btn {
+        padding: 10px 20px;
+        font-size: 16px;
+    }
+
+        .contact-btn i {
+            font-size: 18px;
+        }
+}
+
+/* Анимации */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.avatar-wrapper-fullscreen {
+    animation: fadeIn 0.5s ease;
+}
+
+.contact-buttons {
+    animation: fadeIn 0.6s ease;
+}

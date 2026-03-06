@@ -9,8 +9,8 @@ namespace LashBooking.Domain.Interfaces
         Task<IEnumerable<T>> FindAsync(Expression<Func<T, bool>> predicate); // Найти по условию
 
         Task AddAsync(T entity); // Добавить новую запись
-        Task UpdateAsync(T entity); // Обновить существующую
-        Task DeleteAsync(T entity); // Удалить запись
+        void Update(T entity); // Обновить существующую
+        void Delete(T entity); // Удалить запись
         Task SaveChangesAsync(); // Сохранить изменения в БД
     }
 }

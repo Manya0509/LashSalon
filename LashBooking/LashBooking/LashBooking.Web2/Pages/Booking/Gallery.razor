@@ -1,0 +1,131 @@
+﻿@page "/gallery"
+@inject NavigationManager NavigationManager
+
+<!-- Кнопка назад -->
+<div class="back-button-container">
+    <button class="back-btn" @onclick="GoBack">
+        <span class="back-icon">←</span> Назад
+    </button>
+</div>
+
+<div class="gallery-container">
+    <h2 class="gallery-title">📸 Фото работ</h2>
+
+    <!-- Индикатор загрузки -->
+    @if (isLoading)
+    {
+        <div class="loading-spinner">
+            <div class="spinner"></div>
+            <p>Загрузка фотографий...</p>
+        </div>
+    }
+    else if (!allPhotos.Any())
+    {
+        <!-- Сообщение, если нет фото -->
+        <div class="empty-gallery">
+            <div class="empty-icon">📷</div>
+            <h3>Фотографии скоро появятся</h3>
+            <p>Следите за обновлениями!</p>
+        </div>
+    }
+    else
+    {
+        <!-- Сетка с фото - по 3 в ряд -->
+        <div class="photo-grid">
+            @foreach (var photo in allPhotos)
+            {
+                <div class="photo-item" @onclick="() => OpenLightbox(photo)">
+                    <img src="@photo" alt="Фото работы" class="photo-image" loading="lazy" />
+                </div>
+            }
+        </div>
+    }
+
+    <!-- Lightbox -->
+    @if (showLightbox)
+    {
+        <div class="lightbox" @onclick="CloseLightbox">
+            <div class="lightbox-content" @onclick:stopPropagation="true">
+                <button class="lightbox-close" @onclick="CloseLightbox">✕</button>
+                <img src="@selectedPhoto" alt="Фото работы" class="lightbox-image" />
+                <button class="lightbox-nav lightbox-prev" @onclick="PrevPhoto" @onclick:stopPropagation="true">←</button>
+                <button class="lightbox-nav lightbox-next" @onclick="NextPhoto" @onclick:stopPropagation="true">→</button>
+            </div>
+        </div>
+    }
+</div>
+
+@code {
+    private bool isLoading = true;
+    private List<string> allPhotos = new();
+    private bool showLightbox = false;
+    private string? selectedPhoto;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadPhotos();
+    }
+
+    private async Task LoadPhotos()
+    {
+        try
+        {
+            isLoading = true;
+
+            allPhotos = new List<string>
+            {
+                "/images/gallery/photo1.jpg",
+                "/images/gallery/photo2.jpg",
+                "/images/gallery/photo3.jpg",
+                "/images/gallery/photo5.jpg",
+                "/images/gallery/photo8.jpg",
+                "/images/gallery/photo6.jpg",
+                "/images/gallery/photo7.jpg",
+                "/images/gallery/photo4.jpg",
+                "/images/gallery/photo9.jpg",
+            };
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Ошибка загрузки фото: {ex.Message}");
+        }
+        finally
+        {
+            isLoading = false;
+        }
+    }
+
+    void GoBack() => NavigationManager.NavigateTo("/");
+
+    void OpenLightbox(string photo)
+    {
+        selectedPhoto = photo;
+        showLightbox = true;
+    }
+
+    void CloseLightbox()
+    {
+        showLightbox = false;
+        selectedPhoto = null;
+    }
+
+    void PrevPhoto()
+    {
+        if (selectedPhoto == null) return;
+        var currentIndex = allPhotos.IndexOf(selectedPhoto);
+        if (currentIndex > 0)
+        {
+            selectedPhoto = allPhotos[currentIndex - 1];
+        }
+    }
+
+    void NextPhoto()
+    {
+        if (selectedPhoto == null) return;
+        var currentIndex = allPhotos.IndexOf(selectedPhoto);
+        if (currentIndex < allPhotos.Count - 1)
+        {
+            selectedPhoto = allPhotos[currentIndex + 1];
+        }
+    }
+}

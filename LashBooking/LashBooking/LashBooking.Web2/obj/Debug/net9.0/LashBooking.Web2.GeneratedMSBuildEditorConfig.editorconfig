@@ -52,6 +52,30 @@ build_metadata.AdditionalFiles.CssScope =
 build_metadata.AdditionalFiles.TargetPath = X0ltcG9ydHMucmF6b3I=
 build_metadata.AdditionalFiles.CssScope = 
 
+[C:/Users/Дарья/Desktop/LashSalon/LashSalon/LashBooking/LashBooking/LashBooking.Web2/Pages/Admin/AdminPanel.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcQWRtaW5cQWRtaW5QYW5lbC5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = b-6kcuaor5ox
+
+[C:/Users/Дарья/Desktop/LashSalon/LashSalon/LashBooking/LashBooking/LashBooking.Web2/Pages/Admin/AppointmentManagement.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcQWRtaW5cQXBwb2ludG1lbnRNYW5hZ2VtZW50LnJhem9y
+build_metadata.AdditionalFiles.CssScope = b-3jbh5b7o2g
+
+[C:/Users/Дарья/Desktop/LashSalon/LashSalon/LashBooking/LashBooking/LashBooking.Web2/Pages/Admin/ClientManagement.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcQWRtaW5cQ2xpZW50TWFuYWdlbWVudC5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = b-gk2ezv0qzl
+
+[C:/Users/Дарья/Desktop/LashSalon/LashSalon/LashBooking/LashBooking/LashBooking.Web2/Pages/Admin/ReviewManagement.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcQWRtaW5cUmV2aWV3TWFuYWdlbWVudC5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = b-qyc5x2tozt
+
+[C:/Users/Дарья/Desktop/LashSalon/LashSalon/LashBooking/LashBooking/LashBooking.Web2/Pages/Admin/ServiceManagement.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcQWRtaW5cU2VydmljZU1hbmFnZW1lbnQucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = b-ka406zgi3h
+
+[C:/Users/Дарья/Desktop/LashSalon/LashSalon/LashBooking/LashBooking/LashBooking.Web2/Pages/Booking/About.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcQm9va2luZ1xBYm91dC5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = b-zj2clm9xk4
+
 [C:/Users/Дарья/Desktop/LashSalon/LashSalon/LashBooking/LashBooking/LashBooking.Web2/Pages/Booking/Booking.razor]
 build_metadata.AdditionalFiles.TargetPath = UGFnZXNcQm9va2luZ1xCb29raW5nLnJhem9y
 build_metadata.AdditionalFiles.CssScope = b-6xvvxniqxv
@@ -60,9 +84,25 @@ build_metadata.AdditionalFiles.CssScope = b-6xvvxniqxv
 build_metadata.AdditionalFiles.TargetPath = UGFnZXNcQm9va2luZ1xDYWxlbmRhci5yYXpvcg==
 build_metadata.AdditionalFiles.CssScope = b-7rq6kjh231
 
+[C:/Users/Дарья/Desktop/LashSalon/LashSalon/LashBooking/LashBooking/LashBooking.Web2/Pages/Booking/Gallery.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcQm9va2luZ1xHYWxsZXJ5LnJhem9y
+build_metadata.AdditionalFiles.CssScope = b-h3uw2fkp5a
+
+[C:/Users/Дарья/Desktop/LashSalon/LashSalon/LashBooking/LashBooking/LashBooking.Web2/Pages/Booking/Login.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcQm9va2luZ1xMb2dpbi5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = b-p6o9ddsmlf
+
 [C:/Users/Дарья/Desktop/LashSalon/LashSalon/LashBooking/LashBooking/LashBooking.Web2/Pages/Booking/Main.razor]
 build_metadata.AdditionalFiles.TargetPath = UGFnZXNcQm9va2luZ1xNYWluLnJhem9y
 build_metadata.AdditionalFiles.CssScope = b-292kpax03m
+
+[C:/Users/Дарья/Desktop/LashSalon/LashSalon/LashBooking/LashBooking/LashBooking.Web2/Pages/Booking/Profile.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcQm9va2luZ1xQcm9maWxlLnJhem9y
+build_metadata.AdditionalFiles.CssScope = b-aztrsd3t7z
+
+[C:/Users/Дарья/Desktop/LashSalon/LashSalon/LashBooking/LashBooking/LashBooking.Web2/Pages/Booking/ProfilePopup.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcQm9va2luZ1xQcm9maWxlUG9wdXAucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = b-tz27q0x9y3
 
 [C:/Users/Дарья/Desktop/LashSalon/LashSalon/LashBooking/LashBooking/LashBooking.Web2/Pages/Booking/Reviews.razor]
 build_metadata.AdditionalFiles.TargetPath = UGFnZXNcQm9va2luZ1xSZXZpZXdzLnJhem9y

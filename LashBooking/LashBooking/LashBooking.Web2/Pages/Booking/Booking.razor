@@ -25,8 +25,12 @@
         <label class="form-label">Имя</label>
         <!-- Текст метки над полем ввода -->
         <input class="form-input" @bind="clientName"
-               placeholder="Ваше имя" @bind:event="oninput" />
-        <!-- Двустороннее связывание с переменной clientName, подсказка внутри поля, обновление при каждом вводе -->
+               placeholder="Ваше имя" @bind:event="oninput"
+               readonly="@isAuthenticated" />  
+        @if (isAuthenticated)
+        {
+            <small class="field-note">✓ Автоматически заполнено из профиля</small>
+        }
     </div>
 
     <!-- Группа поля ввода телефона -->
@@ -35,8 +39,12 @@
         <!-- Текст метки над полем ввода -->
         <input class="form-input" @bind="clientPhone"
                placeholder="+7 (999) 123-45-67"
-               @bind:event="oninput" />
-        <!-- Двустороннее связывание с переменной clientPhone, пример формата номера как подсказка, обновление при каждом вводе -->
+               @bind:event="oninput"
+               readonly="@isAuthenticated" />  
+        @if (isAuthenticated)
+        {
+            <small class="field-note">✓ Автоматически заполнено из профиля</small>
+        }
     </div>
 
     <!-- Группа выбора услуги -->
@@ -262,6 +270,8 @@
     private int startHour = 9;                     // Час начала рабочего дня (например, 9:00)
     private int endHour = 18;                      // Час окончания рабочего дня (например, 18:00)
     private int stepMinutes = 60;                  // Шаг времени между слотами в минутах (например, 60 минут = 1 час)
+    private bool isAuthenticated = false;
+    private int? currentClientId;
 
     // Внутренний класс для представления временного слота записи
     class Slot
@@ -277,11 +287,52 @@
     // Жизненный цикл компонента Blazor
     protected override async Task OnInitializedAsync()
     {
+        await LoadClientData();               // Загружаем данные клиента если авторизован  
+
         await LoadServices();                 // Загружаем список услуг из базы данных
 
         await GenerateCalendarDays();         // Генерируем дни для отображения календаря (42 дня - 6 недель)
 
         await LoadAvailableDatesAndSlots();   // Загружаем доступные даты и слоты для выбранной услуги
+    }
+
+    // Загрузка данных клиента из localStorage
+    private async Task LoadClientData()
+    {
+        try
+        {
+            var clientIdStr = await JSRuntime.InvokeAsync<string>("localStorage.getItem", "currentClientId");
+            var name = await JSRuntime.InvokeAsync<string>("localStorage.getItem", "currentClientName");
+
+            if (!string.IsNullOrEmpty(clientIdStr) && int.TryParse(clientIdStr, out int id))
+            {
+                currentClientId = id;
+                clientName = name ?? "";
+                isAuthenticated = true;
+
+                // Если есть ID клиента, загружаем его данные из БД для телефона
+                if (currentClientId.HasValue)
+                {
+                    var clients = await ClientRepo.FindAsync(c => c.Id == currentClientId.Value);
+                    var client = clients.FirstOrDefault();
+                    if (client != null)
+                    {
+                        clientPhone = client.Phone ?? "";
+                    }
+                }
+            }
+            else
+            {
+                isAuthenticated = false;
+                clientName = "";
+                clientPhone = "";
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Ошибка загрузки данных клиента: {ex.Message}");
+            isAuthenticated = false;
+        }
     }
 
     // Метод жизненного цикла Blazor, вызывается после каждого рендеринга компонента
@@ -453,9 +504,7 @@
     {
         for (int h = startHour; h < endHour; h++)                                // Перебираем все часы рабочего дня
         {
-            for (int m = 0; m < 120; m += stepMinutes)                           // Перебираем минуты с заданным шагом (stepMinutes)
-            {
-                var slotTime = date.AddHours(h).AddMinutes(m);                   // Вычисляем время начала слота
+                var slotTime = date.AddHours(h).AddMinutes(0);                   // Вычисляем время начала слота
 
                 var slotEnd = slotTime.AddMinutes(service.DurationMinutes);      // Вычисляем время окончания слота: Добавляем длительность услуги к времени начала
                 if (slotTime < DateTime.Now)                                     // Проверка 1: слот не должен быть в прошлом
@@ -466,7 +515,6 @@
 
                 if (!conflict)                                                   // Если конфликтов нет (слот свободен)
                     return true;                                                 // Немедленно возвращаем true - нашли свободный слот
-            }
         }
         return false;                                                            // Если после всех проверок не нашли свободных слотов: Все слоты заняты
     }
@@ -491,9 +539,7 @@
 
             for (int h = startHour; h < endHour; h++)                               // Перебираем часы
             {
-                for (int m = 0; m < 120; m += stepMinutes)                          // Перебираем минуты с заданным шагом
-                {
-                    var slotTime = selectedDate.AddHours(h).AddMinutes(m);          // Вычисляем время начала слота
+                    var slotTime = selectedDate.AddHours(h).AddMinutes(0);          // Вычисляем время начала слота
 
                     var slotEnd = slotTime.AddMinutes(service.DurationMinutes);     // Вычисляем время окончания слота (начало + длительность услуги)
 
@@ -505,7 +551,6 @@
                         Time = slotTime,
                         IsBusy = conflict                                           // true - занят, false - свободен
                     });
-                }
             }
 
             // Выбираем первый доступный слот для автоматического выбора
@@ -597,21 +642,37 @@
 
             // ===== РАБОТА С КЛИЕНТОМ =====
 
-            // Ищем существующего клиента по телефону
-            var client = (await ClientRepo.FindAsync(c => c.Phone == clientPhone))
-                        .FirstOrDefault();
+            Client client;
 
-            // Если клиент не найден - создаем нового
-            if (client == null)
+            // Если пользователь авторизован, используем его ID
+            if (currentClientId.HasValue)
             {
-                client = new Client
+                var clients = await ClientRepo.FindAsync(c => c.Id == currentClientId.Value);
+                client = clients.FirstOrDefault();
+
+                if (client == null)
+                {
+                    message = "Ошибка: клиент не найден";
+                    return;
+                }
+            }
+            else
+            {
+                // Если не авторизован, ищем по телефону или создаем нового
+                var clients = await ClientRepo.FindAsync(c => c.Phone == clientPhone);
+                client = clients.FirstOrDefault();
+
+                if (client == null)
+                {
+                    client = new Client
                     {
-                        Name = clientName,                        // Имя из формы
-                        Phone = clientPhone,                      // Телефон из формы
-                        CreatedAt = DateTime.Now                  // Текущее время создания
+                        Name = clientName,
+                        Phone = clientPhone,
+                        CreatedAt = DateTime.Now
                     };
-                await ClientRepo.AddAsync(client);                // Добавляем в БД
-                await ClientRepo.SaveChangesAsync();              // Сохраняем изменения
+                    await ClientRepo.AddAsync(client);
+                    await ClientRepo.SaveChangesAsync();
+                }
             }
 
             // ===== СОЗДАНИЕ ЗАПИСИ =====
@@ -635,8 +696,11 @@
             isSuccess = true;  // Зеленый цвет уведомления
 
             // Очищаем поля формы для нового ввода
-            clientName = "";
-            clientPhone = "";
+            if (!isAuthenticated)
+            {
+                clientName = "";
+                clientPhone = "";
+            }
 
             // Обновляем доступные даты и слоты
             await LoadAvailableDatesAndSlots();

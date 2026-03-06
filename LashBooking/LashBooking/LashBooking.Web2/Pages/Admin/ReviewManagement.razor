@@ -1,0 +1,395 @@
+﻿@using LashBooking.Domain.Entities
+@using LashBooking.Domain.Interfaces
+@inject IRepository<Review> ReviewRepo
+@inject IRepository<Client> ClientRepo
+@inject IJSRuntime JSRuntime
+
+<div class="management-section">
+
+    <div class="section-header">
+        <h2><i class="bi bi-star"></i> Управление отзывами</h2>
+
+        <div class="search-box">
+            <input type="text"
+                   class="search-input"
+                   placeholder="Поиск по имени или отзыву..."
+                   @bind="searchTerm"
+                   @bind:event="oninput" />
+        </div>
+    </div>
+
+    <!-- Статистика -->
+    <div class="reviews-stats">
+
+        <div class="stat-card-small">
+            <div class="stat-icon">⭐</div>
+            <div class="stat-info">
+                <span class="stat-value">@averageRating.ToString("F1")</span>
+                <span class="stat-label">Средний рейтинг</span>
+            </div>
+        </div>
+
+        <div class="stat-card-small">
+            <div class="stat-icon">📝</div>
+            <div class="stat-info">
+                <span class="stat-value">@totalReviews</span>
+                <span class="stat-label">Всего отзывов</span>
+            </div>
+        </div>
+
+        <div class="stat-card-small">
+            <div class="stat-icon">⏳</div>
+            <div class="stat-info">
+                <span class="stat-value">@pendingReviews.Count</span>
+                <span class="stat-label">На модерации</span>
+            </div>
+        </div>
+
+        <div class="stat-card-small">
+            <div class="stat-icon">✅</div>
+            <div class="stat-info">
+                <span class="stat-value">@approvedReviews.Count</span>
+                <span class="stat-label">Одобрено</span>
+            </div>
+        </div>
+
+    </div>
+
+    @if (isLoading)
+    {
+        <div class="loading-spinner">
+            <div class="spinner"></div>
+            <p>Загрузка отзывов...</p>
+        </div>
+    }
+    else
+    {
+        <!-- вкладки -->
+
+        <div class="reviews-tabs">
+
+            <button class="tab-btn @(activeTab == "pending" ? "active" : "")"
+                    @onclick="@(() => SetTab("pending"))">
+
+                На модерации
+
+                @if (pendingReviews.Count > 0)
+                {
+                    <span class="badge">@pendingReviews.Count</span>
+                }
+
+            </button>
+
+
+            <button class="tab-btn @(activeTab == "approved" ? "active" : "")"
+                    @onclick="@(() => SetTab("approved"))">
+
+                Одобренные
+
+            </button>
+
+
+            <button class="tab-btn @(activeTab == "all" ? "active" : "")"
+                    @onclick="@(() => SetTab("all"))">
+
+                Все
+
+            </button>
+
+        </div>
+
+
+        <!-- список отзывов -->
+
+        <div class="reviews-list">
+
+            @foreach (var review in FilteredReviews())
+            {
+
+                <div class="review-card @(review.IsApproved ? "approved" : "pending")">
+
+                    <div class="review-header">
+
+                        <div class="review-client-info">
+
+                            <div class="client-avatar">
+                                <i class="bi bi-person-circle"></i>
+                            </div>
+
+                            <div class="client-details">
+
+                                <strong>@(review.Client?.Name ?? "Неизвестный клиент")</strong>
+
+                                <span class="client-phone">
+                                    @(review.Client?.Phone ?? "Нет телефона")
+                                </span>
+
+                            </div>
+
+                        </div>
+
+                        <div class="review-rating">
+
+                            @for (int i = 1; i <= 5; i++)
+                            {
+                                <span class="@(i <= review.Rating ? "star-filled" : "star")">
+                                    ★
+                                </span>
+                            }
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="review-content">
+
+                        <p class="review-text">@review.Text</p>
+
+                        <div class="review-meta">
+
+                            <span class="review-date">
+                                <i class="bi bi-clock"></i>
+                                @review.CreatedAt.ToLocalTime().ToString("dd.MM.yyyy HH:mm")
+                            </span>
+
+                            <span class="review-status @(review.IsApproved ? "approved" : "pending")">
+
+                                @(review.IsApproved ? "✓ Одобрен" : "⏳ На модерации")
+
+                            </span>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="review-actions">
+
+                        @if (!review.IsApproved)
+                        {
+                            <button class="btn-approve"
+                                    @onclick="() => ApproveReview(review.Id)">
+
+                                <i class="bi bi-check-circle"></i>
+                                Одобрить
+
+                            </button>
+
+                            <button class="btn-reject"
+                                    @onclick="() => RejectReview(review.Id)">
+
+                                <i class="bi bi-x-circle"></i>
+                                Отклонить
+
+                            </button>
+                        }
+                        else
+                        {
+                            <button class="btn-reject"
+                                    @onclick="() => RejectReview(review.Id)">
+
+                                <i class="bi bi-x-circle"></i>
+                                Снять с публикации
+
+                            </button>
+                        }
+
+                        <button class="btn-delete"
+                                @onclick="() => DeleteReview(review.Id)">
+
+                            <i class="bi bi-trash"></i>
+                            Удалить
+
+                        </button>
+
+                    </div>
+
+                </div>
+
+            }
+
+
+            @if (!FilteredReviews().Any())
+            {
+                <div class="empty-state">
+
+                    <div class="empty-icon">📭</div>
+
+                    <h4>Отзывы не найдены</h4>
+
+                </div>
+            }
+
+        </div>
+    }
+
+</div>
+
+
+
+@code {
+
+    private bool isLoading = true;
+
+    private string activeTab = "pending";
+
+    private string searchTerm = "";
+
+    private List<Review> allReviews = new();
+
+    private List<Review> pendingReviews = new();
+
+    private List<Review> approvedReviews = new();
+
+    private Dictionary<int, Client> clients = new();
+
+
+
+    private double averageRating =>
+        allReviews.Count == 0
+        ? 0
+        : Math.Round(allReviews.Average(r => r.Rating), 1);
+
+
+    private int totalReviews => allReviews.Count;
+
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadReviews();
+    }
+
+
+
+    private async Task LoadReviews()
+    {
+        try
+        {
+            isLoading = true;
+
+            // загружаем отзывы
+            allReviews = (await ReviewRepo.GetAllAsync()).ToList();
+
+            // загружаем клиентов одним запросом
+            var clientsList = await ClientRepo.GetAllAsync();
+
+            clients = clientsList.ToDictionary(c => c.Id);
+
+            // связываем
+            foreach (var review in allReviews)
+            {
+                if (clients.TryGetValue(review.ClientId, out var client))
+                {
+                    review.Client = client;
+                }
+            }
+
+            pendingReviews = allReviews
+                .Where(r => !r.IsApproved)
+                .OrderByDescending(r => r.CreatedAt)
+                .ToList();
+
+            approvedReviews = allReviews
+                .Where(r => r.IsApproved)
+                .OrderByDescending(r => r.CreatedAt)
+                .ToList();
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Ошибка загрузки отзывов: {ex.Message}");
+        }
+        finally
+        {
+            isLoading = false;
+        }
+    }
+
+
+
+    private IEnumerable<Review> FilteredReviews()
+    {
+
+        var list = activeTab switch
+        {
+            "pending" => pendingReviews,
+            "approved" => approvedReviews,
+            _ => allReviews
+        };
+
+        return list
+            .Where(r =>
+                string.IsNullOrWhiteSpace(searchTerm)
+                || (r.Client?.Name?.Contains(searchTerm, StringComparison.OrdinalIgnoreCase) ?? false)
+                || r.Text.Contains(searchTerm, StringComparison.OrdinalIgnoreCase))
+            .OrderByDescending(r => r.CreatedAt);
+    }
+
+
+
+    private void SetTab(string tab)
+    {
+        activeTab = tab;
+    }
+
+
+
+    private async Task ApproveReview(int reviewId)
+    {
+        var review = allReviews.FirstOrDefault(r => r.Id == reviewId);
+
+        if (review == null) return;
+
+        review.IsApproved = true;
+
+        ReviewRepo.Update(review);
+
+        await ReviewRepo.SaveChangesAsync();
+
+        await LoadReviews();
+    }
+
+
+
+    private async Task RejectReview(int reviewId)
+    {
+        var review = allReviews.FirstOrDefault(r => r.Id == reviewId);
+
+        if (review == null) return;
+
+        review.IsApproved = false;
+
+        ReviewRepo.Update(review);
+
+        await ReviewRepo.SaveChangesAsync();
+
+        await LoadReviews();
+    }
+
+
+
+    private async Task DeleteReview(int reviewId)
+    {
+        if (!await ConfirmAction("Вы уверены, что хотите удалить этот отзыв?"))
+            return;
+
+        var review = allReviews.FirstOrDefault(r => r.Id == reviewId);
+
+        if (review == null) return;
+
+        ReviewRepo.Delete(review);
+
+        await ReviewRepo.SaveChangesAsync();
+
+        await LoadReviews();
+    }
+
+
+
+    private async Task<bool> ConfirmAction(string message)
+    {
+        return await JSRuntime.InvokeAsync<bool>("confirm", message);
+    }
+
+}

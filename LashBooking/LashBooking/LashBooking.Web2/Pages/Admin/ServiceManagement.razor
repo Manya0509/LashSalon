@@ -1,0 +1,219 @@
+﻿@using LashBooking.Domain.Entities
+@using LashBooking.Domain.Interfaces
+@inject IRepository<Service> ServiceRepo
+@inject IJSRuntime JSRuntime
+
+<div class="management-section">
+    <div class="section-header">
+        <h2><i class="bi bi-grid"></i> Управление услугами</h2>
+        <div class="header-actions">
+            <button class="filter-btn active" @onclick="ShowAddForm">
+                <i class="bi bi-plus-lg"></i> Добавить услугу
+            </button>
+            <button class="refresh-btn" @onclick="LoadServices" title="Обновить">
+                <i class="bi bi-arrow-repeat"></i>
+            </button>
+        </div>
+    </div>
+
+    @if (isLoading)
+    {
+        <div class="loading-spinner">
+            <div class="spinner"></div>
+            <p>Загрузка услуг...</p>
+        </div>
+    }
+    else if (!services.Any())
+    {
+        <div class="empty-state">
+            <div class="empty-icon">💅</div>
+            <h4>Услуги не найдены</h4>
+            <p>Добавьте первую услугу</p>
+        </div>
+    }
+    else
+    {
+        <div class="table-responsive">
+            <table class="appointments-table">
+                <thead>
+                    <tr>
+                        <th>Название</th>
+                        <th>Описание</th>
+                        <th>Цена</th>
+                        <th>Длительность</th>
+                        <th>Активна</th>
+                        <th>Действия</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var service in services.OrderBy(s => s.Name))
+                    {
+                        <tr class="appointment-row">
+                            <td><strong>@service.Name</strong></td>
+                            <td>@(service.Description ?? "—")</td>
+                            <td class="price-cell">@service.Price.ToString("C")</td>
+                            <td>@service.DurationMinutes мин</td>
+                            <td>
+                                <span style="color: @(service.IsActive ? "#28a745" : "#dc3545")">
+                                    @(service.IsActive ? "✓ Да" : "✗ Нет")
+                                </span>
+                            </td>
+                            <td class="actions-cell">
+                                <button class="btn-icon edit" @onclick="() => EditService(service)" title="Редактировать">
+                                    <i class="bi bi-pencil"></i>
+                                </button>
+                                <button class="btn-icon delete" @onclick="() => ToggleActive(service)" title="@(service.IsActive ? "Деактивировать" : "Активировать")">
+                                    <i class="bi bi-@(service.IsActive ? "eye-slash" : "eye")"></i>
+                                </button>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    }
+</div>
+
+@if (showForm)
+{
+    <div class="modal-overlay" @onclick="CloseForm">
+        <div class="modal-content" @onclick:stopPropagation="true">
+            <div class="modal-header">
+                <h3><i class="bi bi-grid"></i> @(editingService?.Id > 0 ? "Редактирование" : "Новая услуга")</h3>
+                <button class="modal-close" @onclick="CloseForm">✕</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label class="form-label">Название</label>
+                    <input type="text" class="form-control" @bind="formName" placeholder="Название услуги" />
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Описание</label>
+                    <textarea class="form-control" @bind="formDescription" rows="3" placeholder="Описание..."></textarea>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Цена (₽)</label>
+                    <input type="number" class="form-control" @bind="formPrice" placeholder="0" />
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Длительность (мин)</label>
+                    <input type="number" class="form-control" @bind="formDuration" placeholder="60" />
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn-secondary" @onclick="CloseForm">Отмена</button>
+                <button class="btn-primary" @onclick="SaveService">Сохранить</button>
+            </div>
+        </div>
+    </div>
+}
+
+@code {
+    private bool isLoading = true;
+    private List<Service> services = new();
+
+    private bool showForm = false;
+    private Service? editingService;
+    private string formName = "";
+    private string formDescription = "";
+    private decimal formPrice = 0;
+    private int formDuration = 60;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadServices();
+    }
+
+    private async Task LoadServices()
+    {
+        try
+        {
+            isLoading = true;
+            var all = await ServiceRepo.GetAllAsync();
+            services = all.ToList();
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Ошибка загрузки услуг: {ex.Message}");
+        }
+        finally
+        {
+            isLoading = false;
+        }
+    }
+
+    private void ShowAddForm()
+    {
+        editingService = new Service();
+        formName = "";
+        formDescription = "";
+        formPrice = 0;
+        formDuration = 60;
+        showForm = true;
+    }
+
+    private void EditService(Service service)
+    {
+        editingService = service;
+        formName = service.Name;
+        formDescription = service.Description ?? "";
+        formPrice = service.Price;
+        formDuration = service.DurationMinutes;
+        showForm = true;
+    }
+
+    private async Task SaveService()
+    {
+        try
+        {
+            if (string.IsNullOrWhiteSpace(formName)) return;
+
+            if (editingService != null)
+            {
+                editingService.Name = formName;
+                editingService.Description = formDescription;
+                editingService.Price = formPrice;
+                editingService.DurationMinutes = formDuration;
+
+                if (editingService.Id == 0)
+                {
+                    editingService.IsActive = true;
+                    await ServiceRepo.AddAsync(editingService);
+                }
+                else
+                {
+                    ServiceRepo.Update(editingService);
+                }
+
+                await ServiceRepo.SaveChangesAsync();
+                await LoadServices();
+                CloseForm();
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Ошибка сохранения: {ex.Message}");
+        }
+    }
+
+    private async Task ToggleActive(Service service)
+    {
+        try
+        {
+            service.IsActive = !service.IsActive;
+            ServiceRepo.Update(service);
+            await ServiceRepo.SaveChangesAsync();
+            await LoadServices();
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Ошибка: {ex.Message}");
+        }
+    }
+
+    private void CloseForm()
+    {
+        showForm = false;
+        editingService = null;
+    }
+}

@@ -1,0 +1,325 @@
+﻿@page "/admin/login"
+@using LashBooking.Domain.Entities
+@using LashBooking.Domain.Interfaces
+@using System.Security.Cryptography
+@using System.Text
+
+@inject IRepository<Client> ClientRepo
+@inject IJSRuntime JSRuntime
+@inject NavigationManager NavigationManager
+
+<div class="auth-container">
+    <div class="auth-card">
+        <h2 class="auth-title">
+            @(isLoginMode ? "Вход в личный кабинет" : "Регистрация")
+        </h2>
+        <p class="auth-subtitle">
+            @(isLoginMode ? "Введите номер телефона и пароль" : "Создайте аккаунт")
+        </p>
+
+        <div class="auth-toggle">
+            <button class="toggle-btn @(isLoginMode ? "active" : "")" @onclick="() => SetMode(true)">
+                Вход
+            </button>
+            <button class="toggle-btn @(!isLoginMode ? "active" : "")" @onclick="() => SetMode(false)">
+                Регистрация
+            </button>
+        </div>
+
+        @if (isLoginMode)
+        {
+            <div class="auth-form">
+                <div class="form-group">
+                    <label class="form-label">Телефон</label>
+                    <input type="tel" class="form-input" @bind="loginPhone"
+                           placeholder="+7 (999) 123-45-67" />
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Пароль</label>
+                    <input type="password" class="form-input" @bind="loginPassword"
+                           placeholder="Введите пароль" />
+                </div>
+
+                <button class="auth-btn" @onclick="HandleLogin" disabled="@isLoading">
+                    @if (isLoading)
+                    {
+                        <span class="spinner"></span>
+                        <span>Вход...</span>
+                    }
+                    else
+                    {
+                        <span>Войти</span>
+                    }
+                </button>
+            </div>
+        }
+        else
+        {
+            <div class="auth-form">
+                <div class="form-group">
+                    <label class="form-label">Имя</label>
+                    <input type="text" class="form-input" @bind="regName"
+                           placeholder="Ваше имя" />
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Телефон</label>
+                    <input type="tel" class="form-input" @bind="regPhone"
+                           placeholder="+7 (999) 123-45-67" />
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Пароль</label>
+                    <input type="password" class="form-input" @bind="regPassword"
+                           placeholder="Минимум 6 символов" />
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Повторите пароль</label>
+                    <input type="password" class="form-input" @bind="regConfirmPassword"
+                           placeholder="Повторите пароль" />
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Email (необязательно)</label>
+                    <input type="email" class="form-input" @bind="regEmail"
+                           placeholder="ivan@example.com" />
+                </div>
+
+                <button class="auth-btn" @onclick="HandleRegister" disabled="@isLoading">
+                    @if (isLoading)
+                    {
+                        <span class="spinner"></span>
+                        <span>Регистрация...</span>
+                    }
+                    else
+                    {
+                        <span>Зарегистрироваться</span>
+                    }
+                </button>
+            </div>
+        }
+
+        @if (!string.IsNullOrEmpty(errorMessage))
+        {
+            <div class="alert alert-danger">
+                <span class="alert-icon">⚠️</span>
+                @errorMessage
+            </div>
+        }
+
+        @if (!string.IsNullOrEmpty(successMessage))
+        {
+            <div class="alert alert-success">
+                <span class="alert-icon">✅</span>
+                @successMessage
+            </div>
+        }
+    </div>
+</div>
+
+@code {
+    private bool isLoginMode = true;
+
+    // Поля для входа
+    private string loginPhone = "";
+    private string loginPassword = "";
+
+    // Поля для регистрации
+    private string regName = "";
+    private string regPhone = "";
+    private string regPassword = "";
+    private string regConfirmPassword = "";
+    private string regEmail = "";
+
+    private bool isLoading = false;
+    private string? errorMessage;
+    private string? successMessage;
+
+    private void SetMode(bool mode)
+    {
+        isLoginMode = mode;
+        errorMessage = null;
+        successMessage = null;
+
+        // Очищаем поля
+        loginPhone = "";
+        loginPassword = "";
+        regName = "";
+        regPhone = "";
+        regPassword = "";
+        regConfirmPassword = "";
+        regEmail = "";
+    }
+
+    // ===== ПРОСТОЕ ХЕШИРОВАНИЕ ПАРОЛЕЙ =====
+
+    private string HashPassword(string password)
+    {
+        // Генерируем соль
+        byte[] salt = new byte[16];
+        RandomNumberGenerator.Fill(salt);
+
+        // Хешируем пароль
+        using var pbkdf2 = new Rfc2898DeriveBytes(password, salt, 100000, HashAlgorithmName.SHA256);
+        byte[] hash = pbkdf2.GetBytes(32);
+
+        // Объединяем соль и хеш
+        byte[] hashBytes = new byte[48];
+        Buffer.BlockCopy(salt, 0, hashBytes, 0, 16);
+        Buffer.BlockCopy(hash, 0, hashBytes, 16, 32);
+
+        return Convert.ToBase64String(hashBytes);
+    }
+
+    private bool VerifyPassword(string password, string storedHash)
+    {
+        try
+        {
+            byte[] hashBytes = Convert.FromBase64String(storedHash);
+            if (hashBytes.Length != 48) return false;
+
+            // Извлекаем соль
+            byte[] salt = new byte[16];
+            Buffer.BlockCopy(hashBytes, 0, salt, 0, 16);
+
+            // Хешируем введенный пароль
+            using var pbkdf2 = new Rfc2898DeriveBytes(password, salt, 100000, HashAlgorithmName.SHA256);
+            byte[] hash = pbkdf2.GetBytes(32);
+
+            // Сравниваем хеши
+            for (int i = 0; i < 32; i++)
+            {
+                if (hash[i] != hashBytes[i + 16])
+                    return false;
+            }
+            return true;
+        }
+        catch
+        {
+            return false;
+        }
+    }
+
+    // ===== ОБРАБОТЧИКИ =====
+
+    private async Task HandleLogin()
+    {
+        try
+        {
+            isLoading = true;
+            errorMessage = null;
+
+            if (string.IsNullOrWhiteSpace(loginPhone) || string.IsNullOrWhiteSpace(loginPassword))
+            {
+                errorMessage = "Заполните все поля";
+                return;
+            }
+
+            var cleanPhone = CleanPhone(loginPhone);
+            var clients = await ClientRepo.FindAsync(c => c.Phone == cleanPhone);
+            var client = clients.FirstOrDefault();
+
+            if (client == null)
+            {
+                errorMessage = "Пользователь не найден";
+                return;
+            }
+
+            if (!VerifyPassword(loginPassword, client.Password ?? ""))
+            {
+                errorMessage = "Неверный пароль";
+                return;
+            }
+
+            await JSRuntime.InvokeVoidAsync("localStorage.setItem", "currentClientId", client.Id.ToString());
+            await JSRuntime.InvokeVoidAsync("localStorage.setItem", "currentClientName", client.Name);
+
+            successMessage = "Успешный вход!";
+            await Task.Delay(1000);
+            NavigationManager.NavigateTo("/profile");
+        }
+        catch (Exception ex)
+        {
+            errorMessage = "Ошибка при входе";
+            Console.WriteLine(ex.Message);
+        }
+        finally
+        {
+            isLoading = false;
+        }
+    }
+
+    private async Task HandleRegister()
+    {
+        try
+        {
+            isLoading = true;
+            errorMessage = null;
+
+            // Простая валидация
+            if (string.IsNullOrWhiteSpace(regName) ||
+                string.IsNullOrWhiteSpace(regPhone) ||
+                string.IsNullOrWhiteSpace(regPassword))
+            {
+                errorMessage = "Заполните обязательные поля";
+                return;
+            }
+
+            if (regPassword.Length < 6)
+            {
+                errorMessage = "Пароль должен быть не менее 6 символов";
+                return;
+            }
+
+            if (regPassword != regConfirmPassword)
+            {
+                errorMessage = "Пароли не совпадают";
+                return;
+            }
+
+            var cleanPhone = CleanPhone(regPhone);
+            var existing = await ClientRepo.FindAsync(c => c.Phone == cleanPhone);
+
+            if (existing.Any())
+            {
+                errorMessage = "Этот телефон уже зарегистрирован";
+                return;
+            }
+
+            var newClient = new Client
+            {
+                Name = regName,
+                Phone = cleanPhone,
+                Password = HashPassword(regPassword),
+                Email = string.IsNullOrWhiteSpace(regEmail) ? null : regEmail,
+                CreatedAt = DateTime.Now
+            };
+
+            await ClientRepo.AddAsync(newClient);
+            await ClientRepo.SaveChangesAsync();
+
+            await JSRuntime.InvokeVoidAsync("localStorage.setItem", "currentClientId", newClient.Id.ToString());
+            await JSRuntime.InvokeVoidAsync("localStorage.setItem", "currentClientName", newClient.Name);
+
+            successMessage = "Регистрация успешна!";
+            await Task.Delay(1000);
+            NavigationManager.NavigateTo("/profile");
+        }
+        catch (Exception ex)
+        {
+            errorMessage = "Ошибка при регистрации";
+            Console.WriteLine(ex.Message);
+        }
+        finally
+        {
+            isLoading = false;
+        }
+    }
+
+    private string CleanPhone(string phone)
+    {
+        return new string(phone.Where(c => char.IsDigit(c) || c == '+').ToArray());
+    }
+}

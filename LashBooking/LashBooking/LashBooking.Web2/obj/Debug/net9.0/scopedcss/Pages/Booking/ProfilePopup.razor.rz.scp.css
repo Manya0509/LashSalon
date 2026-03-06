@@ -1,0 +1,578 @@
+/* ===== ПОПАП С ЗАПИСЯМИ ===== */
+
+/* Затемненный фон */
+.popup-overlay[b-tz27q0x9y3] {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(5px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s ease;
+}
+
+    .popup-overlay.visible[b-tz27q0x9y3] {
+        opacity: 1;
+        visibility: visible;
+    }
+
+/* Контейнер попапа */
+.popup-container[b-tz27q0x9y3] {
+    width: 90%;
+    max-width: 600px;
+    max-height: 80vh;
+    background: white;
+    border-radius: 30px;
+    box-shadow: 0 30px 60px rgba(0, 0, 0, 0.3);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    animation: popupSlideUp-b-tz27q0x9y3 0.4s ease;
+}
+
+@keyframes popupSlideUp-b-tz27q0x9y3 {
+    from {
+        opacity: 0;
+        transform: translateY(50px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Заголовок попапа */
+.popup-header[b-tz27q0x9y3] {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 25px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+}
+
+.popup-title[b-tz27q0x9y3] {
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin: 0;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+    .popup-title i[b-tz27q0x9y3] {
+        font-size: 1.8rem;
+    }
+
+.popup-close-btn[b-tz27q0x9y3] {
+    background: rgba(255, 255, 255, 0.2);
+    border: none;
+    color: white;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+    .popup-close-btn:hover[b-tz27q0x9y3] {
+        background: rgba(255, 255, 255, 0.3);
+        transform: rotate(90deg);
+    }
+
+/* Информация о клиенте */
+.popup-client-info[b-tz27q0x9y3] {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    padding: 15px 25px;
+    background: #f8f9fa;
+    border-bottom: 1px solid #e9ecef;
+}
+
+.client-avatar[b-tz27q0x9y3] {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 1.8rem;
+}
+
+.client-details[b-tz27q0x9y3] {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.client-label[b-tz27q0x9y3] {
+    font-size: 0.85rem;
+    color: #6c757d;
+}
+
+.client-name[b-tz27q0x9y3] {
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: #212529;
+}
+
+.logout-icon-btn[b-tz27q0x9y3] {
+    background: transparent;
+    border: 2px solid #dc3545;
+    color: #dc3545;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+    .logout-icon-btn:hover[b-tz27q0x9y3] {
+        background: #dc3545;
+        color: white;
+        transform: translateY(-2px);
+    }
+
+/* Контент попапа */
+.popup-content[b-tz27q0x9y3] {
+    padding: 20px 25px;
+    overflow-y: auto;
+    max-height: calc(80vh - 180px);
+}
+
+/* Загрузка */
+.popup-loading[b-tz27q0x9y3] {
+    text-align: center;
+    padding: 40px 20px;
+}
+
+    .popup-loading .spinner[b-tz27q0x9y3] {
+        width: 40px;
+        height: 40px;
+        border: 4px solid #f3f4f6;
+        border-top-color: #667eea;
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+        margin: 0 auto 15px;
+    }
+
+/* Пустое состояние */
+.popup-empty[b-tz27q0x9y3] {
+    text-align: center;
+    padding: 40px 20px;
+}
+
+    .popup-empty .empty-icon[b-tz27q0x9y3] {
+        font-size: 60px;
+        margin-bottom: 20px;
+        opacity: 0.5;
+    }
+
+    .popup-empty h4[b-tz27q0x9y3] {
+        font-size: 1.4rem;
+        color: #212529;
+        margin-bottom: 10px;
+    }
+
+    .popup-empty p[b-tz27q0x9y3] {
+        color: #6c757d;
+        margin-bottom: 25px;
+    }
+
+.btn-book-small[b-tz27q0x9y3] {
+    padding: 12px 30px;
+    background: #10b981;
+    color: white;
+    border: none;
+    border-radius: 40px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+    .btn-book-small:hover[b-tz27q0x9y3] {
+        background: #059669;
+        transform: translateY(-2px);
+        box-shadow: 0 10px 20px rgba(16, 185, 129, 0.3);
+    }
+
+/* Список записей */
+.popup-appointments[b-tz27q0x9y3] {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+/* Карточка записи в попапе */
+.popup-appointment-card[b-tz27q0x9y3] {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    padding: 15px;
+    background: white;
+    border-radius: 16px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    border-left: 4px solid transparent;
+    transition: all 0.3s ease;
+    position: relative;
+}
+
+    .popup-appointment-card:hover[b-tz27q0x9y3] {
+        transform: translateX(5px);
+        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+    }
+
+    /* Статусы для карточек */
+    .popup-appointment-card.status-scheduled[b-tz27q0x9y3] {
+        border-left-color: #ffc107;
+    }
+
+    .popup-appointment-card.status-confirmed[b-tz27q0x9y3] {
+        border-left-color: #10b981;
+    }
+
+    .popup-appointment-card.status-completed[b-tz27q0x9y3] {
+        border-left-color: #6c757d;
+        opacity: 0.8;
+    }
+
+    .popup-appointment-card.status-cancelled[b-tz27q0x9y3] {
+        border-left-color: #dc3545;
+        opacity: 0.7;
+    }
+
+/* Время в карточке */
+.time-badge-large[b-tz27q0x9y3] {
+    background: #f8f9fa;
+    padding: 8px 12px;
+    border-radius: 12px;
+    text-align: center;
+    min-width: 80px;
+}
+
+.time-day[b-tz27q0x9y3] {
+    display: block;
+    font-size: 0.9rem;
+    color: #6c757d;
+}
+
+.time-hour[b-tz27q0x9y3] {
+    display: block;
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: #212529;
+    line-height: 1.2;
+}
+
+/* Информация об услуге */
+.appointment-info[b-tz27q0x9y3] {
+    flex: 1;
+}
+
+.service-title[b-tz27q0x9y3] {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #212529;
+    margin: 0 0 5px 0;
+}
+
+.service-meta[b-tz27q0x9y3] {
+    display: flex;
+    gap: 15px;
+    margin-bottom: 8px;
+}
+
+.meta-item[b-tz27q0x9y3] {
+    font-size: 0.9rem;
+    color: #6c757d;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+    .meta-item i[b-tz27q0x9y3] {
+        font-size: 0.9rem;
+    }
+
+/* Бейдж статуса маленький */
+.status-badge-small[b-tz27q0x9y3] {
+    display: inline-block;
+    padding: 4px 10px;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 600;
+}
+
+    .status-badge-small.status-scheduled[b-tz27q0x9y3] {
+        background: #fff3cd;
+        color: #856404;
+    }
+
+    .status-badge-small.status-confirmed[b-tz27q0x9y3] {
+        background: #d4edda;
+        color: #155724;
+    }
+
+    .status-badge-small.status-completed[b-tz27q0x9y3] {
+        background: #e2e3e5;
+        color: #383d41;
+    }
+
+    .status-badge-small.status-cancelled[b-tz27q0x9y3] {
+        background: #f8d7da;
+        color: #721c24;
+    }
+
+/* Кнопка отмены маленькая */
+.btn-cancel-small[b-tz27q0x9y3] {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: transparent;
+    border: 2px solid #dc3545;
+    color: #dc3545;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.1rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+    .btn-cancel-small:hover[b-tz27q0x9y3] {
+        background: #dc3545;
+        color: white;
+        transform: rotate(90deg);
+    }
+
+/* Нижняя панель */
+.popup-footer[b-tz27q0x9y3] {
+    display: flex;
+    gap: 10px;
+    padding: 15px 25px;
+    background: #f8f9fa;
+    border-top: 1px solid #e9ecef;
+}
+
+.btn-footer-secondary[b-tz27q0x9y3], .btn-footer-primary[b-tz27q0x9y3] {
+    flex: 1;
+    padding: 12px;
+    border-radius: 12px;
+    font-size: 1rem;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border: none;
+}
+
+.btn-footer-secondary[b-tz27q0x9y3] {
+    background: #e9ecef;
+    color: #495057;
+}
+
+    .btn-footer-secondary:hover[b-tz27q0x9y3] {
+        background: #dee2e6;
+        transform: translateY(-2px);
+    }
+
+.btn-footer-primary[b-tz27q0x9y3] {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+}
+
+    .btn-footer-primary:hover[b-tz27q0x9y3] {
+        transform: translateY(-2px);
+        box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+    }
+
+/* Модальное окно подтверждения внутри попапа */
+.popup-modal-overlay[b-tz27q0x9y3] {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 10000;
+}
+
+.popup-modal-card[b-tz27q0x9y3] {
+    background: white;
+    border-radius: 24px;
+    padding: 30px;
+    max-width: 350px;
+    width: 90%;
+    text-align: center;
+    animation: modalPop-b-tz27q0x9y3 0.3s ease;
+}
+
+@keyframes modalPop-b-tz27q0x9y3 {
+    from {
+        opacity: 0;
+        transform: scale(0.8);
+    }
+
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+.modal-icon[b-tz27q0x9y3] {
+    font-size: 3rem;
+    margin-bottom: 15px;
+}
+
+.popup-modal-card h4[b-tz27q0x9y3] {
+    font-size: 1.4rem;
+    color: #212529;
+    margin-bottom: 10px;
+}
+
+.popup-modal-card p[b-tz27q0x9y3] {
+    color: #6c757d;
+    margin-bottom: 25px;
+}
+
+.modal-buttons[b-tz27q0x9y3] {
+    display: flex;
+    gap: 10px;
+}
+
+.btn-modal-secondary[b-tz27q0x9y3], .btn-modal-danger[b-tz27q0x9y3] {
+    flex: 1;
+    padding: 12px;
+    border-radius: 12px;
+    font-size: 0.95rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border: none;
+}
+
+.btn-modal-secondary[b-tz27q0x9y3] {
+    background: #e9ecef;
+    color: #495057;
+}
+
+    .btn-modal-secondary:hover[b-tz27q0x9y3] {
+        background: #dee2e6;
+    }
+
+.btn-modal-danger[b-tz27q0x9y3] {
+    background: #dc3545;
+    color: white;
+}
+
+    .btn-modal-danger:hover[b-tz27q0x9y3] {
+        background: #c82333;
+        transform: translateY(-2px);
+        box-shadow: 0 8px 16px rgba(220, 53, 69, 0.3);
+    }
+
+/* Скроллбар для попапа */
+.popup-content[b-tz27q0x9y3]::-webkit-scrollbar {
+    width: 6px;
+}
+
+.popup-content[b-tz27q0x9y3]::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 10px;
+}
+
+.popup-content[b-tz27q0x9y3]::-webkit-scrollbar-thumb {
+    background: #c1c1c1;
+    border-radius: 10px;
+}
+
+    .popup-content[b-tz27q0x9y3]::-webkit-scrollbar-thumb:hover {
+        background: #a8a8a8;
+    }
+
+/* Адаптивность для мобильных */
+@media (max-width: 480px) {
+    .popup-container[b-tz27q0x9y3] {
+        width: 95%;
+        max-height: 90vh;
+    }
+
+    .popup-header[b-tz27q0x9y3] {
+        padding: 15px;
+    }
+
+    .popup-title[b-tz27q0x9y3] {
+        font-size: 1.2rem;
+    }
+
+    .popup-client-info[b-tz27q0x9y3] {
+        padding: 12px 15px;
+    }
+
+    .client-avatar[b-tz27q0x9y3] {
+        width: 40px;
+        height: 40px;
+        font-size: 1.5rem;
+    }
+
+    .popup-content[b-tz27q0x9y3] {
+        padding: 15px;
+    }
+
+    .popup-appointment-card[b-tz27q0x9y3] {
+        padding: 12px;
+    }
+
+    .time-badge-large[b-tz27q0x9y3] {
+        min-width: 70px;
+        padding: 6px 8px;
+    }
+
+    .time-hour[b-tz27q0x9y3] {
+        font-size: 1rem;
+    }
+
+    .service-title[b-tz27q0x9y3] {
+        font-size: 1rem;
+    }
+
+    .service-meta[b-tz27q0x9y3] {
+        flex-direction: column;
+        gap: 5px;
+    }
+
+    .popup-footer[b-tz27q0x9y3] {
+        padding: 12px 15px;
+        flex-direction: column;
+    }
+
+    .modal-buttons[b-tz27q0x9y3] {
+        flex-direction: column;
+    }
+}

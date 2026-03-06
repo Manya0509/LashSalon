@@ -38,16 +38,14 @@ namespace LashBooking.Infrastructure.Repositories
             await _dbSet.AddAsync(entity);
         }
 
-        public virtual async Task UpdateAsync(T entity) // Обновляет сущность
+        public virtual void Update(T entity) // Обновляет сущность
         {
             _dbSet.Update(entity);
-            await Task.CompletedTask;
         }
 
-        public virtual async Task DeleteAsync(T entity) // Удаляет сущность.
+        public virtual void Delete(T entity) // Удаляет сущность.
         {
             _dbSet.Remove(entity);
-            await Task.CompletedTask;
         }
 
         public virtual async Task SaveChangesAsync() // Асинхронно сохраняет все изменения в базе данных.

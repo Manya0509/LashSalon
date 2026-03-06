@@ -1,0 +1,159 @@
+﻿@page "/about"
+@inject NavigationManager NavigationManager
+
+<!-- Кнопка назад -->
+<div class="back-button-container">
+    <button class="back-btn" @onclick="GoBack">
+        <span class="back-icon">←</span> Назад
+    </button>
+</div>
+
+<div class="about-container">
+
+    <!-- Блок с фото и именем -->
+    <div class="about-header">
+        <div class="profile-image-wrapper">
+            <img src="/images/avatar.jpg" alt="Дарья Лукина" class="profile-image" />
+        </div>
+        <div class="profile-title">
+            <h1 class="master-name">Дарья Лукина</h1>
+            <p class="master-role">Мастер Lash-стилист</p>
+            <div class="experience-badge">Опыт работы 5+ лет</div>
+        </div>
+    </div>
+
+    <!-- Блок с цитатой -->
+    <div class="quote-block">
+        <p class="quote-text">
+            "Ресницы — это не просто красота, это искусство подчеркнуть вашу индивидуальность"
+        </p>
+    </div>
+
+    <!-- О себе в двух колонках -->
+    <div class="about-grid">
+        <div class="about-card">
+            <h3>✨ Обо мне</h3>
+            <p>
+                Привет! Меня зовут Дарья. Я сертифицированный Lash-стилист с опытом работы более 5 лет.
+                Моя специализация — создание натуральных и выразительных образов с помощью наращивания ресниц.
+            </p>
+            <p>
+                Я постоянно обучаюсь новым техникам, слежу за трендами и использую только премиальные
+                материалы, чтобы каждая клиентка чувствовала себя уверенно и красиво.
+            </p>
+        </div>
+
+        <div class="about-card">
+            <h3>🎓 Образование</h3>
+            <ul class="education-list">
+                <li>✓ Школа LashStudio (2019)</li>
+                <li>✓ Школа LashTime (2020)</li>
+                <li>✓ Сертифицированный мастер бровист (2021)</li>
+                <li>✓ Сертифицированный мастер по ламинированию бровей (2021)</li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- Преимущества -->
+    <h3 class="section-title">Почему выбирают меня</h3>
+    <div class="advantages-grid">
+        <div class="advantage-item">
+            <div class="advantage-icon">🔬</div>
+            <h4>Стерильность</h4>
+            <p>Все инструменты проходят многоступенчатую обработку</p>
+        </div>
+        <div class="advantage-item">
+            <div class="advantage-icon">💎</div>
+            <h4>Материалы</h4>
+            <p>Только премиальные бренды: Lovely, Enigma, Be Perfect</p>
+        </div>
+        <div class="advantage-item">
+            <div class="advantage-icon">⏱️</div>
+            <h4>Скорость</h4>
+            <p>Наращивание за 1.5-2 часа без потери качества</p>
+        </div>
+        <div class="advantage-item">
+            <div class="advantage-icon">❤️</div>
+            <h4>Гарантия</h4>
+            <p>Даю гарантию на работу до 3-х недель</p>
+        </div>
+    </div>
+
+    <!-- Сертификаты -->
+    <h3 class="section-title">Мои сертификаты</h3>
+
+    <!-- Первая строка - 5 вертикальных сертификатов -->
+    <div class="certificates-grid">
+        <div class="certificate-item">
+            <img src="/images/Certificate/cert1.jpg" alt="Сертификат 1" class="certificate-image" />
+        </div>
+        <div class="certificate-item">
+            <img src="/images/Certificate/cert3.jpg" alt="Сертификат 2" class="certificate-image" />
+        </div>
+        <div class="certificate-item">
+            <img src="/images/Certificate/cert2.jpg" alt="Сертификат 3" class="certificate-image" />
+        </div>
+        <div class="certificate-item">
+            <img src="/images/Certificate/cert4.jpg" alt="Сертификат 4" class="certificate-image" />
+        </div>
+        <div class="certificate-item">
+            <img src="/images/Certificate/cert5.jpg" alt="Сертификат 5" class="certificate-image" />
+        </div>
+    </div>
+    <div class="certificate-row-full">
+        <div class="certificate-item certificate-horizontal">
+            <img src="/images/Certificate/cert6.jpg" alt="Сертификат 6" class="certificate-image-horizontal" />
+        </div>
+    </div>
+
+    <!-- Контакты -->
+    <div class="contact-section">
+        <h3 class="section-title">Как со мной связаться</h3>
+        <div class="contact-links">
+            <a href="https://wa.me/79994103801" class="contact-link whatsapp" target="_blank">
+                <i class="bi bi-whatsapp"></i> WhatsApp
+            </a>
+            <a href="https://t.me/79994103801" class="contact-link telegram" target="_blank">
+                <i class="bi bi-telegram"></i> Telegram
+            </a>
+            <div class="contact-link phone" @onclick="ShowPhone">
+                <i class="bi bi-telephone-fill"></i> Позвонить
+            </div>
+        </div>
+
+        <!-- Адрес и режим работы -->
+        <div class="info-block">
+            <p><i class="bi bi-geo-alt-fill"></i> г. Чита, ул. Журавлева, д. 72</p>
+            <p><i class="bi bi-clock-fill"></i> Ежедневно с 9:00 до 18:00</p>
+        </div>
+
+        <!-- Всплывающее окно с номером телефона -->
+        @if (showPhonePopup)
+        {
+            <div class="phone-popup show">
+                <div class="phone-popup-content">
+                    <i class="bi bi-telephone-fill"></i>
+                    <span class="phone-number">+7 (999) 410-38-01</span>
+                    <button class="phone-popup-close" @onclick="HidePhone">✕</button>
+                </div>
+            </div>
+        }
+    </div>
+
+</div>
+
+@code {
+    private bool showPhonePopup = false;
+
+    void GoBack() => NavigationManager.NavigateTo("/");
+
+    void ShowPhone()
+    {
+        showPhonePopup = true;
+    }
+
+    void HidePhone()
+    {
+        showPhonePopup = false;
+    }
+}

@@ -1,18 +1,56 @@
-﻿@page "/"            
-@page "/main"          
+﻿@page "/"
+@page "/main"
+@inject IJSRuntime JSRuntime
+@inject NavigationManager NavigationManager
 
 <!-- Блок с аватаром на весь экран -->
 <div class="avatar-wrapper-fullscreen">
-    <img src="/images/avatar.jpg" class="avatar-img-fullscreen" />  <!-- Изображение аватара -->
-    <div class="overlay bottom-text">                               <!-- Наложение с текстом поверх изображения -->
-        <h2 class="name">Дарья Лукина</h2>                          <!-- Имя мастера -->
-        <h5 class="studio">Студия LashLukina</h5>                   <!-- Название студии -->
+    <img src="/images/avatar.jpg" class="avatar-img-fullscreen" />
+
+    <!-- Кнопка для администратора (всегда видна слева) -->
+    <div class="admin-login-header">
+        <button class="btn-admin-header" @onclick="GoToAdmin">
+            <i class="bi bi-shield-lock"></i>
+            <span>Админ</span>
+        </button>
+    </div>
+
+    <!-- Динамический блок: либо имя клиента, либо кнопка входа -->
+    @if (isAuthenticated)
+    {
+        <div class="client-name-header">
+            <div class="client-name-badge">
+                <i class="bi bi-person-circle"></i>
+                <span>@clientName</span>
+            </div>
+        </div>
+        <!-- Кнопка в личный кабинет -->
+        <div class="profile-btn">
+            <button class="btn-profile" @onclick="@(() => NavigateTo("profile"))">
+                <i class="bi bi-journal-text"></i>
+                <span>Мои записи</span>
+            </button>
+        </div>
+    }
+    else
+    {
+        <div class="admin-login-btn">
+            <button class="btn-login" @onclick="@(() => NavigateTo("admin/login"))">
+                <i class="bi bi-person-circle"></i>
+                <span>Вход</span>
+            </button>
+        </div>
+    }
+
+    <div class="overlay bottom-text">
+        <h2 class="name">Дарья Лукина</h2>
+        <h5 class="studio">Студия LashLukina</h5>
     </div>
 </div>
 
 <!-- Основное содержимое страницы -->
 <div class="main-content text-center mt-3">
-    <p>г. Чита, ул. Журавлева, д. 72</p>                              <!-- Адрес студии -->
+    <p>г. Чита, ул. Журавлева, д. 72</p>
 
     <!-- Навигационные кнопки по разделам -->
     <div class="d-flex justify-content-center mb-4 flex-wrap gap-2">
@@ -22,41 +60,38 @@
         <button class="btn btn-outline-primary" @onclick="@(() => NavigateTo("about"))">Обо мне</button>
     </div>
 
-    <h4>Добро пожаловать, запишитесь онлайн:</h4>                     <!-- Приветствие и призыв к действию -->
+    <h4>Добро пожаловать, запишитесь онлайн:</h4>
     <button class="btn btn-success mt-2 mb-4" @onclick="@(() => NavigateTo("booking"))">
-        Записаться онлайн                                              <!-- Основная кнопка записи -->
+        Записаться онлайн
     </button>
 
-    <h5 class="mt-4 mb-3">Связаться со мной:</h5>                     <!-- Заголовок блока контактов -->
+    <h5 class="mt-4 mb-3">Связаться со мной:</h5>
 
     <!-- Блок кнопок для связи -->
     <div class="contact-buttons">
-        <!-- Кнопка WhatsApp -->
         <button class="contact-btn whatsapp" @onclick="OpenWhatsApp">
-            <i class="bi bi-whatsapp"></i>                            <!-- Иконка WhatsApp -->
+            <i class="bi bi-whatsapp"></i>
             <span>WhatsApp</span>
         </button>
 
-        <!-- Кнопка Telegram -->
         <button class="contact-btn telegram" @onclick="OpenTelegram">
-            <i class="bi bi-telegram"></i>                            <!-- Иконка Telegram -->
+            <i class="bi bi-telegram"></i>
             <span>Telegram</span>
         </button>
 
-        <!-- Кнопка звонка -->
         <button class="contact-btn phone" @onclick="ShowPhone">
-            <i class="bi bi-telephone-fill"></i>                      <!-- Иконка телефона -->
+            <i class="bi bi-telephone-fill"></i>
             <span>Позвонить</span>
         </button>
 
-        <!-- Всплывающее окно с номером телефона (показывается условно) -->
+        <!-- Всплывающее окно с номером телефона -->
         @if (showPhonePopup)
         {
-            <div class="phone-popup @(showPhonePopup ? "show" : "")">
+            <div class="phone-popup show">
                 <div class="phone-popup-content">
                     <i class="bi bi-telephone-fill"></i>
-                    <span class="phone-number">@phoneNumber</span>    <!-- Отображение номера телефона -->
-                    <button class="phone-popup-close" @onclick="HidePhone">✕</button>  <!-- Кнопка закрытия -->
+                    <span class="phone-number">@phoneNumber</span>
+                    <button class="phone-popup-close" @onclick="HidePhone">✕</button>
                 </div>
             </div>
         }
@@ -64,37 +99,57 @@
 </div>
 
 @code {
-    private string phoneNumber = "+7 (999) 410-38-01";    <!-- Номер телефона для отображения -->
-    private bool showPhonePopup = false;                   <!-- Флаг отображения всплывающего окна с телефоном -->
+    private string phoneNumber = "+7 (999) 410-38-01";
+    private bool showPhonePopup = false;
+    private bool isAuthenticated = false;
+    private string clientName = "";
 
-    <!-- Показать всплывающее окно с телефоном -->
+    protected override async Task OnInitializedAsync()
+    {
+        await CheckAuth();
+    }
+
+    private async Task CheckAuth()
+    {
+        try
+        {
+            clientName = await JSRuntime.InvokeAsync<string>("localStorage.getItem", "currentClientName");
+            isAuthenticated = !string.IsNullOrEmpty(clientName);
+        }
+        catch
+        {
+            isAuthenticated = false;
+            clientName = "";
+        }
+    }
+
     void ShowPhone()
     {
         showPhonePopup = true;
     }
 
-    <!-- Скрыть всплывающее окно с телефоном -->
     void HidePhone()
     {
         showPhonePopup = false;
     }
 
-    <!-- Навигация на указанную страницу -->
-    void NavigateTo(string page) => NavigationManager.NavigateTo($"/{page}");
+    void NavigateTo(string page)
+    {
+        NavigationManager.NavigateTo($"/{page}");
+    }
 
-    <!-- Инъекция сервиса навигации Blazor -->
-    [Inject]
-    private NavigationManager NavigationManager { get; set; } = default!;
-
-    <!-- Открыть WhatsApp в новой вкладке -->
     void OpenWhatsApp()
     {
         NavigationManager.NavigateTo("https://wa.me/79994103801", true);
     }
 
-    <!-- Открыть Telegram в новой вкладке -->
     void OpenTelegram()
     {
         NavigationManager.NavigateTo("https://t.me/79994103801", true);
+    }
+
+    private void GoToAdmin()
+    {
+        NavigationManager.NavigateTo("/admin");
     }
 }

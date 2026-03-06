@@ -1,77 +1,131 @@
-﻿@page "/reviews"                              
-@using LashBooking.Domain.Entities             
-@using LashBooking.Domain.Interfaces           
-@inject IRepository<Review> ReviewRepo    
-@inject IRepository<Client> ClientRepo         
+﻿@page "/reviews"
+@using LashBooking.Domain.Entities
+@using LashBooking.Domain.Interfaces
+@inject IRepository<Review> ReviewRepo
+@inject IRepository<Client> ClientRepo
 @inject IRepository<Appointment> AppointmentRepo
+@inject IJSRuntime JSRuntime
+@inject NavigationManager NavigationManager
+
+<!-- Кнопка назад (как в регистрации) -->
+<div class="back-button-container">
+    <button class="back-btn" @onclick="GoBack">
+        <span class="back-icon">←</span> Назад
+    </button>
+</div>
 
 <div class="container mt-5">
 
     <!-- Заголовок страницы -->
-    <h2 class="text-center mb-4">Отзывы клиентов</h2>  
+    <h2 class="text-center mb-4">Отзывы клиентов</h2>
 
     <!-- Средний рейтинг -->
     <div class="text-center mb-4">
-        <h4>Средняя оценка: @AverageRating ⭐</h4>      <!-- Отображение среднего рейтинга -->
+        <h4>Средняя оценка: @AverageRating ⭐</h4>
     </div>
 
     <!-- Список отзывов -->
-    <div class="row">                                   
-        @foreach (var review in reviews)                 
+    <div class="row">
+        @foreach (var review in reviews)
         {
-            <div class="col-md-6 mb-4">                  <!-- По 2 отзыва в ряд на desktop -->
-                <div class="card shadow p-3 review-card">  <!-- Карточка отзыва с тенью -->
-                    <h5>@review.Client.Name</h5>          <!-- Имя клиента -->
-                    
+            <div class="col-md-6 mb-4">
+                <div class="card shadow p-3 review-card">
+                    <h5>@(review.Client?.Name ?? "Анонимный клиент")</h5>
+
                     <!-- Звезды рейтинга -->
                     <div class="stars">
-                        @for (int i = 1; i <= 5; i++)    
+                        @for (int i = 1; i <= 5; i++)
                         {
-                            <!-- Класс: star-filled (закрашенная) или star (пустая) -->
                             <span class="@(i <= review.Rating ? "star-filled" : "star")">★</span>
                         }
                     </div>
-                    
-                    <p class="mt-2">@review.Text</p>      <!-- Текст отзыва -->
-                    <small class="text-muted">@review.CreatedAt.ToLocalTime().ToString("dd.MM.yyyy")</small>  <!-- Дата -->
+
+                    <p class="mt-2">@review.Text</p>
+                    <small class="text-muted">@review.CreatedAt.ToLocalTime().ToString("dd.MM.yyyy")</small>
                 </div>
             </div>
         }
     </div>
 
-    <hr class="my-5" />                                   <!-- Разделитель -->
+    <!-- Сообщение, если нет отзывов -->
+    @if (!reviews.Any())
+    {
+        <div class="text-center my-5">
+            <p class="text-muted">Пока нет отзывов. Будьте первым!</p>
+        </div>
+    }
 
-    <h4>Оставить отзыв</h4>                               <!-- Заголовок формы -->
+    <hr class="my-5" />
 
-    <!-- Поле ввода телефона -->
-    <div class="mb-2">
-        <input class="form-control" placeholder="Телефон"
-               @bind="phone" />                           <!-- Двустороннее связывание -->
-    </div>
+    <h4>Оставить отзыв</h4>
 
-    <!-- Выбор рейтинга -->
-    <div class="mb-2">
-        <select class="form-control" @bind="rating">      <!-- Привязка к переменной rating -->
-            <option value="5">5 ⭐</option>
-            <option value="4">4 ⭐</option>
-            <option value="3">3 ⭐</option>
-            <option value="2">2 ⭐</option>
-            <option value="1">1 ⭐</option>
-        </select>
-    </div>
+    <!-- Форма для нового отзыва -->
+    <div class="row">
+        <div class="col-md-6">
 
-    <!-- Поле ввода текста отзыва -->
-    <div class="mb-2">
-        <textarea class="form-control"
-                  placeholder="Ваш отзыв"
-                  @bind="text"></textarea>                <!-- Двустороннее связывание -->
-    </div>
+            <!-- Поле ввода телефона -->
+            <div class="mb-3">
+                <label class="form-label">Ваш телефон</label>
+                <input class="form-control"
+                       placeholder="+7 (999) 123-45-67"
+                       @bind="phone"
+                       @bind:event="oninput"
+                       readonly="@isAuthenticated" />
+                @if (isAuthenticated)
+                {
+                    <small class="text-success">
+                        <i class="bi bi-check-circle"></i> Автоматически заполнено из профиля
+                    </small>
+                }
+            </div>
 
-    <!-- Кнопка отправки -->
-    <button class="btn btn-primary mt-2" @onclick="AddReview">
-        Отправить
-    </button>
+            <!-- Выбор рейтинга -->
+            <div class="mb-3">
+                <label class="form-label">Оценка</label>
+                <select class="form-control" @bind="rating">
+                    <option value="5">5 ⭐</option>
+                    <option value="4">4 ⭐</option>
+                    <option value="3">3 ⭐</option>
+                    <option value="2">2 ⭐</option>
+                    <option value="1">1 ⭐</option>
+                </select>
+            </div>
 
+            <!-- Поле ввода текста отзыва -->
+            <div class="mb-3">
+                <label class="form-label">Ваш отзыв</label>
+                <textarea class="form-control" rows="4"
+                          placeholder="Расскажите о вашем опыте..."
+                          @bind="text"
+                          @bind:event="oninput"></textarea>
+            </div>
+
+            <!-- Кнопка отправки -->
+            <button class="btn btn-primary" @onclick="AddReview" disabled="@isLoading">
+                @if (isLoading)
+                {
+                    <span class="spinner-border spinner-border-sm me-2" role="status"></span>
+                    <span>Отправка...</span>
+                }
+                else
+                {
+                    <span>Отправить отзыв</span>
+                }
+            </button>
+
+            <!-- Ссылка на вход для неавторизованных -->
+            @if (!isAuthenticated)
+            {
+                <div class="mt-3">
+                    <small class="text-muted">
+                        Уже есть аккаунт?
+                        <a href="/admin/login" class="text-primary">Войдите</a>, чтобы телефон заполнился автоматически
+                    </small>
+                </div>
+            }
+
+        </div> <!-- Закрытие col-md-6 -->
+    </div> <!-- Закрытие row -->
     <!-- Уведомление об успехе/ошибке -->
     @if (!string.IsNullOrEmpty(message))
     {
@@ -81,94 +135,199 @@
     }
 
 </div>
-
 @code {
     // ===== ПОЛЯ КОМПОНЕНТА =====
-    
-    List<Review> reviews = new();           // Список всех одобренных отзывов
-    string phone = "";                      // Телефон из формы
-    string text = "";                       // Текст отзыва из формы
-    int rating = 5;                         // Выбранный рейтинг (по умолчанию 5)
 
-    string message;                         // Сообщение для пользователя
-    bool isSuccess;                         // Флаг успеха (для цвета уведомления)
+    List<Review> reviews = new();
+    string phone = "";
+    string text = "";
+    int rating = 5;
+    string? message;
+    bool isSuccess;
+    private bool isAuthenticated = false;
+    private int? currentClientId;
+    private bool isLoading = false;
 
     // ===== СВОЙСТВА =====
-    
-    // Вычисляет средний рейтинг всех отзывов
+
     double AverageRating =>
         reviews.Count == 0 ? 0 : Math.Round(reviews.Average(x => x.Rating), 1);
 
     // ===== ЖИЗНЕННЫЙ ЦИКЛ =====
-    
-    // Загружает одобренные отзывы при инициализации страницы
+
     protected override async Task OnInitializedAsync()
     {
-        reviews = (await ReviewRepo.FindAsync(r => r.IsApproved))  // Только одобренные
-            .OrderByDescending(r => r.CreatedAt)                   // Сначала новые
-            .ToList();
+        await LoadClientData();
+        await LoadReviews();
     }
 
     // ===== МЕТОДЫ =====
-    
-    // Добавляет новый отзыв после проверок
+
+    // Метод для возврата на главную
+    private void GoBack()
+    {
+        NavigationManager.NavigateTo("/");
+    }
+
+    // Загрузка данных клиента
+    private async Task LoadClientData()
+    {
+        try
+        {
+            var clientIdStr = await JSRuntime.InvokeAsync<string>("localStorage.getItem", "currentClientId");
+            var name = await JSRuntime.InvokeAsync<string>("localStorage.getItem", "currentClientName");
+
+            if (!string.IsNullOrEmpty(clientIdStr) && int.TryParse(clientIdStr, out int id))
+            {
+                currentClientId = id;
+                isAuthenticated = true;
+
+                var clients = await ClientRepo.FindAsync(c => c.Id == currentClientId.Value);
+                var client = clients.FirstOrDefault();
+                if (client != null)
+                {
+                    phone = client.Phone ?? "";
+                }
+            }
+            else
+            {
+                isAuthenticated = false;
+                phone = "";
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Ошибка загрузки данных клиента: {ex.Message}");
+            isAuthenticated = false;
+        }
+    }
+
+    // Загрузка отзывов с клиентами
+    private async Task LoadReviews()
+    {
+        try
+        {
+            var allReviews = await ReviewRepo.FindAsync(r => r.IsApproved);
+
+            foreach (var review in allReviews)
+            {
+                if (review.ClientId > 0)
+                {
+                    var clients = await ClientRepo.FindAsync(c => c.Id == review.ClientId);
+                    review.Client = clients.FirstOrDefault();
+                }
+            }
+
+            reviews = allReviews
+                .OrderByDescending(r => r.CreatedAt)
+                .ToList();
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Ошибка загрузки отзывов: {ex.Message}");
+        }
+    }
+
+    // Добавление нового отзыва
     async Task AddReview()
     {
-        // Сбрасываем предыдущие сообщения
         message = "";
         isSuccess = false;
+        isLoading = true;
 
-        // ===== ПРОВЕРКА 1: Существует ли клиент с таким телефоном =====
-        var client = (await ClientRepo.FindAsync(c => c.Phone == phone))
-            .FirstOrDefault();
-
-        if (client == null)
+        try
         {
-            message = "Клиент не найден.";
-            return;
+            // Валидация
+            if (string.IsNullOrWhiteSpace(phone))
+            {
+                message = "Введите номер телефона";
+                return;
+            }
+
+            if (string.IsNullOrWhiteSpace(text))
+            {
+                message = "Введите текст отзыва";
+                return;
+            }
+
+            if (text.Length < 10)
+            {
+                message = "Отзыв должен содержать не менее 10 символов";
+                return;
+            }
+
+            // Поиск клиента
+            Client? client = null;
+
+            if (currentClientId.HasValue)
+            {
+                var clients = await ClientRepo.FindAsync(c => c.Id == currentClientId.Value);
+                client = clients.FirstOrDefault();
+            }
+
+            if (client == null)
+            {
+                var clients = await ClientRepo.FindAsync(c => c.Phone == phone);
+                client = clients.FirstOrDefault();
+            }
+
+            if (client == null)
+            {
+                message = "Клиент с таким телефоном не найден. Сначала запишитесь на услугу.";
+                return;
+            }
+
+            // Проверка завершенного посещения
+            var hasCompleted = (await AppointmentRepo.FindAsync(a =>
+                a.ClientId == client.Id &&
+                a.Status == AppointmentStatus.Completed)).Any();
+
+            if (!hasCompleted)
+            {
+                message = "Отзыв можно оставить только после посещения студии.";
+                return;
+            }
+
+            // Проверка на повторный отзыв
+            var alreadyReviewed = (await ReviewRepo.FindAsync(r =>
+                r.ClientId == client.Id)).Any();
+
+            if (alreadyReviewed)
+            {
+                message = "Вы уже оставляли отзыв. Спасибо!";
+                return;
+            }
+
+            // Создание отзыва
+            var review = new Review
+            {
+                ClientId = client.Id,
+                Rating = rating,
+                Text = text,
+                IsApproved = false
+            };
+
+            await ReviewRepo.AddAsync(review);
+            await ReviewRepo.SaveChangesAsync();
+
+            message = "✅ Отзыв отправлен на модерацию! Спасибо!";
+            isSuccess = true;
+
+            // Очистка формы
+            text = "";
+            if (!isAuthenticated)
+            {
+                phone = "";
+            }
         }
-
-        // ===== ПРОВЕРКА 2: Было ли у клиента завершенное посещение =====
-        var hasCompleted = (await AppointmentRepo.FindAsync(a =>
-            a.ClientId == client.Id &&
-            a.Status == AppointmentStatus.Completed)).Any();  // Статус "Завершено"
-
-        if (!hasCompleted)
+        catch (Exception ex)
         {
-            message = "Отзыв можно оставить только после посещения.";
-            return;
+            message = "❌ Произошла ошибка при отправке отзыва";
+            Console.WriteLine($"Ошибка: {ex.Message}");
         }
-
-        // ===== ПРОВЕРКА 3: Не оставлял ли клиент отзыв ранее =====
-        var alreadyReviewed = (await ReviewRepo.FindAsync(r =>
-            r.ClientId == client.Id)).Any();
-
-        if (alreadyReviewed)
+        finally
         {
-            message = "Вы уже оставляли отзыв.";
-            return;
+            isLoading = false;
         }
-
-        // ===== СОЗДАНИЕ НОВОГО ОТЗЫВА =====
-        var review = new Review
-        {
-            ClientId = client.Id,           // ID существующего клиента
-            Rating = rating,                // Выбранная оценка (1-5)
-            Text = text,                    // Текст отзыва
-            IsApproved = false              // Не одобрен (ждет модерации)
-        };
-
-        // Сохраняем в базу данных
-        await ReviewRepo.AddAsync(review);
-        await ReviewRepo.SaveChangesAsync();
-
-        // ===== УСПЕШНОЕ ЗАВЕРШЕНИЕ =====
-        message = "Отзыв отправлен на модерацию 💖";
-        isSuccess = true;
-
-        // Очищаем форму
-        phone = "";
-        text = "";
-        // rating не сбрасываем - пусть остается 5 для удобства
     }
 }

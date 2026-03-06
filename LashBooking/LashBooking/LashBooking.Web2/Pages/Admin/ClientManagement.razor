@@ -1,0 +1,192 @@
+﻿@using LashBooking.Domain.Entities
+@using LashBooking.Domain.Interfaces
+@inject IRepository<Client> ClientRepo
+@inject IRepository<Appointment> AppointmentRepo
+@inject IJSRuntime JSRuntime
+
+<div class="management-section">
+    <div class="section-header">
+        <h2><i class="bi bi-people"></i> Управление клиентами</h2>
+        <button class="refresh-btn" @onclick="LoadClients" title="Обновить">
+            <i class="bi bi-arrow-repeat"></i>
+        </button>
+    </div>
+
+    <div class="search-section">
+        <input type="text"
+               class="search-input"
+               placeholder="🔍 Поиск по имени или телефону..."
+               @bind="searchTerm"
+               @bind:event="oninput" />
+    </div>
+
+    @if (isLoading)
+    {
+        <div class="loading-spinner">
+            <div class="spinner"></div>
+            <p>Загрузка клиентов...</p>
+        </div>
+    }
+    else if (!allClients.Any())
+    {
+        <div class="empty-state">
+            <div class="empty-icon">👥</div>
+            <h4>Клиенты не найдены</h4>
+            <p>В базе данных нет ни одного клиента</p>
+        </div>
+    }
+    else if (!filteredClients.Any())
+    {
+        <div class="empty-state">
+            <div class="empty-icon">🔍</div>
+            <h4>Ничего не найдено</h4>
+            <p>По запросу "<strong>@searchTerm</strong>" клиентов не найдено</p>
+            <button class="back-btn" @onclick="ClearSearch" style="margin-top: 15px;">
+                <span class="back-icon">←</span> Очистить поиск
+            </button>
+        </div>
+    }
+    else
+    {
+        <div class="stats-summary" style="margin-bottom: 20px; padding: 15px; background: #f8f9fa; border-radius: 12px;">
+            <p style="margin: 0; color: #666;">
+                <strong>Всего клиентов:</strong> @allClients.Count |
+                <strong>Отображается:</strong> @filteredClients.Count
+                @if (!string.IsNullOrWhiteSpace(searchTerm))
+                {
+                    <span> (поиск: "@searchTerm")</span>
+                }
+            </p>
+        </div>
+
+        <div class="table-responsive">
+            <table class="appointments-table">
+                <thead>
+                    <tr>
+                        <th>Имя</th>
+                        <th>Телефон</th>
+                        <th>Email</th>
+                        <th>Записей</th>
+                        <th>Дата регистрации</th>
+                        <th>Заметки</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var client in filteredClients.OrderBy(c => c.Name))
+                    {
+                        var appointmentCount = GetAppointmentCount(client.Id);
+                        <tr class="appointment-row">
+                            <td><strong>@client.Name</strong></td>
+                            <td>@client.Phone</td>
+                            <td>@(client.Email ?? "—")</td>
+                            <td>
+                                <span class="stat-value">@appointmentCount</span>
+                            </td>
+                            <td>@client.CreatedAt.ToString("dd.MM.yyyy")</td>
+                            <td>@(client.Notes ?? "—")</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    }
+</div>
+
+@code {
+    private bool isLoading = true;
+    private List<Client> allClients = new();
+    private List<Client> filteredClients = new();
+    private Dictionary<int, int> appointmentCounts = new();
+    private string searchTerm = "";
+
+    protected override async Task OnInitializedAsync()
+    {
+        Console.WriteLine("ClientManagement: OnInitializedAsync started");
+        await LoadClients();
+    }
+
+    protected override void OnParametersSet()
+    {
+        // Этот метод вызывается каждый раз при изменении параметров
+        // Можно добавить логику если нужно
+    }
+
+    protected override void OnAfterRender(bool firstRender)
+    {
+        if (firstRender)
+        {
+            Console.WriteLine("ClientManagement: First render completed");
+        }
+    }
+
+    private async Task LoadClients()
+    {
+        try
+        {
+            isLoading = true;
+            Console.WriteLine("Loading clients...");
+
+            // Загружаем клиентов
+            var clients = await ClientRepo.GetAllAsync();
+            allClients = clients.ToList();
+            Console.WriteLine($"Loaded {allClients.Count} clients");
+
+            // Загружаем записи для подсчета
+            var appointments = await AppointmentRepo.GetAllAsync();
+            appointmentCounts = appointments
+                .GroupBy(a => a.ClientId)
+                .ToDictionary(g => g.Key, g => g.Count());
+            Console.WriteLine($"Loaded appointments, found {appointmentCounts.Count} clients with appointments");
+
+            // Применяем фильтр
+            ApplyFilter();
+
+            Console.WriteLine($"Filtered clients: {filteredClients.Count}");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"ОШИБКА загрузки клиентов: {ex.Message}");
+            Console.WriteLine($"Stack trace: {ex.StackTrace}");
+        }
+        finally
+        {
+            isLoading = false;
+        }
+    }
+
+    // Этот метод будет вызываться автоматически при изменении searchTerm благодаря @bind
+    private void ApplyFilter()
+    {
+        if (string.IsNullOrWhiteSpace(searchTerm))
+        {
+            filteredClients = new List<Client>(allClients);
+            Console.WriteLine($"No search filter, showing all {filteredClients.Count} clients");
+        }
+        else
+        {
+            var term = searchTerm.ToLower().Trim();
+            filteredClients = allClients
+                .Where(c =>
+                    (!string.IsNullOrEmpty(c.Name) && c.Name.ToLower().Contains(term)) ||
+                    (!string.IsNullOrEmpty(c.Phone) && c.Phone.Contains(term))
+                )
+                .ToList();
+            Console.WriteLine($"Search filter '{term}' found {filteredClients.Count} clients");
+        }
+
+        // Принудительно обновляем интерфейс
+        StateHasChanged();
+    }
+
+    private void ClearSearch()
+    {
+        Console.WriteLine("Clearing search");
+        searchTerm = "";
+        ApplyFilter();
+    }
+
+    private int GetAppointmentCount(int clientId)
+    {
+        return appointmentCounts.TryGetValue(clientId, out var count) ? count : 0;
+    }
+}

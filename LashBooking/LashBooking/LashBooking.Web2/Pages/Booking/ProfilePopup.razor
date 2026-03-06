@@ -1,0 +1,315 @@
+﻿@page "/profile/popup"
+@using LashBooking.Domain.Entities
+@using LashBooking.Domain.Interfaces
+@using System.Linq.Expressions
+
+@inject IRepository<Appointment> AppointmentRepo
+@inject IRepository<Service> ServiceRepo
+@inject IJSRuntime JSRuntime
+@inject NavigationManager NavigationManager
+
+<!-- Затемненный фон для модального окна -->
+<div class="popup-overlay @(isVisible ? "visible" : "")" @onclick="ClosePopup">
+    <!-- Само модальное окно (попап) -->
+    <div class="popup-container" @onclick:stopPropagation="true">
+        <!-- Заголовок попапа -->
+        <div class="popup-header">
+            <h3 class="popup-title">
+                <i class="bi bi-calendar-check"></i>
+                Мои записи
+            </h3>
+            <button class="popup-close-btn" @onclick="ClosePopup">
+                <i class="bi bi-x-lg"></i>
+            </button>
+        </div>
+
+        <!-- Блок с именем клиента -->
+        <div class="popup-client-info">
+            <div class="client-avatar">
+                <i class="bi bi-person-circle"></i>
+            </div>
+            <div class="client-details">
+                <span class="client-label">Клиент:</span>
+                <span class="client-name">@clientName</span>
+            </div>
+            <button class="logout-icon-btn" @onclick="Logout" title="Выйти">
+                <i class="bi bi-box-arrow-right"></i>
+            </button>
+        </div>
+
+        <!-- Контент попапа -->
+        <div class="popup-content">
+            @if (isLoading)
+            {
+                <div class="popup-loading">
+                    <div class="spinner"></div>
+                    <p>Загрузка записей...</p>
+                </div>
+            }
+            else if (!appointments.Any())
+            {
+                <div class="popup-empty">
+                    <div class="empty-icon">📅</div>
+                    <h4>У вас пока нет записей</h4>
+                    <p>Запишитесь онлайн прямо сейчас!</p>
+                    <button class="btn-book-small" @onclick="GoToBooking">
+                        Записаться онлайн
+                    </button>
+                </div>
+            }
+            else
+            {
+                <div class="popup-appointments">
+                    @foreach (var appointment in appointments)
+                    {
+                        var service = GetService(appointment.ServiceId);
+                        var displayStatus = GetDisplayStatus(appointment);
+                        var statusClass = GetStatusClass(appointment);
+
+                        <div class="popup-appointment-card @statusClass">
+                            <div class="appointment-time">
+                                <div class="time-badge-large">
+                                    <span class="time-day">@appointment.DateStart.ToString("dd MMM")</span>
+                                    <span class="time-hour">@appointment.DateStart.ToString("HH:mm")</span>
+                                </div>
+                            </div>
+
+                            <div class="appointment-info">
+                                <h4 class="service-title">@(service?.Name ?? "Услуга не найдена")</h4>
+                                <div class="service-meta">
+                                    <span class="meta-item">
+                                        <i class="bi bi-clock"></i> @(service?.DurationMinutes ?? 0) мин
+                                    </span>
+                                    <span class="meta-item">
+                                        <i class="bi bi-cash"></i> @(service?.Price.ToString("C") ?? "0 ₽")
+                                    </span>
+                                </div>
+                                <div class="status-badge-small @statusClass">
+                                    @displayStatus
+                                </div>
+                            </div>
+
+                            @if (appointment.Status == AppointmentStatus.Scheduled ||
+                                                appointment.Status == AppointmentStatus.Confirmed)
+                            {
+                                <div class="appointment-actions-small">
+                                    <button class="btn-cancel-small" @onclick="() => CancelAppointment(appointment.Id)" title="Отменить запись">
+                                        <i class="bi bi-x-circle"></i>
+                                    </button>
+                                </div>
+                            }
+                        </div>
+                    }
+                </div>
+            }
+        </div>
+
+        <!-- Нижняя панель с кнопками -->
+        <div class="popup-footer">
+            <button class="btn-footer-secondary" @onclick="GoToMainPage">
+                <i class="bi bi-house-door"></i>
+                На главную
+            </button>
+            <button class="btn-footer-primary" @onclick="GoToBooking">
+                <i class="bi bi-plus-circle"></i>
+                Новая запись
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- Всплывающее окно подтверждения отмены (внутри попапа) -->
+@if (showCancelConfirmation)
+{
+    <div class="popup-modal-overlay">
+        <div class="popup-modal-card">
+            <div class="modal-icon">❓</div>
+            <h4>Отмена записи</h4>
+            <p>Вы уверены, что хотите отменить запись?</p>
+            <div class="modal-buttons">
+                <button class="btn-modal-secondary" @onclick="() => showCancelConfirmation = false">
+                    Нет, оставить
+                </button>
+                <button class="btn-modal-danger" @onclick="ConfirmCancel">
+                    Да, отменить
+                </button>
+            </div>
+        </div>
+    </div>
+}
+
+@code {
+    [Parameter]
+    public bool IsVisible { get; set; } = true;
+
+    [Parameter]
+    public EventCallback OnClose { get; set; }
+
+    private bool isVisible = true;
+    private int? currentClientId;
+    private string clientName = "";
+    private List<Appointment> appointments = new();
+    private Dictionary<int, Service> servicesDictionary = new();
+    private bool isLoading = true;
+    private bool showCancelConfirmation = false;
+    private int? appointmentToCancel;
+
+    protected override async Task OnInitializedAsync()
+    {
+        isVisible = IsVisible;
+        await LoadClientData();
+        await LoadServices();
+        await LoadAppointments();
+    }
+
+    private async Task LoadClientData()
+    {
+        try
+        {
+            var clientIdStr = await JSRuntime.InvokeAsync<string>("localStorage.getItem", "currentClientId");
+            clientName = await JSRuntime.InvokeAsync<string>("localStorage.getItem", "currentClientName") ?? "Гость";
+
+            if (!string.IsNullOrEmpty(clientIdStr) && int.TryParse(clientIdStr, out int id))
+            {
+                currentClientId = id;
+            }
+            else
+            {
+                NavigationManager.NavigateTo("/admin/login");
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Ошибка загрузки данных клиента: {ex.Message}");
+            NavigationManager.NavigateTo("/admin/login");
+        }
+    }
+
+    private async Task LoadServices()
+    {
+        try
+        {
+            var services = await ServiceRepo.GetAllAsync();
+            servicesDictionary = services.Where(s => s.IsActive).ToDictionary(s => s.Id, s => s);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Ошибка загрузки услуг: {ex.Message}");
+        }
+    }
+
+    private async Task LoadAppointments()
+    {
+        try
+        {
+            isLoading = true;
+
+            if (currentClientId.HasValue)
+            {
+                var allAppointments = await AppointmentRepo.FindAsync(a =>
+                    a.ClientId == currentClientId.Value);
+                appointments = allAppointments
+                    .OrderByDescending(a => a.DateStart)
+                    .ToList();
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Ошибка загрузки записей: {ex.Message}");
+        }
+        finally
+        {
+            isLoading = false;
+            StateHasChanged();
+        }
+    }
+
+    private Service? GetService(int serviceId)
+    {
+        return servicesDictionary.TryGetValue(serviceId, out var service) ? service : null;
+    }
+
+    private string GetDisplayStatus(Appointment appointment)
+    {
+        return appointment.Status switch
+        {
+            AppointmentStatus.Scheduled => "Запланирована",
+            AppointmentStatus.Confirmed => "Подтверждена",
+            AppointmentStatus.Completed => "Выполнена",
+            AppointmentStatus.Cancelled => "Отменена",
+            AppointmentStatus.NoShow => "Не явился(ась)",
+            _ => "Неизвестно"
+        };
+    }
+
+    private string GetStatusClass(Appointment appointment)
+    {
+        return appointment.Status switch
+        {
+            AppointmentStatus.Scheduled => "status-scheduled",
+            AppointmentStatus.Confirmed => "status-confirmed",
+            AppointmentStatus.Completed => "status-completed",
+            AppointmentStatus.Cancelled => "status-cancelled",
+            AppointmentStatus.NoShow => "status-noshow",
+            _ => ""
+        };
+    }
+
+    private void CancelAppointment(int appointmentId)
+    {
+        appointmentToCancel = appointmentId;
+        showCancelConfirmation = true;
+    }
+
+    private async Task ConfirmCancel()
+    {
+        if (appointmentToCancel.HasValue)
+        {
+            try
+            {
+                var appointment = appointments.FirstOrDefault(a => a.Id == appointmentToCancel.Value);
+                if (appointment != null)
+                {
+                    appointment.Status = AppointmentStatus.Cancelled;
+                    AppointmentRepo.Update(appointment);
+                    await AppointmentRepo.SaveChangesAsync();
+
+                    await LoadAppointments();
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Ошибка при отмене записи: {ex.Message}");
+            }
+            finally
+            {
+                showCancelConfirmation = false;
+                appointmentToCancel = null;
+            }
+        }
+    }
+
+    private async Task Logout()
+    {
+        await JSRuntime.InvokeVoidAsync("localStorage.removeItem", "currentClientId");
+        await JSRuntime.InvokeVoidAsync("localStorage.removeItem", "currentClientName");
+        NavigationManager.NavigateTo("/");
+    }
+
+    private void GoToMainPage()
+    {
+        NavigationManager.NavigateTo("/");
+    }
+
+    private void GoToBooking()
+    {
+        NavigationManager.NavigateTo("/booking");
+    }
+
+    private async Task ClosePopup()
+    {
+        isVisible = false;
+        await OnClose.InvokeAsync();
+        StateHasChanged();
+    }
+}

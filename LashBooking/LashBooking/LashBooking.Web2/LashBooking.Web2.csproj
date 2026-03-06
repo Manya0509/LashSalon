@@ -22,4 +22,8 @@
     <ProjectReference Include="..\LashBooking.Infrastructure\LashBooking.Infrastructure.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="wwwroot\images\gallery\" />
+  </ItemGroup>
+
 </Project>

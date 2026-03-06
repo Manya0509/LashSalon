@@ -95,6 +95,23 @@
         cursor: pointer;                                    /* Курсор-указатель, показывающий что поле можно использовать как кнопку */
     }
 
+    /* Поле только для чтения */
+    .form-input[readonly][b-6xvvxniqxv] {
+        background-color: #f0f0f0;
+        cursor: default;
+        border-color: #d0d0d0;
+        color: #333;
+    }
+
+/* Подсказка под полем */
+.field-note[b-6xvvxniqxv] {
+    display: block;
+    margin-top: 5px;
+    font-size: 0.8rem;
+    color: #10b981;
+    font-weight: 500;
+}
+
 /* ===== ДАТА ===== */
 .date-input-wrapper[b-6xvvxniqxv] {
     position: relative;                                     /* Относительное позиционирование для абсолютного позиционирования иконки внутри */
@@ -345,4 +362,323 @@
 .relative[b-6xvvxniqxv] {
     position: relative;                               /* Элемент позиционируется относительно своего обычного места */
     /* Используется как контейнер для абсолютно позиционированных дочерних элементов */
+}
+
+/* ===== АДАПТАЦИЯ ДЛЯ МОБИЛЬНЫХ УСТРОЙСТВ ===== */
+
+/* Для планшетов (от 768px и ниже) */
+@media screen and (max-width: 768px) {
+    .booking-card[b-6xvvxniqxv] {
+        margin: 1rem auto;
+        padding: 1.5rem;
+        border-radius: 20px;
+        max-width: 90%;
+    }
+
+    .booking-title[b-6xvvxniqxv] {
+        font-size: 1.5rem;
+        margin-bottom: 1.5rem;
+    }
+
+    .back-btn[b-6xvvxniqxv] {
+        padding: 6px 16px;
+        font-size: 0.9rem;
+    }
+
+    .back-icon[b-6xvvxniqxv] {
+        font-size: 1rem;
+    }
+
+    .form-group[b-6xvvxniqxv] {
+        margin-bottom: 1.2rem;
+    }
+
+    .form-label[b-6xvvxniqxv] {
+        font-size: 0.8rem;
+        margin-bottom: 0.3rem;
+    }
+
+    .form-input[b-6xvvxniqxv], .form-select[b-6xvvxniqxv] {
+        padding: 0.7rem 0.9rem;
+        font-size: 0.95rem;
+        border-radius: 12px;
+    }
+
+    .btn-primary[b-6xvvxniqxv] {
+        padding: 0.9rem;
+        font-size: 1rem;
+        margin-top: 1.5rem;
+    }
+
+    .alert[b-6xvvxniqxv] {
+        padding: 0.9rem;
+        gap: 0.5rem;
+        font-size: 0.9rem;
+    }
+
+    /* Календарь на планшетах */
+    .mini-calendar[b-6xvvxniqxv] {
+        width: 280px;
+        padding: 0.8rem;
+    }
+
+    .calendar-nav[b-6xvvxniqxv] {
+        width: 28px;
+        height: 28px;
+        font-size: 1.1rem;
+    }
+
+    .calendar-month[b-6xvvxniqxv] {
+        font-size: 0.95rem;
+    }
+
+    .calendar-weekday[b-6xvvxniqxv] {
+        font-size: 0.7rem;
+        padding: 0.3rem 0;
+    }
+
+    .calendar-day[b-6xvvxniqxv] {
+        font-size: 0.85rem;
+    }
+}
+
+/* Для мобильных телефонов (от 480px и ниже) */
+@media screen and (max-width: 480px) {
+    .booking-card[b-6xvvxniqxv] {
+        margin: 0.5rem auto;
+        padding: 1rem;
+        border-radius: 16px;
+        max-width: 95%;
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.05);
+    }
+
+    .booking-title[b-6xvvxniqxv] {
+        font-size: 1.3rem;
+        margin-bottom: 1rem;
+        letter-spacing: -0.3px;
+    }
+
+    .back-button-container[b-6xvvxniqxv] {
+        margin-bottom: 10px;
+    }
+
+    .back-btn[b-6xvvxniqxv] {
+        padding: 5px 14px;
+        font-size: 0.85rem;
+        border-width: 1.5px;
+    }
+
+    .back-icon[b-6xvvxniqxv] {
+        font-size: 0.9rem;
+    }
+
+    .form-group[b-6xvvxniqxv] {
+        margin-bottom: 1rem;
+    }
+
+    .form-label[b-6xvvxniqxv] {
+        font-size: 0.75rem;
+        margin-bottom: 0.2rem;
+    }
+
+    .form-input[b-6xvvxniqxv], .form-select[b-6xvvxniqxv] {
+        padding: 0.6rem 0.8rem;
+        font-size: 0.9rem;
+        border-radius: 10px;
+        border-width: 1.5px;
+    }
+
+    .calendar-icon[b-6xvvxniqxv] {
+        right: 0.8rem;
+        font-size: 1rem;
+    }
+
+    .btn-primary[b-6xvvxniqxv] {
+        padding: 0.8rem;
+        font-size: 0.95rem;
+        border-radius: 12px;
+        margin-top: 1.2rem;
+    }
+
+        .btn-primary:hover:not(:disabled)[b-6xvvxniqxv] {
+            transform: translateY(-1px);
+            box-shadow: 0 5px 10px rgba(79, 70, 229, 0.3);
+        }
+
+    .alert[b-6xvvxniqxv] {
+        padding: 0.8rem;
+        gap: 0.4rem;
+        font-size: 0.85rem;
+        border-radius: 10px;
+        margin-top: 1rem;
+    }
+
+    .alert-icon[b-6xvvxniqxv] {
+        font-size: 1rem;
+    }
+
+    .field-note[b-6xvvxniqxv] {
+        font-size: 0.7rem;
+        margin-top: 3px;
+    }
+
+    /* Календарь на мобильных */
+    .mini-calendar[b-6xvvxniqxv] {
+        width: 100%;
+        min-width: 260px;
+        padding: 0.7rem;
+        left: 50%;
+        transform: translateX(-50%);
+        border-radius: 16px;
+    }
+
+    .calendar-header[b-6xvvxniqxv] {
+        margin-bottom: 0.7rem;
+        padding: 0 0.3rem;
+    }
+
+    .calendar-nav[b-6xvvxniqxv] {
+        width: 26px;
+        height: 26px;
+        font-size: 1rem;
+    }
+
+    .calendar-month[b-6xvvxniqxv] {
+        font-size: 0.9rem;
+    }
+
+    .calendar-weekday[b-6xvvxniqxv] {
+        font-size: 0.65rem;
+        padding: 0.2rem 0;
+    }
+
+    .calendar-day[b-6xvvxniqxv] {
+        font-size: 0.8rem;
+        border-radius: 6px;
+    }
+}
+
+/* Для очень маленьких экранов (до 360px) */
+@media screen and (max-width: 360px) {
+    .booking-card[b-6xvvxniqxv] {
+        padding: 0.8rem;
+    }
+
+    .booking-title[b-6xvvxniqxv] {
+        font-size: 1.2rem;
+    }
+
+    .form-input[b-6xvvxniqxv], .form-select[b-6xvvxniqxv] {
+        padding: 0.5rem 0.7rem;
+        font-size: 0.85rem;
+    }
+
+    .btn-primary[b-6xvvxniqxv] {
+        padding: 0.7rem;
+        font-size: 0.9rem;
+    }
+
+    .calendar-icon[b-6xvvxniqxv] {
+        right: 0.7rem;
+    }
+
+    /* Календарь на очень маленьких экранах */
+    .mini-calendar[b-6xvvxniqxv] {
+        padding: 0.5rem;
+    }
+
+    .calendar-nav[b-6xvvxniqxv] {
+        width: 24px;
+        height: 24px;
+        font-size: 0.9rem;
+    }
+
+    .calendar-month[b-6xvvxniqxv] {
+        font-size: 0.8rem;
+    }
+
+    .calendar-weekday[b-6xvvxniqxv] {
+        font-size: 0.6rem;
+    }
+
+    .calendar-day[b-6xvvxniqxv] {
+        font-size: 0.75rem;
+    }
+}
+
+/* Для устройств с тач-экраном (убираем hover эффекты) */
+@media (hover: none) and (pointer: coarse) {
+    .calendar-day.available:hover:not(:disabled)[b-6xvvxniqxv] {
+        transform: none;
+        background: #f3f4f6;
+        color: #1f2937;
+    }
+
+    .calendar-day.available:active:not(:disabled)[b-6xvvxniqxv] {
+        background: #4f46e5;
+        color: white;
+    }
+
+    .btn-primary:hover:not(:disabled)[b-6xvvxniqxv] {
+        transform: none;
+        box-shadow: none;
+    }
+
+    .btn-primary:active:not(:disabled)[b-6xvvxniqxv] {
+        background: #4338ca;
+        transform: translateY(-1px);
+        box-shadow: 0 5px 10px rgba(79, 70, 229, 0.3);
+    }
+
+    .calendar-nav:hover[b-6xvvxniqxv] {
+        background: none;
+    }
+
+    .calendar-nav:active[b-6xvvxniqxv] {
+        background: #f3f4f6;
+    }
+}
+
+/* Для устройств в ландшафтной ориентации */
+@media screen and (max-height: 500px) and (orientation: landscape) {
+    .booking-card[b-6xvvxniqxv] {
+        margin: 0.5rem auto;
+        padding: 1rem;
+    }
+
+    .mini-calendar[b-6xvvxniqxv] {
+        max-height: 250px;
+        overflow-y: auto;
+    }
+
+    .form-group[b-6xvvxniqxv] {
+        margin-bottom: 0.8rem;
+    }
+
+    .btn-primary[b-6xvvxniqxv] {
+        margin-top: 1rem;
+        padding: 0.7rem;
+    }
+}
+
+/* Для устройств с высоким разрешением */
+@media screen and (min-width: 1440px) {
+    .booking-card[b-6xvvxniqxv] {
+        max-width: 800px;
+        padding: 2.5rem;
+    }
+
+    .booking-title[b-6xvvxniqxv] {
+        font-size: 2rem;
+    }
+
+    .form-input[b-6xvvxniqxv], .form-select[b-6xvvxniqxv] {
+        padding: 0.9rem 1.2rem;
+        font-size: 1.1rem;
+    }
+
+    .btn-primary[b-6xvvxniqxv] {
+        padding: 1.2rem;
+        font-size: 1.2rem;
+    }
 }

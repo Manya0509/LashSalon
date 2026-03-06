@@ -23,5 +23,6 @@ public class ApplicationDbContext : DbContext
         modelBuilder.ApplyConfiguration(new ClientConfiguration());
         modelBuilder.ApplyConfiguration(new ServiceConfiguration());
         modelBuilder.ApplyConfiguration(new AppointmentConfiguration());
+        modelBuilder.ApplyConfiguration(new ReviewConfiguration());
     }
 }

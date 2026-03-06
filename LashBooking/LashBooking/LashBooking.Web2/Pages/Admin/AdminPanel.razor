@@ -1,0 +1,283 @@
+﻿@page "/admin"
+@using LashBooking.Domain.Entities
+@using LashBooking.Domain.Interfaces
+@using Microsoft.EntityFrameworkCore
+@inject IRepository<Appointment> AppointmentRepo
+@inject IRepository<Review> ReviewRepo
+@inject IRepository<Client> ClientRepo
+@inject IRepository<Service> ServiceRepo
+@inject NavigationManager NavigationManager
+@inject IJSRuntime JSRuntime
+
+<!-- Кнопка назад на главную -->
+<div class="back-button-container">
+    <button class="back-btn" @onclick="GoBack">
+        <span class="back-icon">←</span> На сайт
+    </button>
+    
+    <!-- Кнопка выхода из админки -->
+    <button class="logout-admin-btn" @onclick="Logout">
+        <i class="bi bi-box-arrow-right"></i> Выйти
+    </button>
+</div>
+
+<div class="admin-container">
+    <h1 class="admin-title">
+        <i class="bi bi-shield-lock"></i> Панель администратора
+    </h1>
+    
+    <!-- Проверка авторизации -->
+    @if (!isAuthorized)
+    {
+        <div class="login-prompt">
+            <div class="login-card">
+                <h3>Вход для администратора</h3>
+                <p>Введите пароль для доступа к панели управления</p>
+                
+                <div class="form-group">
+                    <input type="password" class="form-input" @bind="adminPassword" 
+                           placeholder="Пароль администратора" @bind:event="oninput" />
+                </div>
+                
+                @if (!string.IsNullOrEmpty(errorMessage))
+                {
+                    <div class="error-message">⚠️ @errorMessage</div>
+                }
+                
+                <button class="login-btn" @onclick="AuthorizeAdmin" disabled="@isLoading">
+                    @if (isLoading)
+                    {
+                        <span class="spinner-small"></span>
+                        <span>Вход...</span>
+                    }
+                    else
+                    {
+                        <span>Войти</span>
+                    }
+                </button>
+            </div>
+        </div>
+    }
+    else
+    {
+        <!-- Статистика -->
+        <div class="stats-grid">
+            <div class="stat-card" @onclick="GoToAppointments">
+                <div class="stat-icon">📅</div>
+                <div class="stat-content">
+                    <span class="stat-value">@todayAppointments</span>
+                    <span class="stat-label">Записей на сегодня</span>
+                </div>
+            </div>
+            <div class="stat-card" @onclick="GoToAppointments">
+                <div class="stat-icon">⏳</div>
+                <div class="stat-content">
+                    <span class="stat-value">@upcomingAppointments</span>
+                    <span class="stat-label">Предстоящих записей</span>
+                </div>
+            </div>
+            <div class="stat-card" @onclick="GoToReviews">
+                <div class="stat-icon">📝</div>
+                <div class="stat-content">
+                    <span class="stat-value">@pendingReviews</span>
+                    <span class="stat-label">Отзывов на модерации</span>
+                </div>
+            </div>
+            <div class="stat-card" @onclick="GoToClients">
+                <div class="stat-icon">👥</div>
+                <div class="stat-content">
+                    <span class="stat-value">@totalClients</span>
+                    <span class="stat-label">Всего клиентов</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Навигация по разделам -->
+        <div class="admin-nav">
+            <button class="nav-btn @GetNavButtonClass("appointments")" 
+                    @onclick="GoToAppointments">
+                <i class="bi bi-calendar-check"></i>
+                Записи
+                @if (todayAppointments > 0)
+                {
+                    <span class="badge">@todayAppointments</span>
+                }
+            </button>
+            <button class="nav-btn @GetNavButtonClass("reviews")" 
+                    @onclick="GoToReviews">
+                <i class="bi bi-star"></i>
+                Отзывы
+                @if (pendingReviews > 0)
+                {
+                    <span class="badge warning">@pendingReviews</span>
+                }
+            </button>
+            <button class="nav-btn @GetNavButtonClass("clients")" 
+                    @onclick="GoToClients">
+                <i class="bi bi-people"></i>
+                Клиенты
+            </button>
+            <button class="nav-btn @GetNavButtonClass("services")" 
+                    @onclick="GoToServices">
+                <i class="bi bi-grid"></i>
+                Услуги
+            </button>
+        </div>
+
+        <!-- Контент в зависимости от выбранной вкладки -->
+        <div class="admin-content">
+            @if (activeTab == "appointments")
+            {
+                <AppointmentManagement />
+            }
+            else if (activeTab == "reviews")
+            {
+                <ReviewManagement />
+            }
+            else if (activeTab == "clients")
+            {
+                <ClientManagement />
+            }
+            else if (activeTab == "services")
+            {
+                <ServiceManagement />
+            }
+        </div>
+    }
+</div>
+
+@code {
+    private bool isAuthorized = false;
+    private string adminPassword = "";
+    private string errorMessage = "";
+    private bool isLoading = false;
+    private string activeTab = "appointments";
+    
+    private int todayAppointments = 0;
+    private int upcomingAppointments = 0;
+    private int pendingReviews = 0;
+    private int totalClients = 0;
+
+    // Простой пароль для демо (в реальном проекте используйте безопасное хранение)
+    private const string AdminPassword = "admin123";
+
+    protected override async Task OnInitializedAsync()
+    {
+        // Проверяем, есть ли уже авторизация в sessionStorage
+        await CheckAdminAuth();
+        
+        if (isAuthorized)
+        {
+            await LoadStatistics();
+        }
+    }
+
+    private async Task CheckAdminAuth()
+    {
+        try
+        {
+            var auth = await JSRuntime.InvokeAsync<string>("sessionStorage.getItem", "isAdmin");
+            isAuthorized = auth == "true";
+        }
+        catch
+        {
+            isAuthorized = false;
+        }
+    }
+
+    private async Task AuthorizeAdmin()
+    {
+        try
+        {
+            isLoading = true;
+            errorMessage = "";
+
+            if (string.IsNullOrWhiteSpace(adminPassword))
+            {
+                errorMessage = "Введите пароль";
+                return;
+            }
+
+            // В реальном проекте здесь должна быть проверка через базу данных
+            if (adminPassword == AdminPassword)
+            {
+                await JSRuntime.InvokeVoidAsync("sessionStorage.setItem", "isAdmin", "true");
+                isAuthorized = true;
+                await LoadStatistics();
+            }
+            else
+            {
+                errorMessage = "Неверный пароль";
+            }
+        }
+        catch (Exception ex)
+        {
+            errorMessage = "Ошибка авторизации";
+            Console.WriteLine(ex.Message);
+        }
+        finally
+        {
+            isLoading = false;
+        }
+    }
+
+    private async Task Logout()
+    {
+        await JSRuntime.InvokeVoidAsync("sessionStorage.removeItem", "isAdmin");
+        isAuthorized = false;
+        NavigationManager.NavigateTo("/admin", true);
+    }
+
+    private async Task LoadStatistics()
+    {
+        try
+        {
+            var today = DateTime.Today;
+            var tomorrow = today.AddDays(1);
+
+            // Записи на сегодня
+            var todayApps = await AppointmentRepo.FindAsync(a =>
+                a.DateStart >= today && a.DateStart < tomorrow);
+            todayAppointments = todayApps.Count();
+
+            // Предстоящие записи
+            var upcoming = await AppointmentRepo.FindAsync(a =>
+                a.DateStart > DateTime.Now && a.Status != AppointmentStatus.Cancelled);
+            upcomingAppointments = upcoming.Count();
+
+            // Отзывы на модерации
+            var pending = await ReviewRepo.FindAsync(r => !r.IsApproved);
+            pendingReviews = pending.Count();
+
+            // Всего клиентов
+            var clients = await ClientRepo.GetAllAsync();
+            totalClients = clients.Count();
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Ошибка загрузки статистики: {ex.Message}");
+        }
+    }
+
+    private void SetActiveTab(string tab)
+    {
+        activeTab = tab;
+    }
+
+    private void GoBack()
+    {
+        NavigationManager.NavigateTo("/");
+    }
+
+    // Методы для навигации
+    private void GoToAppointments() => SetActiveTab("appointments");
+    private void GoToReviews() => SetActiveTab("reviews");
+    private void GoToClients() => SetActiveTab("clients");
+    private void GoToServices() => SetActiveTab("services");
+
+    // Возвращает CSS класс для кнопок навигации
+    private string GetNavButtonClass(string tabName)
+    {
+        return activeTab == tabName ? "active" : "";
+    }
+}
