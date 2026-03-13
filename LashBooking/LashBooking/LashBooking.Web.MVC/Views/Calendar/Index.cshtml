@@ -1,0 +1,432 @@
+﻿@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewBag.Title = "Календарь записи — LashLukina";
+
+    var weeks = ViewBag.Weeks as List<List<object>>;
+    string monthLabel = ViewBag.MonthLabel;
+    int prevYear = ViewBag.PrevYear;
+    int prevMonth = ViewBag.PrevMonth;
+    int nextYear = ViewBag.NextYear;
+    int nextMonth = ViewBag.NextMonth;
+}
+
+<div class="back-button-container">
+    <a href="/" class="back-btn"><span class="back-icon">←</span> Назад</a>
+</div>
+
+<h3 class="title">Календарь записи</h3>
+
+<div class="calendar-nav">
+    <a href="/Calendar?year=@prevYear&month=@prevMonth" class="nav-btn">← Предыдущий</a>
+    <span class="month-label">@monthLabel</span>
+    <a href="/Calendar?year=@nextYear&month=@nextMonth" class="nav-btn">Следующий →</a>
+</div>
+
+<div class="calendar-grid">
+    @foreach (var wd in new[] { "Пн", "Вт", "Ср", "Чт", "Пт", "Сб", "Вс" })
+    {
+        string wdClass = (wd == "Сб" || wd == "Вс") ? "weekday weekend-header" : "weekday";
+        <div class="@wdClass">@wd</div>
+    }
+
+    @if (weeks != null)
+    {
+        foreach (var week in weeks)
+        {
+            foreach (var dayObj in week)
+            {
+                dynamic day = dayObj;
+                string state = day.state;
+                string date = day.date;
+                int dayNum = day.day;
+                bool isPast = day.isPast;
+                bool isWeekend = day.isWeekend;
+
+                string cssClass = "day-btn " + state;
+
+                if (isPast || isWeekend)
+                {
+                    <button class="@cssClass" disabled>@dayNum</button>
+                }
+                else
+                {
+                    <button class="@cssClass" onclick="selectDate('@date')">@dayNum</button>
+                }
+            }
+        }
+    }
+</div>
+
+<div class="legend">
+    <span class="legend-item"><span class="legend-dot free"></span> Свободно</span>
+    <span class="legend-item"><span class="legend-dot partial"></span> Частично занято</span>
+    <span class="legend-item"><span class="legend-dot full"></span> Занято</span>
+    <span class="legend-item"><span class="legend-dot weekend"></span> Выходной</span>
+</div>
+
+<div id="slotsSection" style="display:none">
+    <h4 class="slots-title" id="slotsTitle"></h4>
+    <div class="slots-grid" id="slotsGrid"></div>
+</div>
+
+<style>
+    .title {
+        font-size: 2rem;
+        color: #333;
+        margin-bottom: 15px;
+        text-align: center;
+        font-family: 'Segoe UI', sans-serif;
+        line-height: 1.3;
+    }
+
+    .back-button-container {
+        margin-bottom: 15px;
+    }
+
+    .back-btn {
+        background: transparent;
+        color: #444;
+        border: 2px solid #333;
+        border-radius: 30px;
+        padding: 8px 20px;
+        font-size: 1rem;
+        font-weight: 600;
+        cursor: pointer;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        transition: all 0.3s ease;
+        text-decoration: none;
+    }
+
+        .back-btn:hover {
+            background: #4f46e5;
+            color: white;
+            transform: translateX(-3px);
+            box-shadow: 0 4px 10px rgba(79,70,229,0.3);
+        }
+
+    .back-icon {
+        font-size: 1.2rem;
+        line-height: 1;
+    }
+
+    .calendar-nav {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 15px;
+        background: #f8f8f8;
+        padding: 10px 15px;
+        border-radius: 50px;
+        border: 1px solid #eee;
+    }
+
+    .nav-btn {
+        background: #ccc;
+        color: #333;
+        border: none;
+        border-radius: 12px;
+        padding: 8px 16px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s;
+        min-width: 70px;
+        text-align: center;
+        text-decoration: none;
+        display: inline-block;
+    }
+
+        .nav-btn:hover {
+            background: #bbb;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            color: #333;
+        }
+
+    .month-label {
+        font-size: 1.2rem;
+        font-weight: 600;
+        color: #444;
+        text-transform: capitalize;
+    }
+
+    .calendar-grid {
+        display: grid;
+        grid-template-columns: repeat(7, 1fr);
+        gap: 8px;
+        margin-bottom: 12px;
+    }
+
+    .weekday {
+        text-align: center;
+        font-weight: 600;
+        padding: 8px 0;
+        color: #555;
+        font-family: 'Segoe UI', sans-serif;
+        border-bottom: 1px solid #ddd;
+        font-size: 0.95rem;
+    }
+
+        .weekday.weekend-header {
+            color: #e53e3e;
+        }
+
+    .day-btn {
+        padding: 12px 0;
+        border-radius: 12px;
+        border: none;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.2s;
+        font-size: 0.95rem;
+        width: 100%;
+        text-align: center;
+    }
+
+        .day-btn.free {
+            background: linear-gradient(135deg, #f5f5f5, #e0e0e0);
+            color: #333;
+        }
+
+            .day-btn.free:hover {
+                background: linear-gradient(135deg, #e0e0e0, #d0d0d0);
+                transform: translateY(-2px);
+                box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            }
+
+        .day-btn.partial {
+            background: linear-gradient(135deg, #dcdcdc, #bfbfbf);
+            color: #222;
+        }
+
+            .day-btn.partial:hover {
+                background: linear-gradient(135deg, #bfbfbf, #a0a0a0);
+                transform: translateY(-2px);
+                box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            }
+
+        .day-btn.full {
+            background: linear-gradient(135deg, #a0a0a0, #808080);
+            color: #fff;
+        }
+
+            .day-btn.full:hover {
+                background: linear-gradient(135deg, #808080, #666);
+                transform: translateY(-2px);
+                box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+            }
+
+        .day-btn.past {
+            background: #f5f5f5;
+            color: #ccc;
+            cursor: default;
+        }
+
+            .day-btn.past:hover {
+                transform: none;
+                box-shadow: none;
+            }
+
+        /* Выходные дни */
+        .day-btn.weekend {
+            background: #fff0f0;
+            color: #e53e3e;
+            cursor: default;
+            border: 1px solid #fed7d7;
+        }
+
+            .day-btn.weekend:hover {
+                transform: none;
+                box-shadow: none;
+            }
+
+        .day-btn.selected {
+            box-shadow: 0 0 0 3px rgba(79,70,229,0.3);
+            transform: scale(1.05);
+            position: relative;
+            z-index: 2;
+        }
+
+    /* Легенда */
+    .legend {
+        display: flex;
+        gap: 20px;
+        flex-wrap: wrap;
+        margin-bottom: 20px;
+        padding: 10px 14px;
+        background: #f8f8f8;
+        border-radius: 10px;
+        border: 1px solid #eee;
+        font-size: 0.85rem;
+        color: #555;
+    }
+
+    .legend-item {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+    }
+
+    .legend-dot {
+        width: 14px;
+        height: 14px;
+        border-radius: 4px;
+        display: inline-block;
+    }
+
+        .legend-dot.free {
+            background: #e0e0e0;
+        }
+
+        .legend-dot.partial {
+            background: #bfbfbf;
+        }
+
+        .legend-dot.full {
+            background: #808080;
+        }
+
+        .legend-dot.weekend {
+            background: #fff0f0;
+            border: 1px solid #fed7d7;
+        }
+
+    .slots-title {
+        margin-top: 20px;
+        font-size: 1.3rem;
+        color: #555;
+        font-weight: 500;
+    }
+
+    .slots-grid {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        margin-top: 10px;
+        margin-bottom: 20px;
+    }
+
+    .slot-btn {
+        background: #ccc;
+        color: #333;
+        border: none;
+        border-radius: 20px;
+        padding: 10px 16px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s;
+        font-size: 0.95rem;
+        flex: 0 0 auto;
+    }
+
+        .slot-btn:hover {
+            background: #bbb;
+            transform: translateY(-3px);
+            box-shadow: 0 6px 12px rgba(0,0,0,0.1);
+        }
+
+    .no-slots {
+        color: #999;
+        font-style: italic;
+        padding: 20px;
+        text-align: center;
+        width: 100%;
+        background: #f8f8f8;
+        border-radius: 12px;
+    }
+
+    @@media (max-width: 768px) {
+        .title {
+            font-size: 1.6rem;
+        }
+
+        .day-btn {
+            padding: 8px 0;
+            font-size: 0.85rem;
+            border-radius: 8px;
+        }
+
+        .weekday {
+            font-size: 0.85rem;
+        }
+
+        .legend {
+            gap: 12px;
+        }
+    }
+
+    @@media (max-width: 480px) {
+        .title {
+            font-size: 1.4rem;
+        }
+
+        .day-btn {
+            padding: 6px 0;
+            font-size: 0.8rem;
+            border-radius: 6px;
+        }
+
+        .weekday {
+            font-size: 0.8rem;
+        }
+
+        .legend {
+            font-size: 0.8rem;
+            gap: 8px;
+        }
+    }
+
+    @@keyframes fadeIn {
+        from {
+            opacity: 0;
+            transform: translateY(10px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .calendar-grid, .slots-grid {
+        animation: fadeIn 0.3s ease;
+    }
+</style>
+
+<script>
+    let selectedDateStr = null;
+
+    async function selectDate(dateStr) {
+        document.querySelectorAll('.day-btn.selected').forEach(b => b.classList.remove('selected'));
+        event.target.classList.add('selected');
+        selectedDateStr = dateStr;
+
+        const d = new Date(dateStr);
+        const options = { day: 'numeric', month: 'long', year: 'numeric' };
+        document.getElementById('slotsTitle').textContent =
+            'Доступное время на ' + d.toLocaleDateString('ru-RU', options);
+
+        document.getElementById('slotsSection').style.display = 'block';
+        document.getElementById('slotsGrid').innerHTML = '<span class="no-slots">Загрузка...</span>';
+
+        const response = await fetch('/Calendar/Slots?date=' + dateStr);
+        const slots    = await response.json();
+        const grid     = document.getElementById('slotsGrid');
+        grid.innerHTML = '';
+
+        if (slots.length === 0) {
+            grid.innerHTML = '<span class="no-slots">Нет свободного времени</span>';
+        } else {
+            slots.forEach(slot => {
+                const btn     = document.createElement('button');
+                btn.className = 'slot-btn';
+                btn.textContent = slot;
+                btn.onclick = () => {
+                    window.location.href = '/Booking?date=' + dateStr + 'T' + slot + ':00';
+                };
+                grid.appendChild(btn);
+            });
+        }
+    }
+</script>

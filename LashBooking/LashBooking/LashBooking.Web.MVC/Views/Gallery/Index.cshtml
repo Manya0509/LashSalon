@@ -1,0 +1,348 @@
+﻿@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewBag.Title = "Фото работ — LashLukina";
+
+    var allPhotos = new List<string>
+    {
+        "/images/gallery/photo1.jpg",
+        "/images/gallery/photo2.jpg",
+        "/images/gallery/photo3.jpg",
+        "/images/gallery/photo5.jpg",
+        "/images/gallery/photo8.jpg",
+        "/images/gallery/photo6.jpg",
+        "/images/gallery/photo7.jpg",
+        "/images/gallery/photo4.jpg",
+        "/images/gallery/photo9.jpg",
+    };
+}
+
+<div class="back-button-container">
+    <a href="/" class="back-btn">
+        <span class="back-icon">←</span> Назад
+    </a>
+</div>
+
+<div class="gallery-container">
+    <h2 class="gallery-title">📸 Фото работ</h2>
+
+    @if (!allPhotos.Any())
+    {
+        <div class="empty-gallery">
+            <div class="empty-icon">📷</div>
+            <h3>Фотографии скоро появятся</h3>
+            <p>Следите за обновлениями!</p>
+        </div>
+    }
+    else
+    {
+        <div class="photo-grid">
+            @for (int i = 0; i < allPhotos.Count; i++)
+            {
+                var index = i;
+                <div class="photo-item" onclick="openLightbox(@index)">
+                    <img src="@allPhotos[i]" alt="Фото работы" class="photo-image" loading="lazy" />
+                </div>
+            }
+        </div>
+    }
+</div>
+
+<div class="lightbox" id="lightbox" onclick="closeLightbox()">
+    <div class="lightbox-content" onclick="event.stopPropagation()">
+        <button class="lightbox-close" onclick="closeLightbox()">✕</button>
+        <img src="" alt="Фото работы" class="lightbox-image" id="lightboxImage" />
+        <button class="lightbox-nav lightbox-prev" onclick="prevPhoto(); event.stopPropagation()">←</button>
+        <button class="lightbox-nav lightbox-next" onclick="nextPhoto(); event.stopPropagation()">→</button>
+    </div>
+</div>
+
+<style>
+    .back-button-container {
+        max-width: 1200px;
+        margin: 20px auto 0;
+        padding: 0 20px;
+    }
+
+    .back-btn {
+        background: transparent;
+        color: #444;
+        border: 2px solid #333;
+        border-radius: 30px;
+        padding: 8px 20px;
+        font-size: 1rem;
+        font-weight: 600;
+        cursor: pointer;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        transition: all 0.3s ease;
+        text-decoration: none;
+    }
+
+        .back-btn:hover {
+            background: #4f46e5;
+            color: white;
+            transform: translateX(-3px);
+            box-shadow: 0 4px 10px rgba(79, 70, 229, 0.3);
+        }
+
+    .back-icon {
+        font-size: 1.2rem;
+        line-height: 1;
+    }
+
+    .gallery-container {
+        max-width: 1200px;
+        margin: 0 auto 60px;
+        padding: 0 20px;
+    }
+
+    .gallery-title {
+        font-size: 2.2rem;
+        font-weight: 600;
+        text-align: center;
+        color: #333;
+        margin: 20px 0 40px;
+        font-family: 'Segoe UI', sans-serif;
+    }
+
+    .empty-gallery {
+        text-align: center;
+        padding: 80px 20px;
+        background: #f9f9f9;
+        border-radius: 20px;
+        margin: 40px 0;
+    }
+
+    .empty-icon {
+        font-size: 80px;
+        margin-bottom: 20px;
+        opacity: 0.5;
+    }
+
+    .empty-gallery h3 {
+        font-size: 1.8rem;
+        color: #333;
+        margin-bottom: 10px;
+    }
+
+    .empty-gallery p {
+        color: #666;
+        font-size: 1.1rem;
+    }
+
+    .photo-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 25px;
+        margin-bottom: 40px;
+    }
+
+    .photo-item {
+        position: relative;
+        border-radius: 12px;
+        overflow: hidden;
+        cursor: pointer;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        transition: all 0.3s ease;
+        background: #f5f5f5;
+        width: 100%;
+        aspect-ratio: 4/3;
+        max-width: 100%;
+    }
+
+        .photo-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+        }
+
+    .photo-image {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform 0.4s ease;
+        display: block;
+    }
+
+    .photo-item:hover .photo-image {
+        transform: scale(1.05);
+    }
+
+    .lightbox {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(0, 0, 0, 0.95);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 2000;
+        animation: fadeIn 0.3s ease;
+        display: none;
+    }
+
+        .lightbox.active {
+            display: flex;
+        }
+
+    .lightbox-content {
+        position: relative;
+        max-width: 90vw;
+        max-height: 90vh;
+        animation: zoomIn 0.3s ease;
+    }
+
+    .lightbox-image {
+        max-width: 90vw;
+        max-height: 80vh;
+        object-fit: contain;
+        border-radius: 8px;
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+    }
+
+    .lightbox-close {
+        position: absolute;
+        top: -40px;
+        right: 0;
+        background: none;
+        border: none;
+        color: white;
+        font-size: 28px;
+        cursor: pointer;
+        width: 40px;
+        height: 40px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 50%;
+        transition: background 0.3s;
+    }
+
+        .lightbox-close:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+    .lightbox-nav {
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        background: rgba(255, 255, 255, 0.2);
+        border: none;
+        color: white;
+        font-size: 32px;
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.3s;
+        backdrop-filter: blur(5px);
+    }
+
+        .lightbox-nav:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+    .lightbox-prev {
+        left: 20px;
+    }
+
+    .lightbox-next {
+        right: 20px;
+    }
+
+    @@keyframes fadeIn {
+        from {
+            opacity: 0;
+        }
+
+        to {
+            opacity: 1;
+        }
+    }
+
+    @@keyframes zoomIn {
+        from {
+            transform: scale(0.9);
+            opacity: 0;
+        }
+
+        to {
+            transform: scale(1);
+            opacity: 1;
+        }
+    }
+
+    @@media (max-width: 768px) {
+        .photo-grid {
+            gap: 15px;
+        }
+    }
+
+    @@media (max-width: 480px) {
+        .photo-grid {
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+        }
+
+        .gallery-title {
+            font-size: 1.8rem;
+        }
+
+        .empty-icon {
+            font-size: 60px;
+        }
+
+        .empty-gallery h3 {
+            font-size: 1.5rem;
+        }
+    }
+</style>
+
+<script>
+    // Список фото — такой же как в Blazor allPhotos
+    const photos = @Html.Raw(System.Text.Json.JsonSerializer.Serialize(allPhotos));
+    let currentIndex = 0;
+
+    // Было в Blazor: void OpenLightbox(string photo)
+    function openLightbox(index) {
+        currentIndex = index;
+        document.getElementById('lightboxImage').src = photos[currentIndex];
+        document.getElementById('lightbox').classList.add('active');
+        document.body.style.overflow = 'hidden';
+    }
+
+    // Было в Blazor: void CloseLightbox()
+    function closeLightbox() {
+        document.getElementById('lightbox').classList.remove('active');
+        document.body.style.overflow = '';
+    }
+
+    // Было в Blazor: void PrevPhoto()
+    function prevPhoto() {
+        if (currentIndex > 0) {
+            currentIndex--;
+            document.getElementById('lightboxImage').src = photos[currentIndex];
+        }
+    }
+
+    // Было в Blazor: void NextPhoto()
+    function nextPhoto() {
+        if (currentIndex < photos.length - 1) {
+            currentIndex++;
+            document.getElementById('lightboxImage').src = photos[currentIndex];
+        }
+    }
+
+    // Навигация стрелками клавиатуры
+    document.addEventListener('keydown', function (e) {
+        if (!document.getElementById('lightbox').classList.contains('active')) return;
+        if (e.key === 'ArrowLeft') prevPhoto();
+        if (e.key === 'ArrowRight') nextPhoto();
+        if (e.key === 'Escape') closeLightbox();
+    });
+</script>

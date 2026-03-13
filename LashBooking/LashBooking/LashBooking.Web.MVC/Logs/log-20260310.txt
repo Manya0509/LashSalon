@@ -1,0 +1,542 @@
+2026-03-10 18:19:11 [INF] Приложение запускается...
+2026-03-10 18:19:12 [INF] Now listening on: https://localhost:7150
+2026-03-10 18:19:12 [INF] Now listening on: http://localhost:5265
+2026-03-10 18:19:13 [INF] Application started. Press Ctrl+C to shut down.
+2026-03-10 18:19:13 [INF] Hosting environment: Development
+2026-03-10 18:19:13 [INF] Content root path: C:\Users\Дарья\Desktop\LashSalon\LashSalon\LashBooking\LashBooking\LashBooking.Web.MVC
+2026-03-10 18:20:17 [INF] Приложение запускается...
+2026-03-10 18:20:19 [INF] Now listening on: https://localhost:7150
+2026-03-10 18:20:19 [INF] Now listening on: http://localhost:5265
+2026-03-10 18:20:20 [INF] Application started. Press Ctrl+C to shut down.
+2026-03-10 18:20:20 [INF] Hosting environment: Development
+2026-03-10 18:20:20 [INF] Content root path: C:\Users\Дарья\Desktop\LashSalon\LashSalon\LashBooking\LashBooking\LashBooking.Web.MVC
+2026-03-10 18:39:46 [INF] Приложение запускается...
+2026-03-10 18:39:48 [INF] Now listening on: https://localhost:7150
+2026-03-10 18:39:48 [INF] Now listening on: http://localhost:5265
+2026-03-10 18:39:48 [INF] Application started. Press Ctrl+C to shut down.
+2026-03-10 18:39:48 [INF] Hosting environment: Development
+2026-03-10 18:39:48 [INF] Content root path: C:\Users\Дарья\Desktop\LashSalon\LashSalon\LashBooking\LashBooking\LashBooking.Web.MVC
+2026-03-10 18:39:57 [WRN] No store type was specified for the decimal property 'Price' on entity type 'Service'. This will cause values to be silently truncated if they do not fit in the default precision and scale. Explicitly specify the SQL server column type that can accommodate all the values in 'OnModelCreating' using 'HasColumnType', specify precision and scale using 'HasPrecision', or configure a value converter using 'HasConversion'.
+2026-03-10 18:40:08 [INF] Executed DbCommand (174ms) [Parameters=[@__cleanPhone_0='?' (Size = 20)], CommandType='"Text"', CommandTimeout='30']
+SELECT [c].[Id], [c].[CreatedAt], [c].[Email], [c].[Name], [c].[Notes], [c].[Password], [c].[Phone]
+FROM [Clients] AS [c]
+WHERE [c].[Phone] = @__cleanPhone_0
+2026-03-10 18:40:09 [INF] Executed DbCommand (8ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT [s].[Id], [s].[Description], [s].[DurationMinutes], [s].[IsActive], [s].[Name], [s].[Price]
+FROM [Services] AS [s]
+2026-03-10 18:40:09 [INF] Executed DbCommand (24ms) [Parameters=[@__clientId_0='?' (DbType = Int32)], CommandType='"Text"', CommandTimeout='30']
+SELECT [a].[Id], [a].[ClientId], [a].[CreatedAt], [a].[DateEnd], [a].[DateStart], [a].[Notes], [a].[ServiceId], [a].[Status]
+FROM [Appointments] AS [a]
+WHERE [a].[ClientId] = @__clientId_0
+2026-03-10 18:40:14 [INF] Executed DbCommand (1ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT [s].[Id], [s].[Description], [s].[DurationMinutes], [s].[IsActive], [s].[Name], [s].[Price]
+FROM [Services] AS [s]
+2026-03-10 18:40:14 [INF] Executed DbCommand (1ms) [Parameters=[@__clientId_0='?' (DbType = Int32)], CommandType='"Text"', CommandTimeout='30']
+SELECT [a].[Id], [a].[ClientId], [a].[CreatedAt], [a].[DateEnd], [a].[DateStart], [a].[Notes], [a].[ServiceId], [a].[Status]
+FROM [Appointments] AS [a]
+WHERE [a].[ClientId] = @__clientId_0
+2026-03-10 18:40:20 [INF] Executed DbCommand (5ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT [a].[Id], [a].[ClientId], [a].[CreatedAt], [a].[DateEnd], [a].[DateStart], [a].[Notes], [a].[ServiceId], [a].[Status]
+FROM [Appointments] AS [a]
+2026-03-10 18:40:20 [INF] Executed DbCommand (4ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT [c].[Id], [c].[CreatedAt], [c].[Email], [c].[Name], [c].[Notes], [c].[Password], [c].[Phone]
+FROM [Clients] AS [c]
+2026-03-10 18:40:21 [INF] Executed DbCommand (1ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT [s].[Id], [s].[Description], [s].[DurationMinutes], [s].[IsActive], [s].[Name], [s].[Price]
+FROM [Services] AS [s]
+2026-03-10 18:40:21 [INF] Executed DbCommand (4ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT [r].[Id], [r].[ClientId], [r].[CreatedAt], [r].[IsApproved], [r].[Rating], [r].[Text]
+FROM [Reviews] AS [r]
+2026-03-10 18:40:23 [INF] Executed DbCommand (1ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT [a].[Id], [a].[ClientId], [a].[CreatedAt], [a].[DateEnd], [a].[DateStart], [a].[Notes], [a].[ServiceId], [a].[Status]
+FROM [Appointments] AS [a]
+2026-03-10 18:40:23 [INF] Executed DbCommand (1ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT [c].[Id], [c].[CreatedAt], [c].[Email], [c].[Name], [c].[Notes], [c].[Password], [c].[Phone]
+FROM [Clients] AS [c]
+2026-03-10 18:40:23 [INF] Executed DbCommand (1ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT [s].[Id], [s].[Description], [s].[DurationMinutes], [s].[IsActive], [s].[Name], [s].[Price]
+FROM [Services] AS [s]
+2026-03-10 18:40:23 [INF] Executed DbCommand (1ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT [r].[Id], [r].[ClientId], [r].[CreatedAt], [r].[IsApproved], [r].[Rating], [r].[Text]
+FROM [Reviews] AS [r]
+2026-03-10 18:40:24 [INF] Executed DbCommand (2ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT [a].[Id], [a].[ClientId], [a].[CreatedAt], [a].[DateEnd], [a].[DateStart], [a].[Notes], [a].[ServiceId], [a].[Status]
+FROM [Appointments] AS [a]
+2026-03-10 18:40:24 [INF] Executed DbCommand (1ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT [c].[Id], [c].[CreatedAt], [c].[Email], [c].[Name], [c].[Notes], [c].[Password], [c].[Phone]
+FROM [Clients] AS [c]
+2026-03-10 18:40:24 [INF] Executed DbCommand (1ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT [s].[Id], [s].[Description], [s].[DurationMinutes], [s].[IsActive], [s].[Name], [s].[Price]
+FROM [Services] AS [s]
+2026-03-10 18:40:24 [INF] Executed DbCommand (0ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT [r].[Id], [r].[ClientId], [r].[CreatedAt], [r].[IsApproved], [r].[Rating], [r].[Text]
+FROM [Reviews] AS [r]
+2026-03-10 18:40:25 [INF] Executed DbCommand (2ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT [a].[Id], [a].[ClientId], [a].[CreatedAt], [a].[DateEnd], [a].[DateStart], [a].[Notes], [a].[ServiceId], [a].[Status]
+FROM [Appointments] AS [a]
+2026-03-10 18:40:25 [INF] Executed DbCommand (1ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT [c].[Id], [c].[CreatedAt], [c].[Email], [c].[Name], [c].[Notes], [c].[Password], [c].[Phone]
+FROM [Clients] AS [c]
+2026-03-10 18:40:25 [INF] Executed DbCommand (1ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT [s].[Id], [s].[Description], [s].[DurationMinutes], [s].[IsActive], [s].[Name], [s].[Price]
+FROM [Services] AS [s]
+2026-03-10 18:40:25 [INF] Executed DbCommand (0ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT [r].[Id], [r].[ClientId], [r].[CreatedAt], [r].[IsApproved], [r].[Rating], [r].[Text]
+FROM [Reviews] AS [r]
+2026-03-10 18:40:26 [INF] Executed DbCommand (1ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT [a].[Id], [a].[ClientId], [a].[CreatedAt], [a].[DateEnd], [a].[DateStart], [a].[Notes], [a].[ServiceId], [a].[Status]
+FROM [Appointments] AS [a]
+2026-03-10 18:40:26 [INF] Executed DbCommand (1ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT [c].[Id], [c].[CreatedAt], [c].[Email], [c].[Name], [c].[Notes], [c].[Password], [c].[Phone]
+FROM [Clients] AS [c]
+2026-03-10 18:40:26 [INF] Executed DbCommand (1ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT [s].[Id], [s].[Description], [s].[DurationMinutes], [s].[IsActive], [s].[Name], [s].[Price]
+FROM [Services] AS [s]
+2026-03-10 18:40:26 [INF] Executed DbCommand (1ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT [r].[Id], [r].[ClientId], [r].[CreatedAt], [r].[IsApproved], [r].[Rating], [r].[Text]
+FROM [Reviews] AS [r]
+2026-03-10 18:41:16 [INF] Приложение запускается...
+2026-03-10 18:41:18 [INF] Now listening on: https://localhost:7150
+2026-03-10 18:41:18 [INF] Now listening on: http://localhost:5265
+2026-03-10 18:41:18 [INF] Application started. Press Ctrl+C to shut down.
+2026-03-10 18:41:18 [INF] Hosting environment: Development
+2026-03-10 18:41:18 [INF] Content root path: C:\Users\Дарья\Desktop\LashSalon\LashSalon\LashBooking\LashBooking\LashBooking.Web.MVC
+2026-03-10 18:41:30 [WRN] No store type was specified for the decimal property 'Price' on entity type 'Service'. This will cause values to be silently truncated if they do not fit in the default precision and scale. Explicitly specify the SQL server column type that can accommodate all the values in 'OnModelCreating' using 'HasColumnType', specify precision and scale using 'HasPrecision', or configure a value converter using 'HasConversion'.
+2026-03-10 18:42:02 [INF] Executed DbCommand (130ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT [a].[Id], [a].[ClientId], [a].[CreatedAt], [a].[DateEnd], [a].[DateStart], [a].[Notes], [a].[ServiceId], [a].[Status]
+FROM [Appointments] AS [a]
+2026-03-10 18:42:02 [INF] Executed DbCommand (9ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT [c].[Id], [c].[CreatedAt], [c].[Email], [c].[Name], [c].[Notes], [c].[Password], [c].[Phone]
+FROM [Clients] AS [c]
+2026-03-10 18:42:02 [INF] Executed DbCommand (4ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT [s].[Id], [s].[Description], [s].[DurationMinutes], [s].[IsActive], [s].[Name], [s].[Price]
+FROM [Services] AS [s]
+2026-03-10 18:42:02 [INF] Executed DbCommand (4ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT [r].[Id], [r].[ClientId], [r].[CreatedAt], [r].[IsApproved], [r].[Rating], [r].[Text]
+FROM [Reviews] AS [r]
+2026-03-10 18:42:09 [INF] Executed DbCommand (1ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT [a].[Id], [a].[ClientId], [a].[CreatedAt], [a].[DateEnd], [a].[DateStart], [a].[Notes], [a].[ServiceId], [a].[Status]
+FROM [Appointments] AS [a]
+2026-03-10 18:42:09 [INF] Executed DbCommand (1ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT [c].[Id], [c].[CreatedAt], [c].[Email], [c].[Name], [c].[Notes], [c].[Password], [c].[Phone]
+FROM [Clients] AS [c]
+2026-03-10 18:42:09 [INF] Executed DbCommand (1ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT [s].[Id], [s].[Description], [s].[DurationMinutes], [s].[IsActive], [s].[Name], [s].[Price]
+FROM [Services] AS [s]
+2026-03-10 18:42:09 [INF] Executed DbCommand (1ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT [r].[Id], [r].[ClientId], [r].[CreatedAt], [r].[IsApproved], [r].[Rating], [r].[Text]
+FROM [Reviews] AS [r]
+2026-03-10 18:42:25 [INF] Executed DbCommand (17ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT [a].[Id], [a].[ClientId], [a].[CreatedAt], [a].[DateEnd], [a].[DateStart], [a].[Notes], [a].[ServiceId], [a].[Status]
+FROM [Appointments] AS [a]
+2026-03-10 18:42:25 [INF] Executed DbCommand (3ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT [c].[Id], [c].[CreatedAt], [c].[Email], [c].[Name], [c].[Notes], [c].[Password], [c].[Phone]
+FROM [Clients] AS [c]
+2026-03-10 18:42:25 [INF] Executed DbCommand (4ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT [s].[Id], [s].[Description], [s].[DurationMinutes], [s].[IsActive], [s].[Name], [s].[Price]
+FROM [Services] AS [s]
+2026-03-10 18:42:25 [INF] Executed DbCommand (3ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT [r].[Id], [r].[ClientId], [r].[CreatedAt], [r].[IsApproved], [r].[Rating], [r].[Text]
+FROM [Reviews] AS [r]
+2026-03-10 18:48:02 [INF] Приложение запускается...
+2026-03-10 18:48:04 [INF] Now listening on: https://localhost:7150
+2026-03-10 18:48:04 [INF] Now listening on: http://localhost:5265
+2026-03-10 18:48:04 [INF] Application started. Press Ctrl+C to shut down.
+2026-03-10 18:48:04 [INF] Hosting environment: Development
+2026-03-10 18:48:04 [INF] Content root path: C:\Users\Дарья\Desktop\LashSalon\LashSalon\LashBooking\LashBooking\LashBooking.Web.MVC
+2026-03-10 18:48:15 [WRN] No store type was specified for the decimal property 'Price' on entity type 'Service'. This will cause values to be silently truncated if they do not fit in the default precision and scale. Explicitly specify the SQL server column type that can accommodate all the values in 'OnModelCreating' using 'HasColumnType', specify precision and scale using 'HasPrecision', or configure a value converter using 'HasConversion'.
+2026-03-10 18:48:16 [INF] Executed DbCommand (74ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT [s].[Id], [s].[Description], [s].[DurationMinutes], [s].[IsActive], [s].[Name], [s].[Price]
+FROM [Services] AS [s]
+2026-03-10 18:48:17 [INF] Executed DbCommand (68ms) [Parameters=[@__serviceId_0='?' (DbType = Int32), @__date_Date_1='?' (DbType = DateTime2)], CommandType='"Text"', CommandTimeout='30']
+SELECT [a].[Id], [a].[ClientId], [a].[CreatedAt], [a].[DateEnd], [a].[DateStart], [a].[Notes], [a].[ServiceId], [a].[Status]
+FROM [Appointments] AS [a]
+WHERE [a].[ServiceId] = @__serviceId_0 AND CONVERT(date, [a].[DateStart]) = @__date_Date_1
+2026-03-10 18:48:17 [INF] Executed DbCommand (6ms) [Parameters=[@__8__locals1_serviceId_0='?' (DbType = Int32), @__date_Date_1='?' (DbType = DateTime2)], CommandType='"Text"', CommandTimeout='30']
+SELECT [a].[Id], [a].[ClientId], [a].[CreatedAt], [a].[DateEnd], [a].[DateStart], [a].[Notes], [a].[ServiceId], [a].[Status]
+FROM [Appointments] AS [a]
+WHERE [a].[ServiceId] = @__8__locals1_serviceId_0 AND CONVERT(date, [a].[DateStart]) = @__date_Date_1
+2026-03-10 18:48:17 [INF] Executed DbCommand (1ms) [Parameters=[@__8__locals1_serviceId_0='?' (DbType = Int32), @__date_Date_1='?' (DbType = DateTime2)], CommandType='"Text"', CommandTimeout='30']
+SELECT [a].[Id], [a].[ClientId], [a].[CreatedAt], [a].[DateEnd], [a].[DateStart], [a].[Notes], [a].[ServiceId], [a].[Status]
+FROM [Appointments] AS [a]
+WHERE [a].[ServiceId] = @__8__locals1_serviceId_0 AND CONVERT(date, [a].[DateStart]) = @__date_Date_1
+2026-03-10 18:48:17 [INF] Executed DbCommand (1ms) [Parameters=[@__8__locals1_serviceId_0='?' (DbType = Int32), @__date_Date_1='?' (DbType = DateTime2)], CommandType='"Text"', CommandTimeout='30']
+SELECT [a].[Id], [a].[ClientId], [a].[CreatedAt], [a].[DateEnd], [a].[DateStart], [a].[Notes], [a].[ServiceId], [a].[Status]
+FROM [Appointments] AS [a]
+WHERE [a].[ServiceId] = @__8__locals1_serviceId_0 AND CONVERT(date, [a].[DateStart]) = @__date_Date_1
+2026-03-10 18:48:17 [INF] Executed DbCommand (1ms) [Parameters=[@__8__locals1_serviceId_0='?' (DbType = Int32), @__date_Date_1='?' (DbType = DateTime2)], CommandType='"Text"', CommandTimeout='30']
+SELECT [a].[Id], [a].[ClientId], [a].[CreatedAt], [a].[DateEnd], [a].[DateStart], [a].[Notes], [a].[ServiceId], [a].[Status]
+FROM [Appointments] AS [a]
+WHERE [a].[ServiceId] = @__8__locals1_serviceId_0 AND CONVERT(date, [a].[DateStart]) = @__date_Date_1
+2026-03-10 18:48:17 [INF] Executed DbCommand (1ms) [Parameters=[@__8__locals1_serviceId_0='?' (DbType = Int32), @__date_Date_1='?' (DbType = DateTime2)], CommandType='"Text"', CommandTimeout='30']
+SELECT [a].[Id], [a].[ClientId], [a].[CreatedAt], [a].[DateEnd], [a].[DateStart], [a].[Notes], [a].[ServiceId], [a].[Status]
+FROM [Appointments] AS [a]
+WHERE [a].[ServiceId] = @__8__locals1_serviceId_0 AND CONVERT(date, [a].[DateStart]) = @__date_Date_1
+2026-03-10 18:48:17 [INF] Executed DbCommand (1ms) [Parameters=[@__8__locals1_serviceId_0='?' (DbType = Int32), @__date_Date_1='?' (DbType = DateTime2)], CommandType='"Text"', CommandTimeout='30']
+SELECT [a].[Id], [a].[ClientId], [a].[CreatedAt], [a].[DateEnd], [a].[DateStart], [a].[Notes], [a].[ServiceId], [a].[Status]
+FROM [Appointments] AS [a]
+WHERE [a].[ServiceId] = @__8__locals1_serviceId_0 AND CONVERT(date, [a].[DateStart]) = @__date_Date_1
+2026-03-10 18:48:17 [INF] Executed DbCommand (1ms) [Parameters=[@__8__locals1_serviceId_0='?' (DbType = Int32), @__date_Date_1='?' (DbType = DateTime2)], CommandType='"Text"', CommandTimeout='30']
+SELECT [a].[Id], [a].[ClientId], [a].[CreatedAt], [a].[DateEnd], [a].[DateStart], [a].[Notes], [a].[ServiceId], [a].[Status]
+FROM [Appointments] AS [a]
+WHERE [a].[ServiceId] = @__8__locals1_serviceId_0 AND CONVERT(date, [a].[DateStart]) = @__date_Date_1
+2026-03-10 18:48:17 [INF] Executed DbCommand (1ms) [Parameters=[@__8__locals1_serviceId_0='?' (DbType = Int32), @__date_Date_1='?' (DbType = DateTime2)], CommandType='"Text"', CommandTimeout='30']
+SELECT [a].[Id], [a].[ClientId], [a].[CreatedAt], [a].[DateEnd], [a].[DateStart], [a].[Notes], [a].[ServiceId], [a].[Status]
+FROM [Appointments] AS [a]
+WHERE [a].[ServiceId] = @__8__locals1_serviceId_0 AND CONVERT(date, [a].[DateStart]) = @__date_Date_1
+2026-03-10 18:48:17 [INF] Executed DbCommand (1ms) [Parameters=[@__8__locals1_serviceId_0='?' (DbType = Int32), @__date_Date_1='?' (DbType = DateTime2)], CommandType='"Text"', CommandTimeout='30']
+SELECT [a].[Id], [a].[ClientId], [a].[CreatedAt], [a].[DateEnd], [a].[DateStart], [a].[Notes], [a].[ServiceId], [a].[Status]
+FROM [Appointments] AS [a]
+WHERE [a].[ServiceId] = @__8__locals1_serviceId_0 AND CONVERT(date, [a].[DateStart]) = @__date_Date_1
+2026-03-10 18:48:17 [INF] Executed DbCommand (1ms) [Parameters=[@__8__locals1_serviceId_0='?' (DbType = Int32), @__date_Date_1='?' (DbType = DateTime2)], CommandType='"Text"', CommandTimeout='30']
+SELECT [a].[Id], [a].[ClientId], [a].[CreatedAt], [a].[DateEnd], [a].[DateStart], [a].[Notes], [a].[ServiceId], [a].[Status]
+FROM [Appointments] AS [a]
+WHERE [a].[ServiceId] = @__8__locals1_serviceId_0 AND CONVERT(date, [a].[DateStart]) = @__date_Date_1
+2026-03-10 18:48:17 [INF] Executed DbCommand (2ms) [Parameters=[@__8__locals1_serviceId_0='?' (DbType = Int32), @__date_Date_1='?' (DbType = DateTime2)], CommandType='"Text"', CommandTimeout='30']
+SELECT [a].[Id], [a].[ClientId], [a].[CreatedAt], [a].[DateEnd], [a].[DateStart], [a].[Notes], [a].[ServiceId], [a].[Status]
+FROM [Appointments] AS [a]
+WHERE [a].[ServiceId] = @__8__locals1_serviceId_0 AND CONVERT(date, [a].[DateStart]) = @__date_Date_1
+2026-03-10 18:48:17 [INF] Executed DbCommand (1ms) [Parameters=[@__8__locals1_serviceId_0='?' (DbType = Int32), @__date_Date_1='?' (DbType = DateTime2)], CommandType='"Text"', CommandTimeout='30']
+SELECT [a].[Id], [a].[ClientId], [a].[CreatedAt], [a].[DateEnd], [a].[DateStart], [a].[Notes], [a].[ServiceId], [a].[Status]
+FROM [Appointments] AS [a]
+WHERE [a].[ServiceId] = @__8__locals1_serviceId_0 AND CONVERT(date, [a].[DateStart]) = @__date_Date_1
+2026-03-10 18:48:17 [INF] Executed DbCommand (1ms) [Parameters=[@__8__locals1_serviceId_0='?' (DbType = Int32), @__date_Date_1='?' (DbType = DateTime2)], CommandType='"Text"', CommandTimeout='30']
+SELECT [a].[Id], [a].[ClientId], [a].[CreatedAt], [a].[DateEnd], [a].[DateStart], [a].[Notes], [a].[ServiceId], [a].[Status]
+FROM [Appointments] AS [a]
+WHERE [a].[ServiceId] = @__8__locals1_serviceId_0 AND CONVERT(date, [a].[DateStart]) = @__date_Date_1
+2026-03-10 18:48:17 [INF] Executed DbCommand (1ms) [Parameters=[@__8__locals1_serviceId_0='?' (DbType = Int32), @__date_Date_1='?' (DbType = DateTime2)], CommandType='"Text"', CommandTimeout='30']
+SELECT [a].[Id], [a].[ClientId], [a].[CreatedAt], [a].[DateEnd], [a].[DateStart], [a].[Notes], [a].[ServiceId], [a].[Status]
+FROM [Appointments] AS [a]
+WHERE [a].[ServiceId] = @__8__locals1_serviceId_0 AND CONVERT(date, [a].[DateStart]) = @__date_Date_1
+2026-03-10 18:48:17 [INF] Executed DbCommand (1ms) [Parameters=[@__8__locals1_serviceId_0='?' (DbType = Int32), @__date_Date_1='?' (DbType = DateTime2)], CommandType='"Text"', CommandTimeout='30']
+SELECT [a].[Id], [a].[ClientId], [a].[CreatedAt], [a].[DateEnd], [a].[DateStart], [a].[Notes], [a].[ServiceId], [a].[Status]
+FROM [Appointments] AS [a]
+WHERE [a].[ServiceId] = @__8__locals1_serviceId_0 AND CONVERT(date, [a].[DateStart]) = @__date_Date_1
+2026-03-10 18:48:17 [INF] Executed DbCommand (2ms) [Parameters=[@__8__locals1_serviceId_0='?' (DbType = Int32), @__date_Date_1='?' (DbType = DateTime2)], CommandType='"Text"', CommandTimeout='30']
+SELECT [a].[Id], [a].[ClientId], [a].[CreatedAt], [a].[DateEnd], [a].[DateStart], [a].[Notes], [a].[ServiceId], [a].[Status]
+FROM [Appointments] AS [a]
+WHERE [a].[ServiceId] = @__8__locals1_serviceId_0 AND CONVERT(date, [a].[DateStart]) = @__date_Date_1
+2026-03-10 18:48:17 [INF] Executed DbCommand (0ms) [Parameters=[@__8__locals1_serviceId_0='?' (DbType = Int32), @__date_Date_1='?' (DbType = DateTime2)], CommandType='"Text"', CommandTimeout='30']
+SELECT [a].[Id], [a].[ClientId], [a].[CreatedAt], [a].[DateEnd], [a].[DateStart], [a].[Notes], [a].[ServiceId], [a].[Status]
+FROM [Appointments] AS [a]
+WHERE [a].[ServiceId] = @__8__locals1_serviceId_0 AND CONVERT(date, [a].[DateStart]) = @__date_Date_1
+2026-03-10 18:48:17 [INF] Executed DbCommand (1ms) [Parameters=[@__8__locals1_serviceId_0='?' (DbType = Int32), @__date_Date_1='?' (DbType = DateTime2)], CommandType='"Text"', CommandTimeout='30']
+SELECT [a].[Id], [a].[ClientId], [a].[CreatedAt], [a].[DateEnd], [a].[DateStart], [a].[Notes], [a].[ServiceId], [a].[Status]
+FROM [Appointments] AS [a]
+WHERE [a].[ServiceId] = @__8__locals1_serviceId_0 AND CONVERT(date, [a].[DateStart]) = @__date_Date_1
+2026-03-10 18:48:17 [INF] Executed DbCommand (1ms) [Parameters=[@__8__locals1_serviceId_0='?' (DbType = Int32), @__date_Date_1='?' (DbType = DateTime2)], CommandType='"Text"', CommandTimeout='30']
+SELECT [a].[Id], [a].[ClientId], [a].[CreatedAt], [a].[DateEnd], [a].[DateStart], [a].[Notes], [a].[ServiceId], [a].[Status]
+FROM [Appointments] AS [a]
+WHERE [a].[ServiceId] = @__8__locals1_serviceId_0 AND CONVERT(date, [a].[DateStart]) = @__date_Date_1
+2026-03-10 18:48:17 [INF] Executed DbCommand (1ms) [Parameters=[@__8__locals1_serviceId_0='?' (DbType = Int32), @__date_Date_1='?' (DbType = DateTime2)], CommandType='"Text"', CommandTimeout='30']
+SELECT [a].[Id], [a].[ClientId], [a].[CreatedAt], [a].[DateEnd], [a].[DateStart], [a].[Notes], [a].[ServiceId], [a].[Status]
+FROM [Appointments] AS [a]
+WHERE [a].[ServiceId] = @__8__locals1_serviceId_0 AND CONVERT(date, [a].[DateStart]) = @__date_Date_1
+2026-03-10 18:48:17 [INF] Executed DbCommand (1ms) [Parameters=[@__8__locals1_serviceId_0='?' (DbType = Int32), @__date_Date_1='?' (DbType = DateTime2)], CommandType='"Text"', CommandTimeout='30']
+SELECT [a].[Id], [a].[ClientId], [a].[CreatedAt], [a].[DateEnd], [a].[DateStart], [a].[Notes], [a].[ServiceId], [a].[Status]
+FROM [Appointments] AS [a]
+WHERE [a].[ServiceId] = @__8__locals1_serviceId_0 AND CONVERT(date, [a].[DateStart]) = @__date_Date_1
+2026-03-10 18:48:17 [INF] Executed DbCommand (1ms) [Parameters=[@__8__locals1_serviceId_0='?' (DbType = Int32), @__date_Date_1='?' (DbType = DateTime2)], CommandType='"Text"', CommandTimeout='30']
+SELECT [a].[Id], [a].[ClientId], [a].[CreatedAt], [a].[DateEnd], [a].[DateStart], [a].[Notes], [a].[ServiceId], [a].[Status]
+FROM [Appointments] AS [a]
+WHERE [a].[ServiceId] = @__8__locals1_serviceId_0 AND CONVERT(date, [a].[DateStart]) = @__date_Date_1
+2026-03-10 18:48:17 [INF] Executed DbCommand (1ms) [Parameters=[@__8__locals1_serviceId_0='?' (DbType = Int32), @__date_Date_1='?' (DbType = DateTime2)], CommandType='"Text"', CommandTimeout='30']
+SELECT [a].[Id], [a].[ClientId], [a].[CreatedAt], [a].[DateEnd], [a].[DateStart], [a].[Notes], [a].[ServiceId], [a].[Status]
+FROM [Appointments] AS [a]
+WHERE [a].[ServiceId] = @__8__locals1_serviceId_0 AND CONVERT(date, [a].[DateStart]) = @__date_Date_1
+2026-03-10 18:48:17 [INF] Executed DbCommand (2ms) [Parameters=[@__8__locals1_serviceId_0='?' (DbType = Int32), @__date_Date_1='?' (DbType = DateTime2)], CommandType='"Text"', CommandTimeout='30']
+SELECT [a].[Id], [a].[ClientId], [a].[CreatedAt], [a].[DateEnd], [a].[DateStart], [a].[Notes], [a].[ServiceId], [a].[Status]
+FROM [Appointments] AS [a]
+WHERE [a].[ServiceId] = @__8__locals1_serviceId_0 AND CONVERT(date, [a].[DateStart]) = @__date_Date_1
+2026-03-10 18:48:17 [INF] Executed DbCommand (1ms) [Parameters=[@__8__locals1_serviceId_0='?' (DbType = Int32), @__date_Date_1='?' (DbType = DateTime2)], CommandType='"Text"', CommandTimeout='30']
+SELECT [a].[Id], [a].[ClientId], [a].[CreatedAt], [a].[DateEnd], [a].[DateStart], [a].[Notes], [a].[ServiceId], [a].[Status]
+FROM [Appointments] AS [a]
+WHERE [a].[ServiceId] = @__8__locals1_serviceId_0 AND CONVERT(date, [a].[DateStart]) = @__date_Date_1
+2026-03-10 18:48:17 [INF] Executed DbCommand (1ms) [Parameters=[@__8__locals1_serviceId_0='?' (DbType = Int32), @__date_Date_1='?' (DbType = DateTime2)], CommandType='"Text"', CommandTimeout='30']
+SELECT [a].[Id], [a].[ClientId], [a].[CreatedAt], [a].[DateEnd], [a].[DateStart], [a].[Notes], [a].[ServiceId], [a].[Status]
+FROM [Appointments] AS [a]
+WHERE [a].[ServiceId] = @__8__locals1_serviceId_0 AND CONVERT(date, [a].[DateStart]) = @__date_Date_1
+2026-03-10 18:48:17 [INF] Executed DbCommand (1ms) [Parameters=[@__8__locals1_serviceId_0='?' (DbType = Int32), @__date_Date_1='?' (DbType = DateTime2)], CommandType='"Text"', CommandTimeout='30']
+SELECT [a].[Id], [a].[ClientId], [a].[CreatedAt], [a].[DateEnd], [a].[DateStart], [a].[Notes], [a].[ServiceId], [a].[Status]
+FROM [Appointments] AS [a]
+WHERE [a].[ServiceId] = @__8__locals1_serviceId_0 AND CONVERT(date, [a].[DateStart]) = @__date_Date_1
+2026-03-10 18:48:17 [INF] Executed DbCommand (1ms) [Parameters=[@__8__locals1_serviceId_0='?' (DbType = Int32), @__date_Date_1='?' (DbType = DateTime2)], CommandType='"Text"', CommandTimeout='30']
+SELECT [a].[Id], [a].[ClientId], [a].[CreatedAt], [a].[DateEnd], [a].[DateStart], [a].[Notes], [a].[ServiceId], [a].[Status]
+FROM [Appointments] AS [a]
+WHERE [a].[ServiceId] = @__8__locals1_serviceId_0 AND CONVERT(date, [a].[DateStart]) = @__date_Date_1
+2026-03-10 18:48:17 [INF] Executed DbCommand (1ms) [Parameters=[@__8__locals1_serviceId_0='?' (DbType = Int32), @__date_Date_1='?' (DbType = DateTime2)], CommandType='"Text"', CommandTimeout='30']
+SELECT [a].[Id], [a].[ClientId], [a].[CreatedAt], [a].[DateEnd], [a].[DateStart], [a].[Notes], [a].[ServiceId], [a].[Status]
+FROM [Appointments] AS [a]
+WHERE [a].[ServiceId] = @__8__locals1_serviceId_0 AND CONVERT(date, [a].[DateStart]) = @__date_Date_1
+2026-03-10 18:48:17 [INF] Executed DbCommand (1ms) [Parameters=[@__8__locals1_serviceId_0='?' (DbType = Int32), @__date_Date_1='?' (DbType = DateTime2)], CommandType='"Text"', CommandTimeout='30']
+SELECT [a].[Id], [a].[ClientId], [a].[CreatedAt], [a].[DateEnd], [a].[DateStart], [a].[Notes], [a].[ServiceId], [a].[Status]
+FROM [Appointments] AS [a]
+WHERE [a].[ServiceId] = @__8__locals1_serviceId_0 AND CONVERT(date, [a].[DateStart]) = @__date_Date_1
+2026-03-10 18:48:38 [INF] Executed DbCommand (1ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT [s].[Id], [s].[Description], [s].[DurationMinutes], [s].[IsActive], [s].[Name], [s].[Price]
+FROM [Services] AS [s]
+2026-03-10 18:48:38 [INF] Executed DbCommand (1ms) [Parameters=[@__serviceId_0='?' (DbType = Int32), @__date_Date_1='?' (DbType = DateTime2)], CommandType='"Text"', CommandTimeout='30']
+SELECT [a].[Id], [a].[ClientId], [a].[CreatedAt], [a].[DateEnd], [a].[DateStart], [a].[Notes], [a].[ServiceId], [a].[Status]
+FROM [Appointments] AS [a]
+WHERE [a].[ServiceId] = @__serviceId_0 AND CONVERT(date, [a].[DateStart]) = @__date_Date_1
+2026-03-10 18:48:39 [INF] Executed DbCommand (1ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT [s].[Id], [s].[Description], [s].[DurationMinutes], [s].[IsActive], [s].[Name], [s].[Price]
+FROM [Services] AS [s]
+2026-03-10 18:48:39 [INF] Executed DbCommand (1ms) [Parameters=[@__serviceId_0='?' (DbType = Int32), @__date_Date_1='?' (DbType = DateTime2)], CommandType='"Text"', CommandTimeout='30']
+SELECT [a].[Id], [a].[ClientId], [a].[CreatedAt], [a].[DateEnd], [a].[DateStart], [a].[Notes], [a].[ServiceId], [a].[Status]
+FROM [Appointments] AS [a]
+WHERE [a].[ServiceId] = @__serviceId_0 AND CONVERT(date, [a].[DateStart]) = @__date_Date_1
+2026-03-10 18:48:39 [INF] Executed DbCommand (1ms) [Parameters=[@__8__locals1_serviceId_0='?' (DbType = Int32), @__date_Date_1='?' (DbType = DateTime2)], CommandType='"Text"', CommandTimeout='30']
+SELECT [a].[Id], [a].[ClientId], [a].[CreatedAt], [a].[DateEnd], [a].[DateStart], [a].[Notes], [a].[ServiceId], [a].[Status]
+FROM [Appointments] AS [a]
+WHERE [a].[ServiceId] = @__8__locals1_serviceId_0 AND CONVERT(date, [a].[DateStart]) = @__date_Date_1
+2026-03-10 18:48:39 [INF] Executed DbCommand (1ms) [Parameters=[@__8__locals1_serviceId_0='?' (DbType = Int32), @__date_Date_1='?' (DbType = DateTime2)], CommandType='"Text"', CommandTimeout='30']
+SELECT [a].[Id], [a].[ClientId], [a].[CreatedAt], [a].[DateEnd], [a].[DateStart], [a].[Notes], [a].[ServiceId], [a].[Status]
+FROM [Appointments] AS [a]
+WHERE [a].[ServiceId] = @__8__locals1_serviceId_0 AND CONVERT(date, [a].[DateStart]) = @__date_Date_1
+2026-03-10 18:48:39 [INF] Executed DbCommand (1ms) [Parameters=[@__8__locals1_serviceId_0='?' (DbType = Int32), @__date_Date_1='?' (DbType = DateTime2)], CommandType='"Text"', CommandTimeout='30']
+SELECT [a].[Id], [a].[ClientId], [a].[CreatedAt], [a].[DateEnd], [a].[DateStart], [a].[Notes], [a].[ServiceId], [a].[Status]
+FROM [Appointments] AS [a]
+WHERE [a].[ServiceId] = @__8__locals1_serviceId_0 AND CONVERT(date, [a].[DateStart]) = @__date_Date_1
+2026-03-10 18:48:39 [INF] Executed DbCommand (1ms) [Parameters=[@__8__locals1_serviceId_0='?' (DbType = Int32), @__date_Date_1='?' (DbType = DateTime2)], CommandType='"Text"', CommandTimeout='30']
+SELECT [a].[Id], [a].[ClientId], [a].[CreatedAt], [a].[DateEnd], [a].[DateStart], [a].[Notes], [a].[ServiceId], [a].[Status]
+FROM [Appointments] AS [a]
+WHERE [a].[ServiceId] = @__8__locals1_serviceId_0 AND CONVERT(date, [a].[DateStart]) = @__date_Date_1
+2026-03-10 18:48:39 [INF] Executed DbCommand (2ms) [Parameters=[@__8__locals1_serviceId_0='?' (DbType = Int32), @__date_Date_1='?' (DbType = DateTime2)], CommandType='"Text"', CommandTimeout='30']
+SELECT [a].[Id], [a].[ClientId], [a].[CreatedAt], [a].[DateEnd], [a].[DateStart], [a].[Notes], [a].[ServiceId], [a].[Status]
+FROM [Appointments] AS [a]
+WHERE [a].[ServiceId] = @__8__locals1_serviceId_0 AND CONVERT(date, [a].[DateStart]) = @__date_Date_1
+2026-03-10 18:48:39 [INF] Executed DbCommand (1ms) [Parameters=[@__8__locals1_serviceId_0='?' (DbType = Int32), @__date_Date_1='?' (DbType = DateTime2)], CommandType='"Text"', CommandTimeout='30']
+SELECT [a].[Id], [a].[ClientId], [a].[CreatedAt], [a].[DateEnd], [a].[DateStart], [a].[Notes], [a].[ServiceId], [a].[Status]
+FROM [Appointments] AS [a]
+WHERE [a].[ServiceId] = @__8__locals1_serviceId_0 AND CONVERT(date, [a].[DateStart]) = @__date_Date_1
+2026-03-10 18:48:39 [INF] Executed DbCommand (1ms) [Parameters=[@__8__locals1_serviceId_0='?' (DbType = Int32), @__date_Date_1='?' (DbType = DateTime2)], CommandType='"Text"', CommandTimeout='30']
+SELECT [a].[Id], [a].[ClientId], [a].[CreatedAt], [a].[DateEnd], [a].[DateStart], [a].[Notes], [a].[ServiceId], [a].[Status]
+FROM [Appointments] AS [a]
+WHERE [a].[ServiceId] = @__8__locals1_serviceId_0 AND CONVERT(date, [a].[DateStart]) = @__date_Date_1
+2026-03-10 18:48:39 [INF] Executed DbCommand (1ms) [Parameters=[@__8__locals1_serviceId_0='?' (DbType = Int32), @__date_Date_1='?' (DbType = DateTime2)], CommandType='"Text"', CommandTimeout='30']
+SELECT [a].[Id], [a].[ClientId], [a].[CreatedAt], [a].[DateEnd], [a].[DateStart], [a].[Notes], [a].[ServiceId], [a].[Status]
+FROM [Appointments] AS [a]
+WHERE [a].[ServiceId] = @__8__locals1_serviceId_0 AND CONVERT(date, [a].[DateStart]) = @__date_Date_1
+2026-03-10 18:48:39 [INF] Executed DbCommand (1ms) [Parameters=[@__8__locals1_serviceId_0='?' (DbType = Int32), @__date_Date_1='?' (DbType = DateTime2)], CommandType='"Text"', CommandTimeout='30']
+SELECT [a].[Id], [a].[ClientId], [a].[CreatedAt], [a].[DateEnd], [a].[DateStart], [a].[Notes], [a].[ServiceId], [a].[Status]
+FROM [Appointments] AS [a]
+WHERE [a].[ServiceId] = @__8__locals1_serviceId_0 AND CONVERT(date, [a].[DateStart]) = @__date_Date_1
+2026-03-10 18:48:39 [INF] Executed DbCommand (0ms) [Parameters=[@__8__locals1_serviceId_0='?' (DbType = Int32), @__date_Date_1='?' (DbType = DateTime2)], CommandType='"Text"', CommandTimeout='30']
+SELECT [a].[Id], [a].[ClientId], [a].[CreatedAt], [a].[DateEnd], [a].[DateStart], [a].[Notes], [a].[ServiceId], [a].[Status]
+FROM [Appointments] AS [a]
+WHERE [a].[ServiceId] = @__8__locals1_serviceId_0 AND CONVERT(date, [a].[DateStart]) = @__date_Date_1
+2026-03-10 18:48:39 [INF] Executed DbCommand (1ms) [Parameters=[@__8__locals1_serviceId_0='?' (DbType = Int32), @__date_Date_1='?' (DbType = DateTime2)], CommandType='"Text"', CommandTimeout='30']
+SELECT [a].[Id], [a].[ClientId], [a].[CreatedAt], [a].[DateEnd], [a].[DateStart], [a].[Notes], [a].[ServiceId], [a].[Status]
+FROM [Appointments] AS [a]
+WHERE [a].[ServiceId] = @__8__locals1_serviceId_0 AND CONVERT(date, [a].[DateStart]) = @__date_Date_1
+2026-03-10 18:48:39 [INF] Executed DbCommand (3ms) [Parameters=[@__8__locals1_serviceId_0='?' (DbType = Int32), @__date_Date_1='?' (DbType = DateTime2)], CommandType='"Text"', CommandTimeout='30']
+SELECT [a].[Id], [a].[ClientId], [a].[CreatedAt], [a].[DateEnd], [a].[DateStart], [a].[Notes], [a].[ServiceId], [a].[Status]
+FROM [Appointments] AS [a]
+WHERE [a].[ServiceId] = @__8__locals1_serviceId_0 AND CONVERT(date, [a].[DateStart]) = @__date_Date_1
+2026-03-10 18:48:39 [INF] Executed DbCommand (2ms) [Parameters=[@__8__locals1_serviceId_0='?' (DbType = Int32), @__date_Date_1='?' (DbType = DateTime2)], CommandType='"Text"', CommandTimeout='30']
+SELECT [a].[Id], [a].[ClientId], [a].[CreatedAt], [a].[DateEnd], [a].[DateStart], [a].[Notes], [a].[ServiceId], [a].[Status]
+FROM [Appointments] AS [a]
+WHERE [a].[ServiceId] = @__8__locals1_serviceId_0 AND CONVERT(date, [a].[DateStart]) = @__date_Date_1
+2026-03-10 18:48:39 [INF] Executed DbCommand (1ms) [Parameters=[@__8__locals1_serviceId_0='?' (DbType = Int32), @__date_Date_1='?' (DbType = DateTime2)], CommandType='"Text"', CommandTimeout='30']
+SELECT [a].[Id], [a].[ClientId], [a].[CreatedAt], [a].[DateEnd], [a].[DateStart], [a].[Notes], [a].[ServiceId], [a].[Status]
+FROM [Appointments] AS [a]
+WHERE [a].[ServiceId] = @__8__locals1_serviceId_0 AND CONVERT(date, [a].[DateStart]) = @__date_Date_1
+2026-03-10 18:48:39 [INF] Executed DbCommand (2ms) [Parameters=[@__8__locals1_serviceId_0='?' (DbType = Int32), @__date_Date_1='?' (DbType = DateTime2)], CommandType='"Text"', CommandTimeout='30']
+SELECT [a].[Id], [a].[ClientId], [a].[CreatedAt], [a].[DateEnd], [a].[DateStart], [a].[Notes], [a].[ServiceId], [a].[Status]
+FROM [Appointments] AS [a]
+WHERE [a].[ServiceId] = @__8__locals1_serviceId_0 AND CONVERT(date, [a].[DateStart]) = @__date_Date_1
+2026-03-10 18:48:39 [INF] Executed DbCommand (1ms) [Parameters=[@__8__locals1_serviceId_0='?' (DbType = Int32), @__date_Date_1='?' (DbType = DateTime2)], CommandType='"Text"', CommandTimeout='30']
+SELECT [a].[Id], [a].[ClientId], [a].[CreatedAt], [a].[DateEnd], [a].[DateStart], [a].[Notes], [a].[ServiceId], [a].[Status]
+FROM [Appointments] AS [a]
+WHERE [a].[ServiceId] = @__8__locals1_serviceId_0 AND CONVERT(date, [a].[DateStart]) = @__date_Date_1
+2026-03-10 18:48:39 [INF] Executed DbCommand (1ms) [Parameters=[@__8__locals1_serviceId_0='?' (DbType = Int32), @__date_Date_1='?' (DbType = DateTime2)], CommandType='"Text"', CommandTimeout='30']
+SELECT [a].[Id], [a].[ClientId], [a].[CreatedAt], [a].[DateEnd], [a].[DateStart], [a].[Notes], [a].[ServiceId], [a].[Status]
+FROM [Appointments] AS [a]
+WHERE [a].[ServiceId] = @__8__locals1_serviceId_0 AND CONVERT(date, [a].[DateStart]) = @__date_Date_1
+2026-03-10 18:48:39 [INF] Executed DbCommand (2ms) [Parameters=[@__8__locals1_serviceId_0='?' (DbType = Int32), @__date_Date_1='?' (DbType = DateTime2)], CommandType='"Text"', CommandTimeout='30']
+SELECT [a].[Id], [a].[ClientId], [a].[CreatedAt], [a].[DateEnd], [a].[DateStart], [a].[Notes], [a].[ServiceId], [a].[Status]
+FROM [Appointments] AS [a]
+WHERE [a].[ServiceId] = @__8__locals1_serviceId_0 AND CONVERT(date, [a].[DateStart]) = @__date_Date_1
+2026-03-10 18:48:39 [INF] Executed DbCommand (1ms) [Parameters=[@__8__locals1_serviceId_0='?' (DbType = Int32), @__date_Date_1='?' (DbType = DateTime2)], CommandType='"Text"', CommandTimeout='30']
+SELECT [a].[Id], [a].[ClientId], [a].[CreatedAt], [a].[DateEnd], [a].[DateStart], [a].[Notes], [a].[ServiceId], [a].[Status]
+FROM [Appointments] AS [a]
+WHERE [a].[ServiceId] = @__8__locals1_serviceId_0 AND CONVERT(date, [a].[DateStart]) = @__date_Date_1
+2026-03-10 18:48:39 [INF] Executed DbCommand (1ms) [Parameters=[@__8__locals1_serviceId_0='?' (DbType = Int32), @__date_Date_1='?' (DbType = DateTime2)], CommandType='"Text"', CommandTimeout='30']
+SELECT [a].[Id], [a].[ClientId], [a].[CreatedAt], [a].[DateEnd], [a].[DateStart], [a].[Notes], [a].[ServiceId], [a].[Status]
+FROM [Appointments] AS [a]
+WHERE [a].[ServiceId] = @__8__locals1_serviceId_0 AND CONVERT(date, [a].[DateStart]) = @__date_Date_1
+2026-03-10 18:48:39 [INF] Executed DbCommand (1ms) [Parameters=[@__8__locals1_serviceId_0='?' (DbType = Int32), @__date_Date_1='?' (DbType = DateTime2)], CommandType='"Text"', CommandTimeout='30']
+SELECT [a].[Id], [a].[ClientId], [a].[CreatedAt], [a].[DateEnd], [a].[DateStart], [a].[Notes], [a].[ServiceId], [a].[Status]
+FROM [Appointments] AS [a]
+WHERE [a].[ServiceId] = @__8__locals1_serviceId_0 AND CONVERT(date, [a].[DateStart]) = @__date_Date_1
+2026-03-10 18:48:39 [INF] Executed DbCommand (1ms) [Parameters=[@__8__locals1_serviceId_0='?' (DbType = Int32), @__date_Date_1='?' (DbType = DateTime2)], CommandType='"Text"', CommandTimeout='30']
+SELECT [a].[Id], [a].[ClientId], [a].[CreatedAt], [a].[DateEnd], [a].[DateStart], [a].[Notes], [a].[ServiceId], [a].[Status]
+FROM [Appointments] AS [a]
+WHERE [a].[ServiceId] = @__8__locals1_serviceId_0 AND CONVERT(date, [a].[DateStart]) = @__date_Date_1
+2026-03-10 18:48:39 [INF] Executed DbCommand (1ms) [Parameters=[@__8__locals1_serviceId_0='?' (DbType = Int32), @__date_Date_1='?' (DbType = DateTime2)], CommandType='"Text"', CommandTimeout='30']
+SELECT [a].[Id], [a].[ClientId], [a].[CreatedAt], [a].[DateEnd], [a].[DateStart], [a].[Notes], [a].[ServiceId], [a].[Status]
+FROM [Appointments] AS [a]
+WHERE [a].[ServiceId] = @__8__locals1_serviceId_0 AND CONVERT(date, [a].[DateStart]) = @__date_Date_1
+2026-03-10 18:48:39 [INF] Executed DbCommand (0ms) [Parameters=[@__8__locals1_serviceId_0='?' (DbType = Int32), @__date_Date_1='?' (DbType = DateTime2)], CommandType='"Text"', CommandTimeout='30']
+SELECT [a].[Id], [a].[ClientId], [a].[CreatedAt], [a].[DateEnd], [a].[DateStart], [a].[Notes], [a].[ServiceId], [a].[Status]
+FROM [Appointments] AS [a]
+WHERE [a].[ServiceId] = @__8__locals1_serviceId_0 AND CONVERT(date, [a].[DateStart]) = @__date_Date_1
+2026-03-10 18:48:39 [INF] Executed DbCommand (1ms) [Parameters=[@__8__locals1_serviceId_0='?' (DbType = Int32), @__date_Date_1='?' (DbType = DateTime2)], CommandType='"Text"', CommandTimeout='30']
+SELECT [a].[Id], [a].[ClientId], [a].[CreatedAt], [a].[DateEnd], [a].[DateStart], [a].[Notes], [a].[ServiceId], [a].[Status]
+FROM [Appointments] AS [a]
+WHERE [a].[ServiceId] = @__8__locals1_serviceId_0 AND CONVERT(date, [a].[DateStart]) = @__date_Date_1
+2026-03-10 18:48:39 [INF] Executed DbCommand (1ms) [Parameters=[@__8__locals1_serviceId_0='?' (DbType = Int32), @__date_Date_1='?' (DbType = DateTime2)], CommandType='"Text"', CommandTimeout='30']
+SELECT [a].[Id], [a].[ClientId], [a].[CreatedAt], [a].[DateEnd], [a].[DateStart], [a].[Notes], [a].[ServiceId], [a].[Status]
+FROM [Appointments] AS [a]
+WHERE [a].[ServiceId] = @__8__locals1_serviceId_0 AND CONVERT(date, [a].[DateStart]) = @__date_Date_1
+2026-03-10 18:48:39 [INF] Executed DbCommand (1ms) [Parameters=[@__8__locals1_serviceId_0='?' (DbType = Int32), @__date_Date_1='?' (DbType = DateTime2)], CommandType='"Text"', CommandTimeout='30']
+SELECT [a].[Id], [a].[ClientId], [a].[CreatedAt], [a].[DateEnd], [a].[DateStart], [a].[Notes], [a].[ServiceId], [a].[Status]
+FROM [Appointments] AS [a]
+WHERE [a].[ServiceId] = @__8__locals1_serviceId_0 AND CONVERT(date, [a].[DateStart]) = @__date_Date_1
+2026-03-10 18:48:39 [INF] Executed DbCommand (1ms) [Parameters=[@__8__locals1_serviceId_0='?' (DbType = Int32), @__date_Date_1='?' (DbType = DateTime2)], CommandType='"Text"', CommandTimeout='30']
+SELECT [a].[Id], [a].[ClientId], [a].[CreatedAt], [a].[DateEnd], [a].[DateStart], [a].[Notes], [a].[ServiceId], [a].[Status]
+FROM [Appointments] AS [a]
+WHERE [a].[ServiceId] = @__8__locals1_serviceId_0 AND CONVERT(date, [a].[DateStart]) = @__date_Date_1
+2026-03-10 18:48:39 [INF] Executed DbCommand (1ms) [Parameters=[@__8__locals1_serviceId_0='?' (DbType = Int32), @__date_Date_1='?' (DbType = DateTime2)], CommandType='"Text"', CommandTimeout='30']
+SELECT [a].[Id], [a].[ClientId], [a].[CreatedAt], [a].[DateEnd], [a].[DateStart], [a].[Notes], [a].[ServiceId], [a].[Status]
+FROM [Appointments] AS [a]
+WHERE [a].[ServiceId] = @__8__locals1_serviceId_0 AND CONVERT(date, [a].[DateStart]) = @__date_Date_1
+2026-03-10 18:48:39 [INF] Executed DbCommand (1ms) [Parameters=[@__8__locals1_serviceId_0='?' (DbType = Int32), @__date_Date_1='?' (DbType = DateTime2)], CommandType='"Text"', CommandTimeout='30']
+SELECT [a].[Id], [a].[ClientId], [a].[CreatedAt], [a].[DateEnd], [a].[DateStart], [a].[Notes], [a].[ServiceId], [a].[Status]
+FROM [Appointments] AS [a]
+WHERE [a].[ServiceId] = @__8__locals1_serviceId_0 AND CONVERT(date, [a].[DateStart]) = @__date_Date_1
+2026-03-10 18:48:55 [INF] Executed DbCommand (14ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT [s].[Id], [s].[Description], [s].[DurationMinutes], [s].[IsActive], [s].[Name], [s].[Price]
+FROM [Services] AS [s]
+2026-03-10 18:48:55 [INF] Executed DbCommand (6ms) [Parameters=[@__serviceId_0='?' (DbType = Int32), @__date_Date_1='?' (DbType = DateTime2)], CommandType='"Text"', CommandTimeout='30']
+SELECT [a].[Id], [a].[ClientId], [a].[CreatedAt], [a].[DateEnd], [a].[DateStart], [a].[Notes], [a].[ServiceId], [a].[Status]
+FROM [Appointments] AS [a]
+WHERE [a].[ServiceId] = @__serviceId_0 AND CONVERT(date, [a].[DateStart]) = @__date_Date_1
+2026-03-10 18:48:56 [INF] Executed DbCommand (1ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT [s].[Id], [s].[Description], [s].[DurationMinutes], [s].[IsActive], [s].[Name], [s].[Price]
+FROM [Services] AS [s]
+2026-03-10 18:48:56 [INF] Executed DbCommand (1ms) [Parameters=[@__serviceId_0='?' (DbType = Int32), @__date_Date_1='?' (DbType = DateTime2)], CommandType='"Text"', CommandTimeout='30']
+SELECT [a].[Id], [a].[ClientId], [a].[CreatedAt], [a].[DateEnd], [a].[DateStart], [a].[Notes], [a].[ServiceId], [a].[Status]
+FROM [Appointments] AS [a]
+WHERE [a].[ServiceId] = @__serviceId_0 AND CONVERT(date, [a].[DateStart]) = @__date_Date_1
+2026-03-10 18:48:56 [INF] Executed DbCommand (2ms) [Parameters=[@__8__locals1_serviceId_0='?' (DbType = Int32), @__date_Date_1='?' (DbType = DateTime2)], CommandType='"Text"', CommandTimeout='30']
+SELECT [a].[Id], [a].[ClientId], [a].[CreatedAt], [a].[DateEnd], [a].[DateStart], [a].[Notes], [a].[ServiceId], [a].[Status]
+FROM [Appointments] AS [a]
+WHERE [a].[ServiceId] = @__8__locals1_serviceId_0 AND CONVERT(date, [a].[DateStart]) = @__date_Date_1
+2026-03-10 18:48:56 [INF] Executed DbCommand (2ms) [Parameters=[@__8__locals1_serviceId_0='?' (DbType = Int32), @__date_Date_1='?' (DbType = DateTime2)], CommandType='"Text"', CommandTimeout='30']
+SELECT [a].[Id], [a].[ClientId], [a].[CreatedAt], [a].[DateEnd], [a].[DateStart], [a].[Notes], [a].[ServiceId], [a].[Status]
+FROM [Appointments] AS [a]
+WHERE [a].[ServiceId] = @__8__locals1_serviceId_0 AND CONVERT(date, [a].[DateStart]) = @__date_Date_1
+2026-03-10 18:48:56 [INF] Executed DbCommand (1ms) [Parameters=[@__8__locals1_serviceId_0='?' (DbType = Int32), @__date_Date_1='?' (DbType = DateTime2)], CommandType='"Text"', CommandTimeout='30']
+SELECT [a].[Id], [a].[ClientId], [a].[CreatedAt], [a].[DateEnd], [a].[DateStart], [a].[Notes], [a].[ServiceId], [a].[Status]
+FROM [Appointments] AS [a]
+WHERE [a].[ServiceId] = @__8__locals1_serviceId_0 AND CONVERT(date, [a].[DateStart]) = @__date_Date_1
+2026-03-10 18:48:56 [INF] Executed DbCommand (0ms) [Parameters=[@__8__locals1_serviceId_0='?' (DbType = Int32), @__date_Date_1='?' (DbType = DateTime2)], CommandType='"Text"', CommandTimeout='30']
+SELECT [a].[Id], [a].[ClientId], [a].[CreatedAt], [a].[DateEnd], [a].[DateStart], [a].[Notes], [a].[ServiceId], [a].[Status]
+FROM [Appointments] AS [a]
+WHERE [a].[ServiceId] = @__8__locals1_serviceId_0 AND CONVERT(date, [a].[DateStart]) = @__date_Date_1
+2026-03-10 18:48:56 [INF] Executed DbCommand (0ms) [Parameters=[@__8__locals1_serviceId_0='?' (DbType = Int32), @__date_Date_1='?' (DbType = DateTime2)], CommandType='"Text"', CommandTimeout='30']
+SELECT [a].[Id], [a].[ClientId], [a].[CreatedAt], [a].[DateEnd], [a].[DateStart], [a].[Notes], [a].[ServiceId], [a].[Status]
+FROM [Appointments] AS [a]
+WHERE [a].[ServiceId] = @__8__locals1_serviceId_0 AND CONVERT(date, [a].[DateStart]) = @__date_Date_1
+2026-03-10 18:48:56 [INF] Executed DbCommand (1ms) [Parameters=[@__8__locals1_serviceId_0='?' (DbType = Int32), @__date_Date_1='?' (DbType = DateTime2)], CommandType='"Text"', CommandTimeout='30']
+SELECT [a].[Id], [a].[ClientId], [a].[CreatedAt], [a].[DateEnd], [a].[DateStart], [a].[Notes], [a].[ServiceId], [a].[Status]
+FROM [Appointments] AS [a]
+WHERE [a].[ServiceId] = @__8__locals1_serviceId_0 AND CONVERT(date, [a].[DateStart]) = @__date_Date_1
+2026-03-10 18:48:56 [INF] Executed DbCommand (1ms) [Parameters=[@__8__locals1_serviceId_0='?' (DbType = Int32), @__date_Date_1='?' (DbType = DateTime2)], CommandType='"Text"', CommandTimeout='30']
+SELECT [a].[Id], [a].[ClientId], [a].[CreatedAt], [a].[DateEnd], [a].[DateStart], [a].[Notes], [a].[ServiceId], [a].[Status]
+FROM [Appointments] AS [a]
+WHERE [a].[ServiceId] = @__8__locals1_serviceId_0 AND CONVERT(date, [a].[DateStart]) = @__date_Date_1
+2026-03-10 18:48:56 [INF] Executed DbCommand (1ms) [Parameters=[@__8__locals1_serviceId_0='?' (DbType = Int32), @__date_Date_1='?' (DbType = DateTime2)], CommandType='"Text"', CommandTimeout='30']
+SELECT [a].[Id], [a].[ClientId], [a].[CreatedAt], [a].[DateEnd], [a].[DateStart], [a].[Notes], [a].[ServiceId], [a].[Status]
+FROM [Appointments] AS [a]
+WHERE [a].[ServiceId] = @__8__locals1_serviceId_0 AND CONVERT(date, [a].[DateStart]) = @__date_Date_1
+2026-03-10 18:48:56 [INF] Executed DbCommand (1ms) [Parameters=[@__8__locals1_serviceId_0='?' (DbType = Int32), @__date_Date_1='?' (DbType = DateTime2)], CommandType='"Text"', CommandTimeout='30']
+SELECT [a].[Id], [a].[ClientId], [a].[CreatedAt], [a].[DateEnd], [a].[DateStart], [a].[Notes], [a].[ServiceId], [a].[Status]
+FROM [Appointments] AS [a]
+WHERE [a].[ServiceId] = @__8__locals1_serviceId_0 AND CONVERT(date, [a].[DateStart]) = @__date_Date_1
+2026-03-10 18:48:56 [INF] Executed DbCommand (1ms) [Parameters=[@__8__locals1_serviceId_0='?' (DbType = Int32), @__date_Date_1='?' (DbType = DateTime2)], CommandType='"Text"', CommandTimeout='30']
+SELECT [a].[Id], [a].[ClientId], [a].[CreatedAt], [a].[DateEnd], [a].[DateStart], [a].[Notes], [a].[ServiceId], [a].[Status]
+FROM [Appointments] AS [a]
+WHERE [a].[ServiceId] = @__8__locals1_serviceId_0 AND CONVERT(date, [a].[DateStart]) = @__date_Date_1
+2026-03-10 18:48:56 [INF] Executed DbCommand (2ms) [Parameters=[@__8__locals1_serviceId_0='?' (DbType = Int32), @__date_Date_1='?' (DbType = DateTime2)], CommandType='"Text"', CommandTimeout='30']
+SELECT [a].[Id], [a].[ClientId], [a].[CreatedAt], [a].[DateEnd], [a].[DateStart], [a].[Notes], [a].[ServiceId], [a].[Status]
+FROM [Appointments] AS [a]
+WHERE [a].[ServiceId] = @__8__locals1_serviceId_0 AND CONVERT(date, [a].[DateStart]) = @__date_Date_1
+2026-03-10 18:48:56 [INF] Executed DbCommand (1ms) [Parameters=[@__8__locals1_serviceId_0='?' (DbType = Int32), @__date_Date_1='?' (DbType = DateTime2)], CommandType='"Text"', CommandTimeout='30']
+SELECT [a].[Id], [a].[ClientId], [a].[CreatedAt], [a].[DateEnd], [a].[DateStart], [a].[Notes], [a].[ServiceId], [a].[Status]
+FROM [Appointments] AS [a]
+WHERE [a].[ServiceId] = @__8__locals1_serviceId_0 AND CONVERT(date, [a].[DateStart]) = @__date_Date_1
+2026-03-10 18:48:56 [INF] Executed DbCommand (1ms) [Parameters=[@__8__locals1_serviceId_0='?' (DbType = Int32), @__date_Date_1='?' (DbType = DateTime2)], CommandType='"Text"', CommandTimeout='30']
+SELECT [a].[Id], [a].[ClientId], [a].[CreatedAt], [a].[DateEnd], [a].[DateStart], [a].[Notes], [a].[ServiceId], [a].[Status]
+FROM [Appointments] AS [a]
+WHERE [a].[ServiceId] = @__8__locals1_serviceId_0 AND CONVERT(date, [a].[DateStart]) = @__date_Date_1
+2026-03-10 18:48:56 [INF] Executed DbCommand (0ms) [Parameters=[@__8__locals1_serviceId_0='?' (DbType = Int32), @__date_Date_1='?' (DbType = DateTime2)], CommandType='"Text"', CommandTimeout='30']
+SELECT [a].[Id], [a].[ClientId], [a].[CreatedAt], [a].[DateEnd], [a].[DateStart], [a].[Notes], [a].[ServiceId], [a].[Status]
+FROM [Appointments] AS [a]
+WHERE [a].[ServiceId] = @__8__locals1_serviceId_0 AND CONVERT(date, [a].[DateStart]) = @__date_Date_1
+2026-03-10 18:48:56 [INF] Executed DbCommand (0ms) [Parameters=[@__8__locals1_serviceId_0='?' (DbType = Int32), @__date_Date_1='?' (DbType = DateTime2)], CommandType='"Text"', CommandTimeout='30']
+SELECT [a].[Id], [a].[ClientId], [a].[CreatedAt], [a].[DateEnd], [a].[DateStart], [a].[Notes], [a].[ServiceId], [a].[Status]
+FROM [Appointments] AS [a]
+WHERE [a].[ServiceId] = @__8__locals1_serviceId_0 AND CONVERT(date, [a].[DateStart]) = @__date_Date_1
+2026-03-10 18:48:56 [INF] Executed DbCommand (0ms) [Parameters=[@__8__locals1_serviceId_0='?' (DbType = Int32), @__date_Date_1='?' (DbType = DateTime2)], CommandType='"Text"', CommandTimeout='30']
+SELECT [a].[Id], [a].[ClientId], [a].[CreatedAt], [a].[DateEnd], [a].[DateStart], [a].[Notes], [a].[ServiceId], [a].[Status]
+FROM [Appointments] AS [a]
+WHERE [a].[ServiceId] = @__8__locals1_serviceId_0 AND CONVERT(date, [a].[DateStart]) = @__date_Date_1
+2026-03-10 18:48:56 [INF] Executed DbCommand (1ms) [Parameters=[@__8__locals1_serviceId_0='?' (DbType = Int32), @__date_Date_1='?' (DbType = DateTime2)], CommandType='"Text"', CommandTimeout='30']
+SELECT [a].[Id], [a].[ClientId], [a].[CreatedAt], [a].[DateEnd], [a].[DateStart], [a].[Notes], [a].[ServiceId], [a].[Status]
+FROM [Appointments] AS [a]
+WHERE [a].[ServiceId] = @__8__locals1_serviceId_0 AND CONVERT(date, [a].[DateStart]) = @__date_Date_1
+2026-03-10 18:48:56 [INF] Executed DbCommand (1ms) [Parameters=[@__8__locals1_serviceId_0='?' (DbType = Int32), @__date_Date_1='?' (DbType = DateTime2)], CommandType='"Text"', CommandTimeout='30']
+SELECT [a].[Id], [a].[ClientId], [a].[CreatedAt], [a].[DateEnd], [a].[DateStart], [a].[Notes], [a].[ServiceId], [a].[Status]
+FROM [Appointments] AS [a]
+WHERE [a].[ServiceId] = @__8__locals1_serviceId_0 AND CONVERT(date, [a].[DateStart]) = @__date_Date_1
+2026-03-10 18:48:56 [INF] Executed DbCommand (1ms) [Parameters=[@__8__locals1_serviceId_0='?' (DbType = Int32), @__date_Date_1='?' (DbType = DateTime2)], CommandType='"Text"', CommandTimeout='30']
+SELECT [a].[Id], [a].[ClientId], [a].[CreatedAt], [a].[DateEnd], [a].[DateStart], [a].[Notes], [a].[ServiceId], [a].[Status]
+FROM [Appointments] AS [a]
+WHERE [a].[ServiceId] = @__8__locals1_serviceId_0 AND CONVERT(date, [a].[DateStart]) = @__date_Date_1
+2026-03-10 18:48:56 [INF] Executed DbCommand (1ms) [Parameters=[@__8__locals1_serviceId_0='?' (DbType = Int32), @__date_Date_1='?' (DbType = DateTime2)], CommandType='"Text"', CommandTimeout='30']
+SELECT [a].[Id], [a].[ClientId], [a].[CreatedAt], [a].[DateEnd], [a].[DateStart], [a].[Notes], [a].[ServiceId], [a].[Status]
+FROM [Appointments] AS [a]
+WHERE [a].[ServiceId] = @__8__locals1_serviceId_0 AND CONVERT(date, [a].[DateStart]) = @__date_Date_1
+2026-03-10 18:48:56 [INF] Executed DbCommand (1ms) [Parameters=[@__8__locals1_serviceId_0='?' (DbType = Int32), @__date_Date_1='?' (DbType = DateTime2)], CommandType='"Text"', CommandTimeout='30']
+SELECT [a].[Id], [a].[ClientId], [a].[CreatedAt], [a].[DateEnd], [a].[DateStart], [a].[Notes], [a].[ServiceId], [a].[Status]
+FROM [Appointments] AS [a]
+WHERE [a].[ServiceId] = @__8__locals1_serviceId_0 AND CONVERT(date, [a].[DateStart]) = @__date_Date_1
+2026-03-10 18:48:56 [INF] Executed DbCommand (1ms) [Parameters=[@__8__locals1_serviceId_0='?' (DbType = Int32), @__date_Date_1='?' (DbType = DateTime2)], CommandType='"Text"', CommandTimeout='30']
+SELECT [a].[Id], [a].[ClientId], [a].[CreatedAt], [a].[DateEnd], [a].[DateStart], [a].[Notes], [a].[ServiceId], [a].[Status]
+FROM [Appointments] AS [a]
+WHERE [a].[ServiceId] = @__8__locals1_serviceId_0 AND CONVERT(date, [a].[DateStart]) = @__date_Date_1
+2026-03-10 18:48:56 [INF] Executed DbCommand (1ms) [Parameters=[@__8__locals1_serviceId_0='?' (DbType = Int32), @__date_Date_1='?' (DbType = DateTime2)], CommandType='"Text"', CommandTimeout='30']
+SELECT [a].[Id], [a].[ClientId], [a].[CreatedAt], [a].[DateEnd], [a].[DateStart], [a].[Notes], [a].[ServiceId], [a].[Status]
+FROM [Appointments] AS [a]
+WHERE [a].[ServiceId] = @__8__locals1_serviceId_0 AND CONVERT(date, [a].[DateStart]) = @__date_Date_1
+2026-03-10 18:48:56 [INF] Executed DbCommand (1ms) [Parameters=[@__8__locals1_serviceId_0='?' (DbType = Int32), @__date_Date_1='?' (DbType = DateTime2)], CommandType='"Text"', CommandTimeout='30']
+SELECT [a].[Id], [a].[ClientId], [a].[CreatedAt], [a].[DateEnd], [a].[DateStart], [a].[Notes], [a].[ServiceId], [a].[Status]
+FROM [Appointments] AS [a]
+WHERE [a].[ServiceId] = @__8__locals1_serviceId_0 AND CONVERT(date, [a].[DateStart]) = @__date_Date_1
+2026-03-10 18:48:56 [INF] Executed DbCommand (1ms) [Parameters=[@__8__locals1_serviceId_0='?' (DbType = Int32), @__date_Date_1='?' (DbType = DateTime2)], CommandType='"Text"', CommandTimeout='30']
+SELECT [a].[Id], [a].[ClientId], [a].[CreatedAt], [a].[DateEnd], [a].[DateStart], [a].[Notes], [a].[ServiceId], [a].[Status]
+FROM [Appointments] AS [a]
+WHERE [a].[ServiceId] = @__8__locals1_serviceId_0 AND CONVERT(date, [a].[DateStart]) = @__date_Date_1
+2026-03-10 18:48:56 [INF] Executed DbCommand (2ms) [Parameters=[@__8__locals1_serviceId_0='?' (DbType = Int32), @__date_Date_1='?' (DbType = DateTime2)], CommandType='"Text"', CommandTimeout='30']
+SELECT [a].[Id], [a].[ClientId], [a].[CreatedAt], [a].[DateEnd], [a].[DateStart], [a].[Notes], [a].[ServiceId], [a].[Status]
+FROM [Appointments] AS [a]
+WHERE [a].[ServiceId] = @__8__locals1_serviceId_0 AND CONVERT(date, [a].[DateStart]) = @__date_Date_1
+2026-03-10 18:48:56 [INF] Executed DbCommand (1ms) [Parameters=[@__8__locals1_serviceId_0='?' (DbType = Int32), @__date_Date_1='?' (DbType = DateTime2)], CommandType='"Text"', CommandTimeout='30']
+SELECT [a].[Id], [a].[ClientId], [a].[CreatedAt], [a].[DateEnd], [a].[DateStart], [a].[Notes], [a].[ServiceId], [a].[Status]
+FROM [Appointments] AS [a]
+WHERE [a].[ServiceId] = @__8__locals1_serviceId_0 AND CONVERT(date, [a].[DateStart]) = @__date_Date_1
+2026-03-10 18:48:56 [INF] Executed DbCommand (1ms) [Parameters=[@__8__locals1_serviceId_0='?' (DbType = Int32), @__date_Date_1='?' (DbType = DateTime2)], CommandType='"Text"', CommandTimeout='30']
+SELECT [a].[Id], [a].[ClientId], [a].[CreatedAt], [a].[DateEnd], [a].[DateStart], [a].[Notes], [a].[ServiceId], [a].[Status]
+FROM [Appointments] AS [a]
+WHERE [a].[ServiceId] = @__8__locals1_serviceId_0 AND CONVERT(date, [a].[DateStart]) = @__date_Date_1
+2026-03-10 18:48:56 [INF] Executed DbCommand (1ms) [Parameters=[@__8__locals1_serviceId_0='?' (DbType = Int32), @__date_Date_1='?' (DbType = DateTime2)], CommandType='"Text"', CommandTimeout='30']
+SELECT [a].[Id], [a].[ClientId], [a].[CreatedAt], [a].[DateEnd], [a].[DateStart], [a].[Notes], [a].[ServiceId], [a].[Status]
+FROM [Appointments] AS [a]
+WHERE [a].[ServiceId] = @__8__locals1_serviceId_0 AND CONVERT(date, [a].[DateStart]) = @__date_Date_1
+2026-03-10 18:48:56 [INF] Executed DbCommand (1ms) [Parameters=[@__8__locals1_serviceId_0='?' (DbType = Int32), @__date_Date_1='?' (DbType = DateTime2)], CommandType='"Text"', CommandTimeout='30']
+SELECT [a].[Id], [a].[ClientId], [a].[CreatedAt], [a].[DateEnd], [a].[DateStart], [a].[Notes], [a].[ServiceId], [a].[Status]
+FROM [Appointments] AS [a]
+WHERE [a].[ServiceId] = @__8__locals1_serviceId_0 AND CONVERT(date, [a].[DateStart]) = @__date_Date_1

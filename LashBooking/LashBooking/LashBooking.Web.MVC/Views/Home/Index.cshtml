@@ -1,0 +1,604 @@
+﻿@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewBag.Title = "LashLukina — Студия наращивания ресниц";
+
+    bool isAuthenticated = ViewBag.IsAuthenticated ?? false;
+    string clientName = ViewBag.ClientName ?? "";
+    string phoneNumber = "+7 (999) 410-38-01";
+}
+
+<div class="avatar-wrapper-fullscreen">
+    <img src="/images/avatar.jpg" class="avatar-img-fullscreen" />
+
+    <div class="admin-login-header">
+        <a href="/Admin" class="btn-admin-header">
+            <i class="bi bi-shield-lock"></i>
+            <span>Админ</span>
+        </a>
+    </div>
+
+    @if (isAuthenticated)
+    {
+        <div class="client-name-header">
+            <div class="client-name-badge">
+                <i class="bi bi-person-circle"></i>
+                <span>@clientName</span>
+            </div>
+        </div>
+
+        <div class="profile-btn">
+            <a href="/Profile" class="btn-profile">
+                <i class="bi bi-journal-text"></i>
+                <span>Мои записи</span>
+            </a>
+        </div>
+    }
+    else
+    {
+        <div class="admin-login-btn">
+            <a href="/Auth/Login" class="btn-login">
+                <i class="bi bi-person-circle"></i>
+                <span>Вход</span>
+            </a>
+        </div>
+    }
+
+    <div class="overlay bottom-text">
+        <h2 class="name">Дарья Лукина</h2>
+        <h5 class="studio">Студия LashLukina</h5>
+    </div>
+</div>
+
+<div class="main-content text-center mt-3">
+    <p>г. Чита, ул. Журавлева, д. 72</p>
+
+    <div class="d-flex justify-content-center mb-4 flex-wrap gap-2">
+        <a href="/Calendar" class="btn btn-outline-primary">Календарь</a>
+        <a href="/Gallery" class="btn btn-outline-primary">Фото работ</a>
+        <a href="/Reviews" class="btn btn-outline-primary">Отзывы</a>
+        <a href="/About" class="btn btn-outline-primary">Обо мне</a>
+    </div>
+
+    <h4>Добро пожаловать, запишитесь онлайн:</h4>
+
+    <a href="/Booking" class="btn btn-success mt-2 mb-4">
+        Записаться онлайн
+    </a>
+
+    <h5 class="mt-4 mb-3">Связаться со мной:</h5>
+
+    <div class="contact-buttons">
+        <a href="https://wa.me/79994103801"
+           target="_blank"
+           class="contact-btn whatsapp">
+            <i class="bi bi-whatsapp"></i>
+            <span>WhatsApp</span>
+        </a>
+
+        <a href="https://t.me/79994103801"
+           target="_blank"
+           class="contact-btn telegram">
+            <i class="bi bi-telegram"></i>
+            <span>Telegram</span>
+        </a>
+
+        <button class="contact-btn phone" onclick="showPhone()">
+            <i class="bi bi-telephone-fill"></i>
+            <span>Позвонить</span>
+        </button>
+    </div>
+
+    <div class="phone-popup" id="phonePopup">
+        <div class="phone-popup-content">
+            <i class="bi bi-telephone-fill"></i>
+            <span class="phone-number">@phoneNumber</span>
+            <button class="phone-popup-close" onclick="hidePhone()">✕</button>
+        </div>
+    </div>
+</div>
+
+<style>
+    .avatar-wrapper-fullscreen {
+        position: relative;
+        width: 100%;
+        height: 400px;
+        overflow: hidden;
+    }
+
+    .avatar-img-fullscreen {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        object-position: center top;
+    }
+
+    .overlay.bottom-text {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        padding: 20px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: flex-end;
+        color: white;
+        text-shadow: 1px 1px 6px rgba(0,0,0,0.6);
+        background: linear-gradient(to top, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0) 60%);
+    }
+
+    .overlay .name {
+        font-size: 2.5rem;
+        margin: 0;
+        text-align: center;
+    }
+
+    .overlay .studio {
+        font-size: 1.5rem;
+        margin: 0;
+        opacity: 0.9;
+        text-align: center;
+    }
+
+    .admin-login-header {
+        position: absolute;
+        top: 20px;
+        left: 20px;
+        z-index: 20;
+    }
+
+    .btn-admin-header {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 8px 16px;
+        background: rgba(0, 0, 0, 0.3);
+        backdrop-filter: blur(5px);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        border-radius: 30px;
+        color: white;
+        font-size: 14px;
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+        text-decoration: none;
+    }
+
+        .btn-admin-header:hover {
+            background: rgba(0, 0, 0, 0.5);
+            border-color: rgba(255, 255, 255, 0.4);
+            transform: translateY(-2px);
+            color: white;
+        }
+
+        .btn-admin-header i {
+            font-size: 18px;
+        }
+
+    .admin-login-btn {
+        position: absolute;
+        top: 20px;
+        right: 20px;
+        z-index: 20;
+    }
+
+    .btn-login {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 8px 16px;
+        background-color: rgba(255, 255, 255, 0.2);
+        backdrop-filter: blur(5px);
+        border: 1px solid rgba(255, 255, 255, 0.3);
+        border-radius: 30px;
+        color: white;
+        font-size: 14px;
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+        text-decoration: none;
+    }
+
+        .btn-login:hover {
+            background-color: rgba(255, 255, 255, 0.3);
+            border-color: rgba(255, 255, 255, 0.5);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.3);
+            color: white;
+        }
+
+        .btn-login i {
+            font-size: 18px;
+        }
+
+    .profile-btn {
+        position: absolute;
+        top: 20px;
+        right: 100px;
+        z-index: 20;
+    }
+
+    .btn-profile {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 8px 16px;
+        background: rgba(16, 185, 129, 0.2);
+        backdrop-filter: blur(5px);
+        border: 1px solid rgba(16, 185, 129, 0.3);
+        border-radius: 30px;
+        color: white;
+        font-size: 14px;
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+        text-decoration: none;
+    }
+
+        .btn-profile:hover {
+            background: rgba(16, 185, 129, 0.4);
+            border-color: rgba(16, 185, 129, 0.6);
+            transform: translateY(-2px);
+            color: white;
+        }
+
+        .btn-profile i {
+            font-size: 18px;
+        }
+
+    .client-name-header {
+        position: absolute;
+        top: 20px;
+        right: 100px;
+        z-index: 20;
+    }
+
+    .client-name-badge {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding: 8px 16px;
+        background: rgba(255, 255, 255, 0.2);
+        backdrop-filter: blur(5px);
+        border: 1px solid rgba(255, 255, 255, 0.3);
+        border-radius: 30px;
+        color: white;
+        font-size: 14px;
+        font-weight: 500;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    }
+
+        .client-name-badge i {
+            font-size: 18px;
+        }
+
+    .main-content {
+        padding: 20px;
+        max-width: 900px;
+        margin: 0 auto;
+    }
+
+    a.btn {
+        display: inline-block;
+        text-align: center;
+        text-decoration: none;
+    }
+
+    .btn-outline-primary {
+        border: 2px solid #6c757d !important;
+        background: transparent;
+        color: black !important;
+        text-decoration: none;
+        border-radius: 12px;
+        padding: 10px 20px;
+        font-weight: 500;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+
+        .btn-outline-primary:hover {
+            background-color: #6c757d !important;
+            color: white !important;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 10px rgba(0,0,0,0.15);
+        }
+
+    .btn-success {
+        background-color: #28a745 !important;
+        border: none;
+        color: white !important;
+        text-decoration: none;
+        border-radius: 12px;
+        padding: 10px 20px;
+        font-weight: 500;
+    }
+
+        .btn-success:hover {
+            background-color: #218838 !important;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 10px rgba(0,0,0,0.15);
+            color: white !important;
+        }
+
+    .contact-buttons {
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 8px;
+        margin: 20px 0;
+    }
+
+    .contact-btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 6px;
+        padding: 8px 16px;
+        border-radius: 12px;
+        border: 2px solid #6c757d;
+        font-size: 14px;
+        font-weight: 500;
+        color: #000;
+        background: transparent;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        text-decoration: none;
+    }
+
+        .contact-btn i {
+            font-size: 16px;
+        }
+
+        .contact-btn.whatsapp {
+            border-color: #25D366;
+            color: #000;
+        }
+
+            .contact-btn.whatsapp:hover {
+                background-color: #25D366;
+                color: white;
+                transform: translateY(-2px);
+            }
+
+        .contact-btn.telegram {
+            border-color: #2AABEE;
+            color: #000;
+        }
+
+            .contact-btn.telegram:hover {
+                background-color: #2AABEE;
+                color: white;
+                transform: translateY(-2px);
+            }
+
+        .contact-btn.phone {
+            border-color: #6c757d;
+            color: #000;
+        }
+
+            .contact-btn.phone:hover {
+                background-color: #6c757d;
+                color: white;
+                transform: translateY(-2px);
+            }
+
+    .phone-popup {
+        position: fixed;
+        bottom: 30px;
+        left: 50%;
+        transform: translateX(-50%) translateY(100px);
+        background-color: white;
+        border-radius: 50px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        padding: 12px 24px;
+        z-index: 1000;
+        opacity: 0;
+        transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+        border: 1px solid #e0e0e0;
+        pointer-events: none;
+    }
+
+        .phone-popup.show {
+            opacity: 1;
+            transform: translateX(-50%) translateY(0);
+            pointer-events: all;
+        }
+
+    .phone-popup-content {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+    }
+
+        .phone-popup-content i {
+            color: #28a745;
+            font-size: 20px;
+        }
+
+    .phone-number {
+        font-size: 18px;
+        font-weight: 600;
+        color: #333;
+    }
+
+    .phone-popup-close {
+        background: none;
+        border: none;
+        color: #999;
+        font-size: 18px;
+        cursor: pointer;
+        padding: 0 5px;
+    }
+
+        .phone-popup-close:hover {
+            color: #333;
+        }
+
+    @@media (max-width: 768px) {
+        .admin-login-header {
+            top: 10px;
+            left: 10px;
+        }
+
+        .btn-admin-header span,
+        .btn-login span,
+        .btn-profile span,
+        .client-name-badge span {
+            display: none;
+        }
+
+        .btn-admin-header i,
+        .btn-login i,
+        .btn-profile i,
+        .client-name-badge i {
+            font-size: 20px;
+        }
+
+        .admin-login-btn {
+            top: 10px;
+            right: 10px;
+        }
+
+        .profile-btn,
+        .client-name-header {
+            top: 10px;
+            right: 70px;
+        }
+
+        .avatar-wrapper-fullscreen {
+            height: 300px;
+        }
+
+        .overlay .name {
+            font-size: 1.8rem;
+        }
+
+        .overlay .studio {
+            font-size: 1.1rem;
+        }
+
+        .main-content {
+            padding: 15px;
+        }
+
+        .contact-buttons {
+            gap: 6px;
+        }
+
+        .contact-btn {
+            padding: 6px 12px;
+            font-size: 13px;
+        }
+    }
+
+    @@media (max-width: 480px) {
+        .avatar-wrapper-fullscreen {
+            height: 250px;
+        }
+
+        .overlay .name {
+            font-size: 1.5rem;
+        }
+
+        .overlay .studio {
+            font-size: 1rem;
+        }
+
+        .contact-buttons {
+            flex-direction: column;
+        }
+
+        .contact-btn {
+            width: 100%;
+            justify-content: center;
+        }
+
+        .phone-popup {
+            width: 90%;
+            padding: 10px 16px;
+        }
+    }
+
+    @@media (max-width: 360px) {
+        .avatar-wrapper-fullscreen {
+            height: 200px;
+        }
+
+        .overlay .name {
+            font-size: 1.3rem;
+        }
+
+        .overlay .studio {
+            font-size: 0.9rem;
+        }
+    }
+
+    @@media (hover: none) and (pointer: coarse) {
+        .btn-admin-header:hover,
+        .btn-login:hover,
+        .btn-profile:hover,
+        .contact-btn:hover {
+            transform: none;
+            box-shadow: none;
+        }
+
+        .btn-admin-header:active,
+        .btn-login:active,
+        .btn-profile:active,
+        .contact-btn:active {
+            transform: translateY(-1px);
+        }
+    }
+
+    @@media (max-height: 500px) and (orientation: landscape) {
+        .avatar-wrapper-fullscreen {
+            height: 180px;
+        }
+
+        .overlay .name {
+            font-size: 1.3rem;
+        }
+
+        .overlay .studio {
+            font-size: 0.9rem;
+        }
+    }
+
+    @@media (min-width: 1440px) {
+        .avatar-wrapper-fullscreen {
+            height: 500px;
+        }
+
+        .overlay .name {
+            font-size: 3rem;
+        }
+
+        .overlay .studio {
+            font-size: 2rem;
+        }
+    }
+</style>
+
+<script>
+    function showPhone() {
+        document.getElementById('phonePopup').classList.add('show');
+    }
+
+    function hidePhone() {
+        document.getElementById('phonePopup').classList.remove('show');
+    }
+
+    document.addEventListener('click', function (event) {
+        var popup = document.getElementById('phonePopup');
+        var phoneBtn = event.target.closest('.contact-btn.phone');
+        if (!phoneBtn && !popup.contains(event.target)) {
+            popup.classList.remove('show');
+        }
+    });
+</script>

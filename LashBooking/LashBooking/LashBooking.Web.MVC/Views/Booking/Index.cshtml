@@ -1,0 +1,729 @@
+﻿@using System.Text.Json
+@using LashBooking.Web.MVC.Controllers
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewBag.Title = "Онлайн запись — LashLukина";
+
+    var services = ViewBag.Services as List<LashBooking.Domain.Entities.Service> ?? new();
+    int selectedServiceId = ViewBag.SelectedServiceId ?? 0;
+    string clientName = ViewBag.ClientName ?? "";
+    string clientPhone = ViewBag.ClientPhone ?? "";
+    bool isAuthenticated = ViewBag.IsAuthenticated ?? false;
+    string selectedDate = ViewBag.SelectedDate ?? DateTime.Today.ToString("yyyy-MM-dd");
+    string selectedDateDisplay = ViewBag.SelectedDateDisplay ?? DateTime.Today.ToString("dd.MM.yyyy");
+    string selectedTime = ViewBag.SelectedTime ?? "";
+    var slots = ViewBag.Slots as List<BookingController.Slot> ?? new();
+    var availableDates = ViewBag.AvailableDates as List<string> ?? new();
+    string? message = ViewBag.Message as string;
+    bool isSuccess = ViewBag.IsSuccess ?? false;
+}
+
+<div class="back-button-container">
+    <a href="/" class="back-btn">
+        <span class="back-icon">←</span> Назад
+    </a>
+</div>
+
+<div class="booking-card">
+    <h2 class="booking-title">✏️ Онлайн запись</h2>
+
+    @if (!string.IsNullOrEmpty(message))
+    {
+        <div class="alert @(isSuccess ? "alert-success" : "alert-danger")">
+            <span class="alert-icon">@(isSuccess ? "✅" : "⚠️")</span>
+            @message
+        </div>
+    }
+
+    <div class="alert alert-danger" id="validationError" style="display:none">
+        <span class="alert-icon">⚠️</span>
+        <span id="validationErrorText"></span>
+    </div>
+
+    <form method="post" action="/Booking/Save" id="bookingForm">
+        @Html.AntiForgeryToken()
+
+        @* Имя *@
+        <div class="form-group">
+            <label class="form-label">Имя</label>
+            @if (isAuthenticated)
+            {
+                <input class="form-input" name="clientName" id="clientName" value="@clientName" readonly />
+                <small class="field-note">✓ Автоматически заполнено из профиля</small>
+            }
+            else
+            {
+                <input class="form-input" name="clientName" id="clientName" value="@clientName" placeholder="Ваше имя" />
+            }
+        </div>
+
+        @* Телефон *@
+        <div class="form-group">
+            <label class="form-label">Телефон</label>
+            @if (isAuthenticated)
+            {
+                <input class="form-input" name="clientPhone" id="clientPhone" value="@clientPhone" readonly />
+                <small class="field-note">✓ Автоматически заполнено из профиля</small>
+            }
+            else
+            {
+                <input class="form-input" name="clientPhone" id="clientPhone" value="@clientPhone" placeholder="+7 (999) 123-45-67" />
+            }
+        </div>
+
+        @* Услуга *@
+        <div class="form-group">
+            <label class="form-label">Услуга</label>
+            <select class="form-select" name="serviceId" id="serviceSelect" onchange="onServiceChanged(this.value)">
+                @foreach (var s in services)
+                {
+                    if (s.Id == selectedServiceId)
+                    {
+                        <option value="@s.Id" selected>@s.Name — @s.Price.ToString("C")</option>
+                    }
+                    else
+                    {
+                        <option value="@s.Id">@s.Name — @s.Price.ToString("C")</option>
+                    }
+                }
+            </select>
+        </div>
+
+        @* Дата с мини-календарём *@
+        <div class="form-group relative">
+            <label class="form-label">Дата</label>
+            <div class="date-input-wrapper" onclick="toggleCalendar()">
+                <input class="form-input date-input" id="dateDisplay" readonly value="@selectedDateDisplay" />
+                <span class="calendar-icon">📅</span>
+            </div>
+            <input type="hidden" id="selectedDateHidden" value="@selectedDate" />
+
+            <div class="mini-calendar" id="miniCalendar" style="display:none">
+                <div class="calendar-header">
+                    <button class="calendar-nav" type="button" onclick="prevMonth()">←</button>
+                    <span class="calendar-month" id="calendarMonthLabel"></span>
+                    <button class="calendar-nav" type="button" onclick="nextMonth()">→</button>
+                </div>
+                <div class="calendar-grid" id="calendarGrid">
+                    @* ИЗМЕНЕНИЕ 1: заголовки Сб и Вс — красные *@
+                    @foreach (var wd in new[] { "Пн", "Вт", "Ср", "Чт", "Пт", "Сб", "Вс" })
+                    {
+                        string wdCls = (wd == "Сб" || wd == "Вс") ? "calendar-weekday weekend-header" : "calendar-weekday";
+                        <div class="@wdCls">@wd</div>
+                    }
+                </div>
+            </div>
+        </div>
+
+        @* Время *@
+        <div class="form-group">
+            <label class="form-label">Время</label>
+            <select class="form-select" name="selectedTime" id="timeSelect">
+                @if (slots.Any())
+                {
+                    @foreach (var slot in slots.OrderBy(s => s.Time))
+                    {
+                        bool isAvailable = !slot.IsBusy && slot.Time >= DateTime.Now;
+                        string timeStr = slot.Time.ToString("HH:mm");
+                        string timeVal = slot.Time.ToString("yyyy-MM-ddTHH:mm:ss");
+                        string label = timeStr + (slot.IsBusy ? " ❌ занято" : " ✅ свободно");
+
+                        if (!isAvailable)
+                        {
+                            <option value="@timeVal" disabled>@label</option>
+                        }
+                        else if (timeVal == selectedTime)
+                        {
+                            <option value="@timeVal" selected>@label</option>
+                        }
+                        else
+                        {
+                            <option value="@timeVal">@label</option>
+                        }
+                    }
+                }
+                else
+                {
+                    <option disabled>Нет доступного времени</option>
+                }
+            </select>
+        </div>
+
+        @* ИЗМЕНЕНИЕ 2: кнопка в серых оттенках *@
+        <button type="submit" class="btn-primary">Записаться</button>
+
+    </form>
+</div>
+
+<style>
+    .booking-card {
+        font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+        max-width: 700px;
+        margin: 2rem auto;
+        padding: 2rem;
+        background: white;
+        border-radius: 24px;
+        box-shadow: 0 20px 40px rgba(0,0,0,0.08);
+        border: 1px solid rgba(0,0,0,0.05);
+    }
+
+    .booking-title {
+        font-size: 1.75rem;
+        font-weight: 600;
+        text-align: center;
+        margin-bottom: 2rem;
+        color: #272c36;
+        letter-spacing: -0.5px;
+    }
+
+    .back-button-container {
+        margin-bottom: 15px;
+    }
+
+    /* ИЗМЕНЕНИЕ 2а: кнопка Назад — серая */
+    .back-btn {
+        background: #e8e8e8;
+        color: #444;
+        border: 2px solid #ccc;
+        border-radius: 30px;
+        padding: 8px 20px;
+        font-size: 1rem;
+        font-weight: 600;
+        cursor: pointer;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        transition: all 0.3s ease;
+        text-decoration: none;
+    }
+
+        .back-btn:hover {
+            background: #d0d0d0;
+            color: #222;
+            border-color: #aaa;
+            transform: translateX(-3px);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+        }
+
+    .back-icon {
+        font-size: 1.2rem;
+        line-height: 1;
+    }
+
+    .form-group {
+        margin-bottom: 1.5rem;
+        position: relative;
+    }
+
+    .form-label {
+        display: block;
+        font-size: 0.875rem;
+        font-weight: 500;
+        margin-bottom: 0.5rem;
+        color: #202731;
+    }
+
+    .form-input, .form-select {
+        width: 100%;
+        padding: 0.75rem 1rem;
+        border: 2px solid #e5e7eb;
+        border-radius: 14px;
+        font-size: 1rem;
+        transition: all 0.2s ease;
+        background: white;
+        box-sizing: border-box;
+    }
+
+        .form-input:hover, .form-select:hover {
+            border-color: #9ca3af;
+        }
+
+        .form-input:focus, .form-select:focus {
+            outline: none;
+            border-color: rgba(79,70,229,0.5);
+            box-shadow: 0 0 0 4px rgba(79,70,229,0.1);
+        }
+
+        .form-input[readonly] {
+            background-color: #f0f0f0;
+            cursor: default;
+            border-color: #d0d0d0;
+            color: #333;
+        }
+
+        .form-input.input-error {
+            border-color: #f87171 !important;
+            box-shadow: 0 0 0 4px rgba(248,113,113,0.15) !important;
+        }
+
+    .field-note {
+        display: block;
+        margin-top: 5px;
+        font-size: 0.8rem;
+        color: #10b981;
+        font-weight: 500;
+    }
+
+    .date-input-wrapper {
+        position: relative;
+        cursor: pointer;
+    }
+
+    .calendar-icon {
+        position: absolute;
+        right: 1rem;
+        top: 50%;
+        transform: translateY(-50%);
+        color: #9ca3af;
+        pointer-events: none;
+        font-size: 1.25rem;
+    }
+
+    .mini-calendar {
+        position: absolute;
+        top: calc(100% + 8px);
+        left: 0;
+        width: 320px;
+        background: white;
+        border-radius: 20px;
+        box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+        padding: 1rem;
+        z-index: 1000;
+        border: 1px solid #e5e7eb;
+        animation: slideDown 0.2s ease;
+    }
+
+    .calendar-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 1rem;
+        padding: 0 0.5rem;
+    }
+
+    .calendar-nav {
+        background: none;
+        border: none;
+        font-size: 1.25rem;
+        color: #4f46e5;
+        cursor: pointer;
+        width: 32px;
+        height: 32px;
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: background 0.2s;
+    }
+
+        .calendar-nav:hover {
+            background: #f3f4f6;
+        }
+
+    .calendar-month {
+        font-weight: 600;
+        color: #1f2937;
+        text-transform: capitalize;
+    }
+
+    .calendar-grid {
+        display: grid;
+        grid-template-columns: repeat(7, 1fr);
+        gap: 4px;
+    }
+
+    .calendar-weekday {
+        text-align: center;
+        font-size: 0.75rem;
+        font-weight: 600;
+        color: #9ca3af;
+        padding: 0.5rem 0;
+    }
+        /* ИЗМЕНЕНИЕ 1: красный заголовок выходных */
+        .calendar-weekday.weekend-header {
+            color: #e53e3e;
+        }
+
+    .calendar-day {
+        aspect-ratio: 1;
+        border: none;
+        background: none;
+        border-radius: 8px;
+        cursor: pointer;
+        font-weight: 500;
+        transition: all 0.2s;
+        color: #1f2937;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 100%;
+        padding: 0;
+        font-size: 0.9rem;
+    }
+
+        .calendar-day.available {
+            background: #f3f4f6;
+        }
+
+            .calendar-day.available:hover:not(:disabled) {
+                background: #4f46e5;
+                color: white;
+                transform: scale(1.05);
+            }
+
+        .calendar-day.active {
+            background: #4f46e5 !important;
+            color: white !important;
+            font-weight: 600;
+        }
+
+        .calendar-day.unavailable {
+            color: #d1d5db;
+            cursor: not-allowed;
+        }
+
+        .calendar-day.past {
+            color: #e5e7eb;
+            cursor: not-allowed;
+        }
+        /* ИЗМЕНЕНИЕ 3: стиль выходного дня */
+        .calendar-day.weekend-day {
+            background: #fff0f0;
+            color: #e53e3e;
+            cursor: not-allowed;
+        }
+
+        .calendar-day.other-month {
+            opacity: 0.4;
+        }
+
+        .calendar-day:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+    /* ИЗМЕНЕНИЕ 2б: кнопка Записаться — серая */
+    .btn-primary {
+        width: 100%;
+        padding: 1rem;
+        background: #555;
+        color: white;
+        border: none;
+        border-radius: 14px;
+        font-size: 1.125rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
+        margin-top: 2rem;
+    }
+
+        .btn-primary:hover:not(:disabled) {
+            background: #444;
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+        }
+
+    .alert {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        padding: 1rem;
+        border-radius: 14px;
+        margin-bottom: 1.5rem;
+        font-weight: 500;
+        animation: slideUp 0.3s ease;
+    }
+
+    .alert-success {
+        background: #ecfdf5;
+        color: #065f46;
+        border: 1px solid #a7f3d0;
+    }
+
+    .alert-danger {
+        background: #fef2f2;
+        color: #991b1b;
+        border: 1px solid #fecaca;
+    }
+
+    .alert-icon {
+        font-size: 1.25rem;
+    }
+
+    .relative {
+        position: relative;
+    }
+
+    @@keyframes slideDown {
+        from {
+            opacity: 0;
+            transform: translateY(-10px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    @@keyframes slideUp {
+        from {
+            opacity: 0;
+            transform: translateY(10px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    @@media screen and (max-width: 768px) {
+        .booking-card {
+            margin: 1rem auto;
+            padding: 1.5rem;
+            max-width: 90%;
+        }
+
+        .booking-title {
+            font-size: 1.5rem;
+        }
+
+        .mini-calendar {
+            width: 280px;
+        }
+    }
+
+    @@media screen and (max-width: 480px) {
+        .booking-card {
+            margin: 0.5rem auto;
+            padding: 1rem;
+            max-width: 95%;
+        }
+
+        .booking-title {
+            font-size: 1.3rem;
+        }
+
+        .mini-calendar {
+            width: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+    }
+
+    @@media screen and (max-width: 360px) {
+        .booking-card {
+            padding: 0.8rem;
+        }
+
+        .booking-title {
+            font-size: 1.2rem;
+        }
+    }
+</style>
+
+@section Scripts {
+    <script>
+        const availableDates = @Html.Raw(JsonSerializer.Serialize(availableDates));
+        let currentViewDate = new Date('@selectedDate');
+        let selectedDateStr = '@selectedDate';
+
+        // ===== ВАЛИДАЦИЯ =====
+
+        document.getElementById('bookingForm').addEventListener('submit', function (e) {
+            hideError();
+            const name       = document.getElementById('clientName').value.trim();
+            const phone      = document.getElementById('clientPhone').value.trim();
+            const time       = document.getElementById('timeSelect').value;
+            const timeOption = document.getElementById('timeSelect').selectedOptions[0];
+
+            if (!name || name.length < 2) {
+                e.preventDefault();
+                showError('Пожалуйста, введите имя (минимум 2 символа)');
+                highlight('clientName');
+                return;
+            }
+            if (!phone || phone.replace(/\D/g, '').length < 7) {
+                e.preventDefault();
+                showError('Пожалуйста, введите корректный номер телефона');
+                highlight('clientPhone');
+                return;
+            }
+            if (!time || timeOption.disabled) {
+                e.preventDefault();
+                showError('Пожалуйста, выберите доступное время записи');
+                return;
+            }
+        });
+
+        function showError(msg) {
+            const block = document.getElementById('validationError');
+            document.getElementById('validationErrorText').textContent = msg;
+            block.style.display = 'flex';
+            block.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+
+        function hideError() {
+            document.getElementById('validationError').style.display = 'none';
+            document.querySelectorAll('.input-error').forEach(el => el.classList.remove('input-error'));
+        }
+
+        function highlight(fieldId) {
+            const el = document.getElementById(fieldId);
+            if (el && !el.readOnly) el.classList.add('input-error');
+        }
+
+        // ===== КАЛЕНДАРЬ =====
+
+        // ИЗМЕНЕНИЕ 3: функция проверки выходного дня
+        function isWeekend(date) {
+            const day = date.getDay();
+            return day === 0 || day === 6; // 0=воскресенье, 6=суббота
+        }
+
+        function toggleCalendar() {
+            const cal = document.getElementById('miniCalendar');
+            if (cal.style.display === 'none') { cal.style.display = 'block'; renderCalendar(); }
+            else cal.style.display = 'none';
+        }
+
+        document.addEventListener('click', function (e) {
+            const cal     = document.getElementById('miniCalendar');
+            const wrapper = document.querySelector('.date-input-wrapper');
+            if (!cal.contains(e.target) && !wrapper.contains(e.target))
+                cal.style.display = 'none';
+        });
+
+        function prevMonth() {
+            currentViewDate = new Date(currentViewDate.getFullYear(), currentViewDate.getMonth() - 1, 1);
+            renderCalendar();
+        }
+
+        function nextMonth() {
+            currentViewDate = new Date(currentViewDate.getFullYear(), currentViewDate.getMonth() + 1, 1);
+            renderCalendar();
+        }
+
+        function renderCalendar() {
+            const year  = currentViewDate.getFullYear();
+            const month = currentViewDate.getMonth();
+
+            const monthNames = ['Январь','Февраль','Март','Апрель','Май','Июнь',
+                                'Июль','Август','Сентябрь','Октябрь','Ноябрь','Декабрь'];
+            document.getElementById('calendarMonthLabel').textContent = monthNames[month] + ' ' + year;
+
+            const firstDay = new Date(year, month, 1);
+            const shift    = (firstDay.getDay() + 6) % 7;
+
+            const grid    = document.getElementById('calendarGrid');
+            const headers = Array.from(grid.querySelectorAll('.calendar-weekday'));
+            grid.innerHTML = '';
+            headers.forEach(h => grid.appendChild(h));
+
+            const today = new Date();
+            today.setHours(0, 0, 0, 0);
+
+            for (let i = 0; i < 42; i++) {
+                const d              = new Date(year, month, 1 - shift + i);
+                const dateStr        = formatDate(d);
+                const isCurrentMonth = d.getMonth() === month;
+                const isPast         = d < today;
+                const isWknd         = isWeekend(d);  // ИЗМЕНЕНИЕ 3
+                const isAvailable    = availableDates.includes(dateStr);
+                const isSelected     = dateStr === selectedDateStr;
+
+                const btn = document.createElement('button');
+                btn.type        = 'button';
+                btn.textContent = d.getDate();
+                btn.className   = 'calendar-day';
+
+                // ИЗМЕНЕНИЕ 3: выходные получают класс weekend-day и блокируются
+                if (isSelected)           btn.classList.add('active');
+                else if (isPast)          btn.classList.add('past');
+                else if (isWknd)          btn.classList.add('weekend-day');
+                else if (!isCurrentMonth) btn.classList.add('other-month');
+                else if (isAvailable)     btn.classList.add('available');
+                else                      btn.classList.add('unavailable');
+
+                if (isPast || isWknd || !isAvailable || !isCurrentMonth) {
+                    btn.disabled = true;
+                } else {
+                    btn.onclick = () => selectDate(dateStr, d);
+                }
+
+                grid.appendChild(btn);
+            }
+        }
+
+        async function selectDate(dateStr, dateObj) {
+            selectedDateStr = dateStr;
+            document.getElementById('selectedDateHidden').value = dateStr;
+            document.getElementById('dateDisplay').value = formatDisplayDate(dateObj);
+            document.getElementById('miniCalendar').style.display = 'none';
+            renderCalendar();
+            await loadSlots(dateStr);
+        }
+
+        async function loadSlots(dateStr) {
+            const serviceId = document.getElementById('serviceSelect').value;
+            const response  = await fetch(`/Booking/GetSlotsByDate?date=${dateStr}&serviceId=${serviceId}`);
+            const slots     = await response.json();
+            const select    = document.getElementById('timeSelect');
+            select.innerHTML = '';
+
+            const available = slots.filter(s => !s.isBusy);
+            if (available.length === 0) {
+                select.innerHTML = '<option disabled>Нет доступного времени</option>';
+                return;
+            }
+
+            slots.forEach(slot => {
+                const opt       = document.createElement('option');
+                opt.value       = slot.time;
+                opt.textContent = slot.timeDisplay + (slot.isBusy ? ' ❌ занято' : ' ✅ свободно');
+                if (slot.isBusy) opt.disabled = true;
+                select.appendChild(opt);
+            });
+        }
+
+        async function onServiceChanged(serviceId) {
+            const response = await fetch(`/Booking/GetAvailableDatesAction?serviceId=${serviceId}`);
+            const dates    = await response.json();
+            availableDates.length = 0;
+            dates.forEach(d => availableDates.push(d));
+
+            if (dates.length > 0) {
+                const firstDate = dates[0];
+                const d = new Date(firstDate);
+                selectedDateStr = firstDate;
+                document.getElementById('selectedDateHidden').value = firstDate;
+                document.getElementById('dateDisplay').value = formatDisplayDate(d);
+                currentViewDate = new Date(d.getFullYear(), d.getMonth(), 1);
+            }
+
+            renderCalendar();
+            await loadSlots(selectedDateStr);
+        }
+
+        function formatDate(d) {
+            const y   = d.getFullYear();
+            const m   = String(d.getMonth() + 1).padStart(2, '0');
+            const day = String(d.getDate()).padStart(2, '0');
+            return `${y}-${m}-${day}`;
+        }
+
+        function formatDisplayDate(d) {
+            const day = String(d.getDate()).padStart(2, '0');
+            const m   = String(d.getMonth() + 1).padStart(2, '0');
+            const y   = d.getFullYear();
+            return `${day}.${m}.${y}`;
+        }
+
+        renderCalendar();
+    </script>
+}

@@ -1,0 +1,118 @@
+﻿@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewBag.Title = "Вход — Администратор";
+    string? error = ViewBag.Error as string;
+}
+
+<div class="login-page">
+    <div class="login-card">
+        <h3><i class="bi bi-shield-lock"></i> Вход для администратора</h3>
+        <p>Введите пароль для доступа к панели управления</p>
+
+        @if (!string.IsNullOrEmpty(error))
+        {
+            <div class="error-message">⚠️ @error</div>
+        }
+
+        <form method="post" action="/Admin/Authorize">
+            @Html.AntiForgeryToken()
+            <div class="form-group">
+                <input type="password" class="form-input" name="adminPassword"
+                       placeholder="Пароль администратора" autofocus />
+            </div>
+            <button type="submit" class="login-btn">Войти</button>
+        </form>
+
+        <div style="margin-top: 20px; text-align: center;">
+            <a href="/" style="color: #888; font-size: 0.9rem;">← На сайт</a>
+        </div>
+    </div>
+</div>
+
+<style>
+    .login-page {
+        min-height: 80vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: #f5f5f5;
+        padding: 20px;
+    }
+
+    .login-card {
+        background: white;
+        border-radius: 12px;
+        padding: 35px;
+        width: 100%;
+        max-width: 380px;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+        border: 1px solid #eaeaea;
+    }
+
+        .login-card h3 {
+            font-size: 1.6rem;
+            color: #333;
+            margin-bottom: 8px;
+            text-align: center;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .login-card p {
+            color: #777;
+            text-align: center;
+            margin-bottom: 25px;
+            font-size: 0.95rem;
+        }
+
+    .form-group {
+        margin-bottom: 20px;
+    }
+
+    .form-input {
+        width: 100%;
+        padding: 12px 16px;
+        border: 1px solid #ddd;
+        border-radius: 6px;
+        font-size: 0.95rem;
+        background: #fafafa;
+        box-sizing: border-box;
+    }
+
+        .form-input:focus {
+            outline: none;
+            border-color: #888;
+            background: white;
+            box-shadow: 0 0 0 3px rgba(0,0,0,0.05);
+        }
+
+    .login-btn {
+        width: 100%;
+        padding: 12px;
+        background: #666;
+        color: white;
+        border: none;
+        border-radius: 6px;
+        font-size: 0.95rem;
+        font-weight: 500;
+        cursor: pointer;
+        transition: background 0.2s;
+    }
+
+        .login-btn:hover {
+            background: #555;
+        }
+
+    .error-message {
+        color: #d32f2f;
+        font-size: 0.9rem;
+        margin-bottom: 15px;
+        padding: 10px 12px;
+        background: #ffebee;
+        border-radius: 6px;
+        border: 1px solid #ffcdd2;
+    }
+</style>

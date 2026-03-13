@@ -1,0 +1,197 @@
+﻿@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewBag.Title = "Отзывы — LashLukina";
+
+    var reviews = ViewBag.Reviews as List<LashBooking.Domain.Entities.Review> ?? new();
+    double averageRating = ViewBag.AverageRating ?? 0.0;
+    bool isAuthenticated = ViewBag.IsAuthenticated ?? false;
+    string phone = ViewBag.Phone ?? "";
+    string? message = ViewBag.Message as string;
+    bool isSuccess = ViewBag.IsSuccess ?? false;
+}
+
+<div class="back-button-container">
+    <a href="/" class="back-btn">
+        <span class="back-icon">←</span> Назад
+    </a>
+</div>
+
+<div class="container mt-5">
+
+    <h2 class="text-center mb-4">Отзывы клиентов</h2>
+
+    <div class="text-center mb-4">
+        <h4>Средняя оценка: @averageRating ⭐</h4>
+    </div>
+
+    <div class="row">
+        @foreach (var review in reviews)
+        {
+            <div class="col-md-6 mb-4">
+                <div class="card shadow p-3 review-card">
+                    <h5>@(review.Client?.Name ?? "Анонимный клиент")</h5>
+                    <div class="stars">
+                        @for (int i = 1; i <= 5; i++)
+                        {
+                            <span class="@(i <= review.Rating ? "star-filled" : "star")">★</span>
+                        }
+                    </div>
+                    <p class="mt-2">@review.Text</p>
+                    <small class="text-muted">@review.CreatedAt.ToLocalTime().ToString("dd.MM.yyyy")</small>
+                </div>
+            </div>
+        }
+    </div>
+
+    @if (!reviews.Any())
+    {
+        <div class="text-center my-5">
+            <p class="text-muted">Пока нет отзывов. Будьте первым!</p>
+        </div>
+    }
+
+    <hr class="my-5" />
+
+    <h4>Оставить отзыв</h4>
+
+    @* Уведомление об успехе или ошибке *@
+    @if (!string.IsNullOrEmpty(message))
+    {
+        <div class="alert mt-3 @(isSuccess ? "alert-success" : "alert-danger")">
+            @message
+        </div>
+    }
+
+    <div class="row">
+        <div class="col-md-6">
+
+            @* POST форма — вместо @onclick="AddReview" в Blazor *@
+            <form method="post" action="/Reviews/Add">
+                @Html.AntiForgeryToken()
+
+                <div class="mb-3">
+                    <label class="form-label">Ваш телефон</label>
+                    @if (isAuthenticated)
+                    {
+                        <input class="form-control" name="phone" value="@phone" readonly />
+                        <small class="text-success">
+                            <i class="bi bi-check-circle"></i> Автоматически заполнено из профиля
+                        </small>
+                    }
+                    else
+                    {
+                        <input class="form-control" name="phone" placeholder="+7 (999) 123-45-67" value="@phone" />
+                    }
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">Оценка</label>
+                    <select class="form-control" name="rating">
+                        <option value="5">5 ⭐</option>
+                        <option value="4">4 ⭐</option>
+                        <option value="3">3 ⭐</option>
+                        <option value="2">2 ⭐</option>
+                        <option value="1">1 ⭐</option>
+                    </select>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">Ваш отзыв</label>
+                    <textarea class="form-control" name="text" rows="4"
+                              placeholder="Расскажите о вашем опыте..."></textarea>
+                </div>
+
+                <button type="submit" class="btn btn-primary">Отправить отзыв</button>
+
+                @if (!isAuthenticated)
+                {
+                    <div class="mt-3">
+                        <small class="text-muted">
+                            Уже есть аккаунт?
+                            <a href="/Auth/Login" class="text-primary">Войдите</a>,
+                            чтобы телефон заполнился автоматически
+                        </small>
+                    </div>
+                }
+
+            </form>
+
+        </div>
+    </div>
+
+</div>
+
+<style>
+    .back-button-container {
+        margin: 20px 0 0 20px;
+    }
+
+    .back-btn {
+        background: transparent;
+        color: #444;
+        border: 2px solid #333;
+        border-radius: 30px;
+        padding: 8px 20px;
+        font-size: 1rem;
+        font-weight: 600;
+        cursor: pointer;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        transition: all 0.3s ease;
+        text-decoration: none;
+    }
+
+        .back-btn:hover {
+            background: #4f46e5;
+            color: white;
+            transform: translateX(-3px);
+            box-shadow: 0 4px 10px rgba(79, 70, 229, 0.3);
+        }
+
+    .back-icon {
+        font-size: 1.2rem;
+        line-height: 1;
+    }
+
+    .review-card {
+        border-radius: 20px;
+        background: #fff;
+        transition: transform 0.2s ease;
+        border: none;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+    }
+
+        .review-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+        }
+
+    .star {
+        color: #ddd;
+        font-size: 18px;
+    }
+
+    .star-filled {
+        color: #f8b400;
+        font-size: 18px;
+    }
+
+    .form-control[readonly] {
+        background-color: #f0f0f0;
+        cursor: default;
+        border-color: #d0d0d0;
+        color: #333;
+    }
+
+    .text-success {
+        color: #10b981;
+        font-size: 0.85rem;
+        margin-top: 5px;
+        display: block;
+    }
+
+        .text-success i {
+            margin-right: 4px;
+        }
+</style>

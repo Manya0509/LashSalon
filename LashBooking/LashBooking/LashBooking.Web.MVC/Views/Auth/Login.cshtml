@@ -1,0 +1,314 @@
+﻿@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewBag.Title = "Вход — LashLukina";
+
+    bool isLoginMode = ViewBag.IsLoginMode ?? true;
+    string? errorMessage = ViewBag.ErrorMessage as string;
+    string? successMessage = ViewBag.SuccessMessage as string;
+}
+
+<div class="auth-container">
+    <div class="auth-card">
+
+        <h2 class="auth-title" id="authTitle">
+            @(isLoginMode ? "Вход в личный кабинет" : "Регистрация")
+        </h2>
+        <p class="auth-subtitle" id="authSubtitle">
+            @(isLoginMode ? "Введите номер телефона и пароль" : "Создайте аккаунт")
+        </p>
+
+        @* Переключатель Вход / Регистрация *@
+        <div class="auth-toggle">
+            <a href="/Auth/Login" class="toggle-btn @(isLoginMode ? "active" : "")">
+                Вход
+            </a>
+            <a href="/Auth/Login?mode=register" class="toggle-btn @(!isLoginMode ? "active" : "")">
+                Регистрация
+            </a>
+        </div>
+
+        @* ===== ФОРМА ВХОДА ===== *@
+        @if (isLoginMode)
+        {
+            <form method="post" action="/Auth/HandleLogin" class="auth-form">
+                @Html.AntiForgeryToken()
+
+                <div class="form-group">
+                    <label class="form-label">Телефон</label>
+                    <input type="tel" class="form-input" name="loginPhone"
+                           placeholder="+7 (999) 123-45-67" />
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Пароль</label>
+                    <input type="password" class="form-input" name="loginPassword"
+                           placeholder="Введите пароль" />
+                </div>
+
+                <button type="submit" class="auth-btn">Войти</button>
+            </form>
+        }
+        else
+        {
+            @* ===== ФОРМА РЕГИСТРАЦИИ ===== *@
+            <form method="post" action="/Auth/HandleRegister" class="auth-form">
+                @Html.AntiForgeryToken()
+
+                <div class="form-group">
+                    <label class="form-label">Имя</label>
+                    <input type="text" class="form-input" name="regName"
+                           placeholder="Ваше имя" />
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Телефон</label>
+                    <input type="tel" class="form-input" name="regPhone"
+                           placeholder="+7 (999) 123-45-67" />
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Пароль</label>
+                    <input type="password" class="form-input" name="regPassword"
+                           placeholder="Минимум 6 символов" />
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Повторите пароль</label>
+                    <input type="password" class="form-input" name="regConfirmPassword"
+                           placeholder="Повторите пароль" />
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Email (необязательно)</label>
+                    <input type="email" class="form-input" name="regEmail"
+                           placeholder="ivan@example.com" />
+                </div>
+
+                <button type="submit" class="auth-btn">Зарегистрироваться</button>
+            </form>
+        }
+
+        @* Сообщения об ошибке и успехе *@
+        @if (!string.IsNullOrEmpty(errorMessage))
+        {
+            <div class="alert alert-danger">
+                <span class="alert-icon">⚠️</span>
+                @errorMessage
+            </div>
+        }
+
+        @if (!string.IsNullOrEmpty(successMessage))
+        {
+            <div class="alert alert-success">
+                <span class="alert-icon">✅</span>
+                @successMessage
+            </div>
+        }
+
+    </div>
+</div>
+
+<style>
+    .auth-container {
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: #f0f0f0;
+        padding: 20px;
+    }
+
+    .auth-card {
+        background: white;
+        border-radius: 24px;
+        padding: 40px;
+        width: 100%;
+        max-width: 450px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        animation: fadeIn 0.5s ease;
+    }
+
+    .auth-title {
+        font-size: 2rem;
+        font-weight: 700;
+        text-align: center;
+        margin-bottom: 10px;
+        color: #333;
+    }
+
+    .auth-subtitle {
+        text-align: center;
+        color: #666;
+        margin-bottom: 30px;
+        font-size: 0.95rem;
+    }
+
+    .auth-toggle {
+        display: flex;
+        gap: 10px;
+        margin-bottom: 30px;
+        background: #e8e8e8;
+        padding: 5px;
+        border-radius: 50px;
+    }
+
+    .toggle-btn {
+        flex: 1;
+        padding: 12px;
+        border: none;
+        border-radius: 50px;
+        background: transparent;
+        font-size: 1rem;
+        font-weight: 600;
+        color: #666;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        text-align: center;
+        text-decoration: none;
+        display: block;
+    }
+
+        .toggle-btn.active {
+            background: #666;
+            color: white;
+            box-shadow: 0 4px 10px rgba(128, 128, 128, 0.2);
+        }
+
+        .toggle-btn:hover:not(.active) {
+            background: #d0d0d0;
+            color: #333;
+        }
+
+    .auth-form {
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+    }
+
+    .form-group {
+        margin-bottom: 0;
+    }
+
+    .form-label {
+        display: block;
+        font-size: 0.875rem;
+        font-weight: 500;
+        margin-bottom: 0.5rem;
+        color: #4b5563;
+    }
+
+    .form-input {
+        width: 100%;
+        padding: 12px 16px;
+        border: 2px solid #d0d0d0;
+        border-radius: 12px;
+        font-size: 1rem;
+        transition: all 0.2s ease;
+        background: #f8f8f8;
+        box-sizing: border-box;
+    }
+
+        .form-input:hover {
+            border-color: #a0a0a0;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: #808080;
+            box-shadow: 0 0 0 4px rgba(128, 128, 128, 0.1);
+            background: white;
+        }
+
+        .form-input::placeholder {
+            color: #999;
+        }
+
+    .auth-btn {
+        background: #808080;
+        color: white;
+        border: none;
+        border-radius: 50px;
+        padding: 14px;
+        font-size: 1rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        margin-top: 10px;
+        width: 100%;
+    }
+
+        .auth-btn:hover {
+            background: #666;
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(128, 128, 128, 0.3);
+        }
+
+    .alert {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 16px;
+        border-radius: 12px;
+        margin-top: 20px;
+        font-weight: 500;
+        animation: slideUp 0.3s ease;
+    }
+
+    .alert-success {
+        background: #ecfdf5;
+        color: #065f46;
+        border: 1px solid #a7f3d0;
+    }
+
+    .alert-danger {
+        background: #fef2f2;
+        color: #991b1b;
+        border: 1px solid #fecaca;
+    }
+
+    .alert-icon {
+        font-size: 1.25rem;
+    }
+
+    @@keyframes fadeIn {
+        from {
+            opacity: 0;
+            transform: translateY(-20px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    @@keyframes slideUp {
+        from {
+            opacity: 0;
+            transform: translateY(10px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    @@media (max-width: 480px) {
+        .auth-card {
+            padding: 30px 20px;
+        }
+
+        .auth-title {
+            font-size: 1.75rem;
+        }
+
+        .toggle-btn {
+            padding: 10px;
+        }
+    }
+</style>
