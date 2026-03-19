@@ -2,6 +2,7 @@
 using LashBooking.Domain.Entities;
 using LashBooking.Domain.Interfaces;
 using LashBooking.Web.MVC.Filters;
+using ClosedXML.Excel;
 
 namespace LashBooking.Web.MVC.Controllers
 {
@@ -12,6 +13,7 @@ namespace LashBooking.Web.MVC.Controllers
         private readonly IRepository<Client> _clients;
         private readonly IRepository<Service> _services;
         private readonly IRepository<Review> _reviews;
+        private readonly IRepository<BlockedSlot> _blockedSlots;
         private readonly string _adminPassword;
 
         public AdminController(
@@ -19,17 +21,19 @@ namespace LashBooking.Web.MVC.Controllers
             IRepository<Client> clients,
             IRepository<Service> services,
             IRepository<Review> reviews,
+            IRepository<BlockedSlot> blockedSlots,
             IConfiguration configuration)
         {
             _appointments = appointments;
             _clients = clients;
             _services = services;
             _reviews = reviews;
+            _blockedSlots = blockedSlots;
             _adminPassword = configuration["AdminPassword"]
                 ?? throw new InvalidOperationException("Пароль администратора не настроен в конфигурации.");
         }
 
-        // ===== АВТОРИЗАЦИЯ — исключены из фильтра =====
+        //  АВТОРИЗАЦИЯ  
 
         [SkipRequireAdminAuth]
         [HttpGet]
@@ -61,7 +65,7 @@ namespace LashBooking.Web.MVC.Controllers
             return RedirectToAction("Login");
         }
 
-        // ===== ГЛАВНАЯ =====
+        // ГЛАВНАЯ 
 
         [HttpGet]
         public async Task<IActionResult> Index(string tab = "appointments")
@@ -82,13 +86,14 @@ namespace LashBooking.Web.MVC.Controllers
             else if (tab == "reviews") LoadReviewsTab(allReviews, allClients);
             else if (tab == "clients") LoadClientsTab(allClients, allAppointments, "");
             else if (tab == "services") ViewBag.Services = allServices.OrderBy(s => s.Name).ToList();
+            else if (tab == "schedule") await LoadScheduleTab();
 
             if (TempData["Message"] != null) { ViewBag.Message = TempData["Message"]; ViewBag.IsSuccess = TempData["IsSuccess"] ?? true; }
 
             return View();
         }
 
-        // ===== ЗАПИСИ =====
+        //  ЗАПИСИ 
 
         [HttpGet]
         public async Task<IActionResult> FilterAppointments(string filter = "today", string search = "")
@@ -188,7 +193,7 @@ namespace LashBooking.Web.MVC.Controllers
             return RedirectToAction("Index", new { tab = "appointments" });
         }
 
-        // ===== ОТЗЫВЫ =====
+        //  ОТЗЫВЫ 
 
         private void LoadReviewsTab(IEnumerable<Review> reviews, IEnumerable<Client> clients)
         {
@@ -234,7 +239,7 @@ namespace LashBooking.Web.MVC.Controllers
             return RedirectToAction("Index", new { tab = "reviews" });
         }
 
-        // ===== КЛИЕНТЫ =====
+        //  КЛИЕНТЫ 
 
         [HttpGet]
         public async Task<IActionResult> FilterClients(string search = "")
@@ -269,7 +274,7 @@ namespace LashBooking.Web.MVC.Controllers
             ViewBag.ClientSearch = search;
         }
 
-        // ===== УСЛУГИ =====
+        //  УСЛУГИ 
 
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -302,6 +307,123 @@ namespace LashBooking.Web.MVC.Controllers
                 TempData["IsSuccess"] = true;
             }
             return RedirectToAction("Index", new { tab = "services" });
+        }
+
+        // РАСПИСАНИЕ
+
+        private async Task LoadScheduleTab()
+        {
+            var today = DateTime.Today;
+            var blocked = (await _blockedSlots.GetAllAsync())
+                .Where(b => b.Date >= today)
+                .OrderBy(b => b.Date)
+                .ThenBy(b => b.BlockedHour)
+                .ToList();
+            ViewBag.BlockedSlots = blocked;
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> BlockSlot(DateTime date, int? hour, string? reason)
+        {
+            var blocked = new BlockedSlot
+            {
+                Date = date.Date,
+                BlockedHour = hour == -1 ? null : hour,
+                Reason = reason,
+                CreatedAt = DateTime.Now
+            };
+            await _blockedSlots.AddAsync(blocked);
+            await _blockedSlots.SaveChangesAsync();
+            TempData["Message"] = hour == -1
+                ? $"День {date:dd.MM.yyyy} заблокирован."
+                : $"Час {hour}:00 {date:dd.MM.yyyy} заблокирован.";
+            TempData["IsSuccess"] = true;
+            return RedirectToAction("Index", new { tab = "schedule" });
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> UnblockSlot(int slotId)
+        {
+            var slot = await _blockedSlots.GetByIdAsync(slotId);
+            if (slot != null)
+            {
+                _blockedSlots.Delete(slot);
+                await _blockedSlots.SaveChangesAsync();
+                TempData["Message"] = "Блокировка снята.";
+                TempData["IsSuccess"] = true;
+            }
+            return RedirectToAction("Index", new { tab = "schedule" });
+        }
+
+        //  ЭКСПОРТ 
+
+        [HttpGet]
+        public async Task<IActionResult> ExportAppointments()
+        {
+            var appointments = await _appointments.GetAllAsync();
+            var clients = (await _clients.GetAllAsync()).ToDictionary(c => c.Id);
+            var services = (await _services.GetAllAsync()).ToDictionary(s => s.Id);
+
+            using var workbook = new ClosedXML.Excel.XLWorkbook();
+            var worksheet = workbook.Worksheets.Add("Записи");
+
+            // Заголовки
+            worksheet.Cell(1, 1).Value = "Дата";
+            worksheet.Cell(1, 2).Value = "Время";
+            worksheet.Cell(1, 3).Value = "Клиент";
+            worksheet.Cell(1, 4).Value = "Телефон";
+            worksheet.Cell(1, 5).Value = "Услуга";
+            worksheet.Cell(1, 6).Value = "Длительность (мин)";
+            worksheet.Cell(1, 7).Value = "Цена";
+            worksheet.Cell(1, 8).Value = "Статус";
+            worksheet.Cell(1, 9).Value = "Заметки";
+
+            // Стиль заголовков
+            var headerRow = worksheet.Row(1);
+            headerRow.Style.Font.Bold = true;
+            headerRow.Style.Fill.BackgroundColor = ClosedXML.Excel.XLColor.FromHtml("#f0f0f0");
+
+            // Данные
+            int row = 2;
+            foreach (var appt in appointments.OrderByDescending(a => a.DateStart))
+            {
+                clients.TryGetValue(appt.ClientId, out var client);
+                services.TryGetValue(appt.ServiceId, out var service);
+
+                string status = appt.Status switch
+                {
+                    AppointmentStatus.Scheduled => "Запланирована",
+                    AppointmentStatus.Confirmed => "Подтверждена",
+                    AppointmentStatus.Completed => "Выполнена",
+                    AppointmentStatus.Cancelled => "Отменена",
+                    AppointmentStatus.NoShow => "Не явился",
+                    _ => "—"
+                };
+
+                worksheet.Cell(row, 1).Value = appt.DateStart.ToString("dd.MM.yyyy");
+                worksheet.Cell(row, 2).Value = appt.DateStart.ToString("HH:mm");
+                worksheet.Cell(row, 3).Value = client?.Name ?? "—";
+                worksheet.Cell(row, 4).Value = client?.Phone ?? "—";
+                worksheet.Cell(row, 5).Value = service?.Name ?? "—";
+                worksheet.Cell(row, 6).Value = service?.DurationMinutes ?? 0;
+                worksheet.Cell(row, 7).Value = service?.Price ?? 0;
+                worksheet.Cell(row, 8).Value = status;
+                worksheet.Cell(row, 9).Value = appt.Notes ?? "—";
+
+                row++;
+            }
+
+            // Автоширина колонок
+            worksheet.Columns().AdjustToContents();
+
+            using var stream = new MemoryStream();
+            workbook.SaveAs(stream);
+            stream.Position = 0;
+
+            string fileName = $"Записи_{DateTime.Today:dd-MM-yyyy}.xlsx";
+            return File(stream.ToArray(), "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", fileName);
         }
     }
 }

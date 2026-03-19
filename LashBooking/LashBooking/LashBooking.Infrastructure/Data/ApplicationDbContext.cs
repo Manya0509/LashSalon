@@ -15,6 +15,7 @@ public class ApplicationDbContext : DbContext
     public DbSet<Service> Services => Set<Service>();
     public DbSet<Appointment> Appointments => Set<Appointment>();
     public DbSet<Review> Reviews => Set<Review>();
+    public DbSet<BlockedSlot> BlockedSlots { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

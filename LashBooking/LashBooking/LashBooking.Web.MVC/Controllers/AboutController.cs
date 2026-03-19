@@ -6,7 +6,7 @@ namespace LashBooking.Web.MVC.Controllers
     {
         public IActionResult Index()
         {
-            return View();
+            return View();    // возвращает Views/About/Index.cshtml
         }
     }
 }

@@ -105,7 +105,7 @@
                     <button class="calendar-nav" type="button" onclick="nextMonth()">→</button>
                 </div>
                 <div class="calendar-grid" id="calendarGrid">
-                    @* ИЗМЕНЕНИЕ 1: заголовки Сб и Вс — красные *@
+                    @*  заголовки Сб и Вс — красные *@
                     @foreach (var wd in new[] { "Пн", "Вт", "Ср", "Чт", "Пт", "Сб", "Вс" })
                     {
                         string wdCls = (wd == "Сб" || wd == "Вс") ? "calendar-weekday weekend-header" : "calendar-weekday";
@@ -149,7 +149,7 @@
             </select>
         </div>
 
-        @* ИЗМЕНЕНИЕ 2: кнопка в серых оттенках *@
+        @* кнопка в серых оттенках *@
         <button type="submit" class="btn-primary">Записаться</button>
 
     </form>
@@ -180,7 +180,6 @@
         margin-bottom: 15px;
     }
 
-    /* ИЗМЕНЕНИЕ 2а: кнопка Назад — серая */
     .back-btn {
         background: #e8e8e8;
         color: #444;
@@ -305,7 +304,7 @@
         background: none;
         border: none;
         font-size: 1.25rem;
-        color: #4f46e5;
+        color: #555;
         cursor: pointer;
         width: 32px;
         height: 32px;
@@ -366,13 +365,13 @@
         }
 
             .calendar-day.available:hover:not(:disabled) {
-                background: #4f46e5;
+                background: #555;
                 color: white;
                 transform: scale(1.05);
             }
 
         .calendar-day.active {
-            background: #4f46e5 !important;
+            background: #555 !important;
             color: white !important;
             font-weight: 600;
         }
@@ -402,7 +401,6 @@
             cursor: not-allowed;
         }
 
-    /* ИЗМЕНЕНИЕ 2б: кнопка Записаться — серая */
     .btn-primary {
         width: 100%;
         padding: 1rem;
@@ -580,7 +578,7 @@
 
         // ===== КАЛЕНДАРЬ =====
 
-        // ИЗМЕНЕНИЕ 3: функция проверки выходного дня
+        // функция проверки выходного дня
         function isWeekend(date) {
             const day = date.getDay();
             return day === 0 || day === 6; // 0=воскресенье, 6=суббота
@@ -633,7 +631,7 @@
                 const dateStr        = formatDate(d);
                 const isCurrentMonth = d.getMonth() === month;
                 const isPast         = d < today;
-                const isWknd         = isWeekend(d);  // ИЗМЕНЕНИЕ 3
+                const isWknd         = isWeekend(d);  
                 const isAvailable    = availableDates.includes(dateStr);
                 const isSelected     = dateStr === selectedDateStr;
 
@@ -642,7 +640,7 @@
                 btn.textContent = d.getDate();
                 btn.className   = 'calendar-day';
 
-                // ИЗМЕНЕНИЕ 3: выходные получают класс weekend-day и блокируются
+                //  выходные получают класс weekend-day и блокируются
                 if (isSelected)           btn.classList.add('active');
                 else if (isPast)          btn.classList.add('past');
                 else if (isWknd)          btn.classList.add('weekend-day');

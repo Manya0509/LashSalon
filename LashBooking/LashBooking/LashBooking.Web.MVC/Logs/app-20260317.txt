@@ -1,0 +1,1102 @@
+﻿
+[17.03.2026 12:48:32] INF
+Приложение запускается...
+
+[17.03.2026 12:48:34] INF
+Приложение запущено успешно
+
+[17.03.2026 12:48:35] INF
+Now listening on: https://localhost:7150
+
+[17.03.2026 12:48:35] INF
+Now listening on: http://localhost:5265
+
+[17.03.2026 12:48:35] INF
+Application started. Press Ctrl+C to shut down.
+
+[17.03.2026 12:48:35] INF
+Hosting environment: Development
+
+[17.03.2026 12:48:35] INF
+Content root path: C:\Users\Дарья\Desktop\LashSalon\LashSalon\LashBooking\LashBooking\LashBooking.Web.MVC
+
+[17.03.2026 12:48:43] INF
+HTTP GET / -> 200 за 1244мс
+
+[17.03.2026 12:50:28] WRN
+No store type was specified for the decimal property 'Price' on entity type 'Service'. This will cause values to be silently truncated if they do not fit in the default precision and scale. Explicitly specify the SQL server column type that can accommodate all the values in 'OnModelCreating' using 'HasColumnType', specify precision and scale using 'HasPrecision', or configure a value converter using 'HasConversion'.
+
+[17.03.2026 12:50:28] INF
+HTTP GET /Admin -> 302 за 1726мс
+
+[17.03.2026 12:50:29] INF
+HTTP GET /Admin/Login -> 200 за 205мс
+
+[17.03.2026 12:50:47] INF
+HTTP GET /Auth/Login -> 200 за 79мс
+
+[17.03.2026 12:51:06] INF
+HTTP POST /Auth/HandleLogin -> 302 за 1932мс
+
+[17.03.2026 12:51:06] INF
+HTTP GET /Auth/Login -> 200 за 11мс
+
+[17.03.2026 12:51:22] INF
+HTTP POST /Auth/HandleLogin -> 302 за 37мс
+
+[17.03.2026 12:51:22] INF
+HTTP GET /Auth/Login -> 200 за 3мс
+
+[17.03.2026 12:51:38] INF
+HTTP POST /Auth/HandleLogin -> 302 за 192мс
+
+[17.03.2026 12:51:38] INF
+HTTP GET /Profile -> 200 за 221мс
+
+[17.03.2026 12:51:44] INF
+HTTP GET / -> 200 за 4мс
+
+[17.03.2026 12:51:47] INF
+HTTP GET /Booking -> 200 за 315мс
+
+[17.03.2026 12:57:39] INF
+Приложение запускается...
+
+[17.03.2026 12:57:40] INF
+Приложение запущено успешно
+
+[17.03.2026 12:57:40] INF
+Now listening on: https://localhost:7150
+
+[17.03.2026 12:57:40] INF
+Now listening on: http://localhost:5265
+
+[17.03.2026 12:57:40] INF
+Application started. Press Ctrl+C to shut down.
+
+[17.03.2026 12:57:40] INF
+Hosting environment: Development
+
+[17.03.2026 12:57:40] INF
+Content root path: C:\Users\Дарья\Desktop\LashSalon\LashSalon\LashBooking\LashBooking\LashBooking.Web.MVC
+
+[17.03.2026 12:57:46] INF
+HTTP GET / -> 200 за 1416мс
+
+[17.03.2026 12:57:52] WRN
+No store type was specified for the decimal property 'Price' on entity type 'Service'. This will cause values to be silently truncated if they do not fit in the default precision and scale. Explicitly specify the SQL server column type that can accommodate all the values in 'OnModelCreating' using 'HasColumnType', specify precision and scale using 'HasPrecision', or configure a value converter using 'HasConversion'.
+
+[17.03.2026 12:57:54] INF
+HTTP GET /Booking -> 200 за 4370мс
+
+[17.03.2026 12:57:58] INF
+HTTP GET /Booking/GetSlotsByDate -> 200 за 175мс
+
+[17.03.2026 13:00:45] INF
+Приложение запускается...
+
+[17.03.2026 13:00:46] INF
+Приложение запущено успешно
+
+[17.03.2026 13:00:46] INF
+Now listening on: https://localhost:7150
+
+[17.03.2026 13:00:46] INF
+Now listening on: http://localhost:5265
+
+[17.03.2026 13:00:47] INF
+Application started. Press Ctrl+C to shut down.
+
+[17.03.2026 13:00:47] INF
+Hosting environment: Development
+
+[17.03.2026 13:00:47] INF
+Content root path: C:\Users\Дарья\Desktop\LashSalon\LashSalon\LashBooking\LashBooking\LashBooking.Web.MVC
+
+[17.03.2026 13:00:53] INF
+HTTP GET / -> 200 за 2024мс
+
+[17.03.2026 13:17:29] INF
+Приложение запускается...
+
+[17.03.2026 13:17:30] INF
+Приложение запущено успешно
+
+[17.03.2026 13:17:30] INF
+Now listening on: https://localhost:7150
+
+[17.03.2026 13:17:30] INF
+Now listening on: http://localhost:5265
+
+[17.03.2026 13:17:30] INF
+Application started. Press Ctrl+C to shut down.
+
+[17.03.2026 13:17:30] INF
+Hosting environment: Development
+
+[17.03.2026 13:17:30] INF
+Content root path: C:\Users\Дарья\Desktop\LashSalon\LashSalon\LashBooking\LashBooking\LashBooking.Web.MVC
+
+[17.03.2026 13:17:36] INF
+HTTP GET / -> 200 за 2438мс
+
+[17.03.2026 13:17:50] WRN
+No store type was specified for the decimal property 'Price' on entity type 'Service'. This will cause values to be silently truncated if they do not fit in the default precision and scale. Explicitly specify the SQL server column type that can accommodate all the values in 'OnModelCreating' using 'HasColumnType', specify precision and scale using 'HasPrecision', or configure a value converter using 'HasConversion'.
+
+[17.03.2026 13:17:50] INF
+HTTP GET /Auth/Login -> 200 за 1666мс
+
+[17.03.2026 13:18:12] INF
+HTTP POST /Auth/HandleLogin -> 302 за 2072мс
+
+[17.03.2026 13:18:12] INF
+HTTP GET /Profile -> 200 за 242мс
+
+[17.03.2026 13:18:24] INF
+HTTP GET / -> 200 за 5мс
+
+[17.03.2026 13:18:26] INF
+HTTP GET /Profile -> 200 за 29мс
+
+[17.03.2026 13:18:40] INF
+HTTP GET /Auth/Logout -> 302 за 12мс
+
+[17.03.2026 13:18:40] INF
+HTTP GET / -> 200 за 2мс
+
+[17.03.2026 13:18:44] INF
+HTTP GET /Admin -> 302 за 19мс
+
+[17.03.2026 13:18:44] INF
+HTTP GET /Admin/Login -> 200 за 23мс
+
+[17.03.2026 13:18:51] INF
+HTTP POST /Admin/Authorize -> 302 за 11мс
+
+[17.03.2026 13:18:51] INF
+HTTP GET /Admin/Login -> 200 за 17мс
+
+[17.03.2026 13:18:57] INF
+HTTP POST /Admin/Authorize -> 302 за 4мс
+
+[17.03.2026 13:18:58] INF
+HTTP GET /Admin -> 200 за 343мс
+
+[17.03.2026 13:19:19] INF
+HTTP GET /Admin/Index -> 200 за 60мс
+
+[17.03.2026 13:28:03] INF
+Приложение запускается...
+
+[17.03.2026 13:28:05] INF
+Приложение запущено успешно
+
+[17.03.2026 13:28:05] INF
+Now listening on: https://localhost:7150
+
+[17.03.2026 13:28:05] INF
+Now listening on: http://localhost:5265
+
+[17.03.2026 13:28:05] INF
+Application started. Press Ctrl+C to shut down.
+
+[17.03.2026 13:28:05] INF
+Hosting environment: Development
+
+[17.03.2026 13:28:05] INF
+Content root path: C:\Users\Дарья\Desktop\LashSalon\LashSalon\LashBooking\LashBooking\LashBooking.Web.MVC
+
+[17.03.2026 13:28:11] INF
+HTTP GET / -> 200 за 1924мс
+
+[17.03.2026 13:28:17] WRN
+No store type was specified for the decimal property 'Price' on entity type 'Service'. This will cause values to be silently truncated if they do not fit in the default precision and scale. Explicitly specify the SQL server column type that can accommodate all the values in 'OnModelCreating' using 'HasColumnType', specify precision and scale using 'HasPrecision', or configure a value converter using 'HasConversion'.
+
+[17.03.2026 13:28:18] INF
+HTTP GET /Admin -> 302 за 3055мс
+
+[17.03.2026 13:28:18] INF
+HTTP GET /Admin/Login -> 200 за 163мс
+
+[17.03.2026 13:28:24] INF
+HTTP POST /Admin/Authorize -> 302 за 69мс
+
+[17.03.2026 13:28:26] INF
+HTTP GET /Admin -> 200 за 1784мс
+
+[17.03.2026 13:28:29] INF
+HTTP GET /Admin/Index -> 200 за 82мс
+
+[17.03.2026 13:32:05] INF
+Приложение запускается...
+
+[17.03.2026 13:32:07] INF
+Приложение запущено успешно
+
+[17.03.2026 13:32:07] INF
+Now listening on: https://localhost:7150
+
+[17.03.2026 13:32:07] INF
+Now listening on: http://localhost:5265
+
+[17.03.2026 13:32:07] INF
+Application started. Press Ctrl+C to shut down.
+
+[17.03.2026 13:32:07] INF
+Hosting environment: Development
+
+[17.03.2026 13:32:07] INF
+Content root path: C:\Users\Дарья\Desktop\LashSalon\LashSalon\LashBooking\LashBooking\LashBooking.Web.MVC
+
+[17.03.2026 13:32:12] INF
+HTTP GET / -> 200 за 1668мс
+
+[17.03.2026 13:32:17] WRN
+No store type was specified for the decimal property 'Price' on entity type 'Service'. This will cause values to be silently truncated if they do not fit in the default precision and scale. Explicitly specify the SQL server column type that can accommodate all the values in 'OnModelCreating' using 'HasColumnType', specify precision and scale using 'HasPrecision', or configure a value converter using 'HasConversion'.
+
+[17.03.2026 13:32:17] INF
+HTTP GET /Admin -> 302 за 1814мс
+
+[17.03.2026 13:32:17] INF
+HTTP GET /Admin/Login -> 200 за 179мс
+
+[17.03.2026 13:32:25] INF
+HTTP POST /Admin/Authorize -> 302 за 55мс
+
+[17.03.2026 13:32:26] INF
+HTTP GET /Admin -> 200 за 1753мс
+
+[17.03.2026 13:32:28] INF
+HTTP GET /Admin/Index -> 200 за 55мс
+
+[17.03.2026 13:36:21] INF
+HTTP GET /Admin/Index -> 200 за 45мс
+
+[17.03.2026 13:36:22] INF
+HTTP GET /Admin/Index -> 200 за 87мс
+
+[17.03.2026 13:36:25] INF
+HTTP GET /Admin/Index -> 200 за 19мс
+
+[17.03.2026 13:41:41] INF
+Приложение запускается...
+
+[17.03.2026 13:41:42] INF
+Приложение запущено успешно
+
+[17.03.2026 13:41:42] INF
+Now listening on: https://localhost:7150
+
+[17.03.2026 13:41:42] INF
+Now listening on: http://localhost:5265
+
+[17.03.2026 13:41:42] INF
+Application started. Press Ctrl+C to shut down.
+
+[17.03.2026 13:41:42] INF
+Hosting environment: Development
+
+[17.03.2026 13:41:42] INF
+Content root path: C:\Users\Дарья\Desktop\LashSalon\LashSalon\LashBooking\LashBooking\LashBooking.Web.MVC
+
+[17.03.2026 13:41:48] INF
+HTTP GET / -> 200 за 1775мс
+
+[17.03.2026 13:41:53] WRN
+No store type was specified for the decimal property 'Price' on entity type 'Service'. This will cause values to be silently truncated if they do not fit in the default precision and scale. Explicitly specify the SQL server column type that can accommodate all the values in 'OnModelCreating' using 'HasColumnType', specify precision and scale using 'HasPrecision', or configure a value converter using 'HasConversion'.
+
+[17.03.2026 13:41:53] INF
+HTTP GET /Admin -> 302 за 1472мс
+
+[17.03.2026 13:41:53] INF
+HTTP GET /Admin/Login -> 200 за 123мс
+
+[17.03.2026 13:42:04] INF
+HTTP POST /Admin/Authorize -> 302 за 53мс
+
+[17.03.2026 13:42:06] INF
+HTTP GET /Admin -> 200 за 1775мс
+
+[17.03.2026 13:42:10] INF
+HTTP GET /Admin/Index -> 200 за 65мс
+
+[17.03.2026 13:42:12] INF
+HTTP GET /Admin/Index -> 200 за 29мс
+
+[17.03.2026 13:42:37] INF
+HTTP GET /Admin/Index -> 200 за 68мс
+
+[17.03.2026 13:42:39] INF
+HTTP GET /Admin/Index -> 200 за 14мс
+
+[17.03.2026 13:42:46] INF
+HTTP GET /Admin/Index -> 200 за 13мс
+
+[17.03.2026 13:42:50] INF
+HTTP GET /Admin/Index -> 200 за 72мс
+
+[17.03.2026 13:42:51] INF
+HTTP GET /Admin/Index -> 200 за 14мс
+
+[17.03.2026 13:42:52] INF
+HTTP GET /Admin/FilterAppointments -> 200 за 30мс
+
+[17.03.2026 13:44:42] INF
+Приложение запускается...
+
+[17.03.2026 13:44:43] INF
+Приложение запущено успешно
+
+[17.03.2026 13:44:43] INF
+Now listening on: https://localhost:7150
+
+[17.03.2026 13:44:43] INF
+Now listening on: http://localhost:5265
+
+[17.03.2026 13:44:43] INF
+Application started. Press Ctrl+C to shut down.
+
+[17.03.2026 13:44:43] INF
+Hosting environment: Development
+
+[17.03.2026 13:44:43] INF
+Content root path: C:\Users\Дарья\Desktop\LashSalon\LashSalon\LashBooking\LashBooking\LashBooking.Web.MVC
+
+[17.03.2026 13:44:48] INF
+HTTP GET / -> 200 за 1103мс
+
+[17.03.2026 13:44:51] WRN
+No store type was specified for the decimal property 'Price' on entity type 'Service'. This will cause values to be silently truncated if they do not fit in the default precision and scale. Explicitly specify the SQL server column type that can accommodate all the values in 'OnModelCreating' using 'HasColumnType', specify precision and scale using 'HasPrecision', or configure a value converter using 'HasConversion'.
+
+[17.03.2026 13:44:52] INF
+HTTP GET /Admin -> 302 за 1696мс
+
+[17.03.2026 13:44:52] INF
+HTTP GET /Admin/Login -> 200 за 275мс
+
+[17.03.2026 13:45:00] INF
+HTTP POST /Admin/Authorize -> 302 за 58мс
+
+[17.03.2026 13:45:02] INF
+HTTP GET /Admin -> 200 за 1604мс
+
+[17.03.2026 13:45:06] INF
+HTTP GET /Admin/FilterAppointments -> 200 за 49мс
+
+[17.03.2026 13:45:31] INF
+HTTP GET /Admin/Index -> 200 за 80мс
+
+[17.03.2026 13:45:34] INF
+HTTP GET /Admin/FilterAppointments -> 200 за 22мс
+
+[17.03.2026 13:46:14] INF
+HTTP GET /Admin/Index -> 200 за 114мс
+
+[17.03.2026 14:09:46] INF
+Приложение запускается...
+
+[17.03.2026 14:09:48] INF
+Приложение запущено успешно
+
+[17.03.2026 14:09:49] INF
+Now listening on: https://localhost:7150
+
+[17.03.2026 14:09:49] INF
+Now listening on: http://localhost:5265
+
+[17.03.2026 14:09:49] INF
+Application started. Press Ctrl+C to shut down.
+
+[17.03.2026 14:09:49] INF
+Hosting environment: Development
+
+[17.03.2026 14:09:49] INF
+Content root path: C:\Users\Дарья\Desktop\LashSalon\LashSalon\LashBooking\LashBooking\LashBooking.Web.MVC
+
+[17.03.2026 14:09:55] INF
+HTTP GET / -> 200 за 2304мс
+
+[17.03.2026 14:10:02] WRN
+No store type was specified for the decimal property 'Price' on entity type 'Service'. This will cause values to be silently truncated if they do not fit in the default precision and scale. Explicitly specify the SQL server column type that can accommodate all the values in 'OnModelCreating' using 'HasColumnType', specify precision and scale using 'HasPrecision', or configure a value converter using 'HasConversion'.
+
+[17.03.2026 14:10:04] INF
+HTTP GET /Calendar -> 200 за 3562мс
+
+[17.03.2026 14:10:09] INF
+HTTP GET /Calendar/Slots -> 200 за 206мс
+
+[17.03.2026 14:11:55] INF
+Приложение запускается...
+
+[17.03.2026 14:11:56] INF
+Приложение запущено успешно
+
+[17.03.2026 14:11:56] INF
+Now listening on: https://localhost:7150
+
+[17.03.2026 14:11:56] INF
+Now listening on: http://localhost:5265
+
+[17.03.2026 14:11:56] INF
+Application started. Press Ctrl+C to shut down.
+
+[17.03.2026 14:11:56] INF
+Hosting environment: Development
+
+[17.03.2026 14:11:56] INF
+Content root path: C:\Users\Дарья\Desktop\LashSalon\LashSalon\LashBooking\LashBooking\LashBooking.Web.MVC
+
+[17.03.2026 14:12:02] INF
+HTTP GET / -> 200 за 1862мс
+
+[17.03.2026 14:12:06] WRN
+No store type was specified for the decimal property 'Price' on entity type 'Service'. This will cause values to be silently truncated if they do not fit in the default precision and scale. Explicitly specify the SQL server column type that can accommodate all the values in 'OnModelCreating' using 'HasColumnType', specify precision and scale using 'HasPrecision', or configure a value converter using 'HasConversion'.
+
+[17.03.2026 14:12:09] INF
+HTTP GET /Calendar -> 200 за 4606мс
+
+[17.03.2026 14:13:16] INF
+Приложение запускается...
+
+[17.03.2026 14:13:17] INF
+Приложение запущено успешно
+
+[17.03.2026 14:13:18] INF
+Now listening on: https://localhost:7150
+
+[17.03.2026 14:13:18] INF
+Now listening on: http://localhost:5265
+
+[17.03.2026 14:13:18] INF
+Application started. Press Ctrl+C to shut down.
+
+[17.03.2026 14:13:18] INF
+Hosting environment: Development
+
+[17.03.2026 14:13:18] INF
+Content root path: C:\Users\Дарья\Desktop\LashSalon\LashSalon\LashBooking\LashBooking\LashBooking.Web.MVC
+
+[17.03.2026 14:13:23] INF
+HTTP GET / -> 200 за 2079мс
+
+[17.03.2026 14:13:28] WRN
+No store type was specified for the decimal property 'Price' on entity type 'Service'. This will cause values to be silently truncated if they do not fit in the default precision and scale. Explicitly specify the SQL server column type that can accommodate all the values in 'OnModelCreating' using 'HasColumnType', specify precision and scale using 'HasPrecision', or configure a value converter using 'HasConversion'.
+
+[17.03.2026 14:13:30] INF
+HTTP GET /Calendar -> 200 за 4497мс
+
+[17.03.2026 14:15:33] INF
+Приложение запускается...
+
+[17.03.2026 14:15:33] INF
+Приложение запущено успешно
+
+[17.03.2026 14:15:34] INF
+Now listening on: https://localhost:7150
+
+[17.03.2026 14:15:34] INF
+Now listening on: http://localhost:5265
+
+[17.03.2026 14:15:34] INF
+Application started. Press Ctrl+C to shut down.
+
+[17.03.2026 14:15:34] INF
+Hosting environment: Development
+
+[17.03.2026 14:15:34] INF
+Content root path: C:\Users\Дарья\Desktop\LashSalon\LashSalon\LashBooking\LashBooking\LashBooking.Web.MVC
+
+[17.03.2026 14:15:38] INF
+HTTP GET / -> 200 за 1422мс
+
+[17.03.2026 14:15:43] WRN
+No store type was specified for the decimal property 'Price' on entity type 'Service'. This will cause values to be silently truncated if they do not fit in the default precision and scale. Explicitly specify the SQL server column type that can accommodate all the values in 'OnModelCreating' using 'HasColumnType', specify precision and scale using 'HasPrecision', or configure a value converter using 'HasConversion'.
+
+[17.03.2026 14:15:46] INF
+HTTP GET /Calendar -> 200 за 5017мс
+
+[17.03.2026 14:15:53] INF
+HTTP GET / -> 200 за 3мс
+
+[17.03.2026 14:15:55] INF
+HTTP GET /Gallery -> 200 за 32мс
+
+[17.03.2026 14:16:01] INF
+HTTP GET /Reviews -> 200 за 358мс
+
+[17.03.2026 14:16:04] INF
+HTTP GET /About -> 200 за 30мс
+
+[17.03.2026 14:16:04] WRN
+HTTP GET /images/master.jpg -> 404 за 5мс
+
+[17.03.2026 14:16:55] INF
+Приложение запускается...
+
+[17.03.2026 14:16:56] INF
+Приложение запущено успешно
+
+[17.03.2026 14:16:56] INF
+Now listening on: https://localhost:7150
+
+[17.03.2026 14:16:56] INF
+Now listening on: http://localhost:5265
+
+[17.03.2026 14:16:56] INF
+Application started. Press Ctrl+C to shut down.
+
+[17.03.2026 14:16:56] INF
+Hosting environment: Development
+
+[17.03.2026 14:16:56] INF
+Content root path: C:\Users\Дарья\Desktop\LashSalon\LashSalon\LashBooking\LashBooking\LashBooking.Web.MVC
+
+[17.03.2026 14:17:00] INF
+HTTP GET / -> 200 за 1142мс
+
+[17.03.2026 14:17:05] INF
+HTTP GET /About -> 200 за 57мс
+
+[17.03.2026 14:17:05] WRN
+HTTP GET /images/master.jpg -> 404 за 14мс
+
+[17.03.2026 14:18:04] INF
+Приложение запускается...
+
+[17.03.2026 14:18:05] INF
+Приложение запущено успешно
+
+[17.03.2026 14:18:06] INF
+Now listening on: https://localhost:7150
+
+[17.03.2026 14:18:06] INF
+Now listening on: http://localhost:5265
+
+[17.03.2026 14:18:06] INF
+Application started. Press Ctrl+C to shut down.
+
+[17.03.2026 14:18:06] INF
+Hosting environment: Development
+
+[17.03.2026 14:18:06] INF
+Content root path: C:\Users\Дарья\Desktop\LashSalon\LashSalon\LashBooking\LashBooking\LashBooking.Web.MVC
+
+[17.03.2026 14:18:10] INF
+HTTP GET / -> 200 за 1728мс
+
+[17.03.2026 14:18:14] INF
+HTTP GET /About -> 200 за 75мс
+
+[17.03.2026 14:18:14] WRN
+HTTP GET /images/master.jpg -> 404 за 29мс
+
+[17.03.2026 14:18:40] INF
+Приложение запускается...
+
+[17.03.2026 14:18:41] INF
+Приложение запущено успешно
+
+[17.03.2026 14:18:41] INF
+Now listening on: https://localhost:7150
+
+[17.03.2026 14:18:41] INF
+Now listening on: http://localhost:5265
+
+[17.03.2026 14:18:41] INF
+Application started. Press Ctrl+C to shut down.
+
+[17.03.2026 14:18:41] INF
+Hosting environment: Development
+
+[17.03.2026 14:18:41] INF
+Content root path: C:\Users\Дарья\Desktop\LashSalon\LashSalon\LashBooking\LashBooking\LashBooking.Web.MVC
+
+[17.03.2026 14:18:45] INF
+HTTP GET / -> 200 за 1175мс
+
+[17.03.2026 14:18:52] INF
+HTTP GET /About -> 200 за 31мс
+
+[17.03.2026 14:18:53] WRN
+HTTP GET /images/master.jpg -> 404 за 18мс
+
+[17.03.2026 14:19:15] INF
+Приложение запускается...
+
+[17.03.2026 14:19:16] INF
+Приложение запущено успешно
+
+[17.03.2026 14:19:16] INF
+Now listening on: https://localhost:7150
+
+[17.03.2026 14:19:16] INF
+Now listening on: http://localhost:5265
+
+[17.03.2026 14:19:16] INF
+Application started. Press Ctrl+C to shut down.
+
+[17.03.2026 14:19:16] INF
+Hosting environment: Development
+
+[17.03.2026 14:19:16] INF
+Content root path: C:\Users\Дарья\Desktop\LashSalon\LashSalon\LashBooking\LashBooking\LashBooking.Web.MVC
+
+[17.03.2026 14:19:21] INF
+HTTP GET / -> 200 за 1430мс
+
+[17.03.2026 14:19:29] INF
+HTTP GET /About -> 200 за 55мс
+
+[17.03.2026 14:19:29] WRN
+HTTP GET /images/master.jpg -> 404 за 119мс
+
+[17.03.2026 14:22:01] INF
+Приложение запускается...
+
+[17.03.2026 14:22:02] INF
+Приложение запущено успешно
+
+[17.03.2026 14:22:03] INF
+Now listening on: https://localhost:7150
+
+[17.03.2026 14:22:03] INF
+Now listening on: http://localhost:5265
+
+[17.03.2026 14:22:03] INF
+Application started. Press Ctrl+C to shut down.
+
+[17.03.2026 14:22:03] INF
+Hosting environment: Development
+
+[17.03.2026 14:22:03] INF
+Content root path: C:\Users\Дарья\Desktop\LashSalon\LashSalon\LashBooking\LashBooking\LashBooking.Web.MVC
+
+[17.03.2026 14:22:12] INF
+HTTP GET / -> 200 за 4685мс
+
+[17.03.2026 14:22:16] WRN
+HTTP GET /images/master.jpg -> 404 за 155мс
+
+[17.03.2026 14:22:16] INF
+HTTP GET /About -> 200 за 1675мс
+
+[17.03.2026 14:22:50] INF
+Приложение запускается...
+
+[17.03.2026 14:22:52] INF
+Приложение запущено успешно
+
+[17.03.2026 14:22:52] INF
+Now listening on: https://localhost:7150
+
+[17.03.2026 14:22:52] INF
+Now listening on: http://localhost:5265
+
+[17.03.2026 14:22:52] INF
+Application started. Press Ctrl+C to shut down.
+
+[17.03.2026 14:22:52] INF
+Hosting environment: Development
+
+[17.03.2026 14:22:52] INF
+Content root path: C:\Users\Дарья\Desktop\LashSalon\LashSalon\LashBooking\LashBooking\LashBooking.Web.MVC
+
+[17.03.2026 14:23:06] INF
+HTTP GET / -> 200 за 8522мс
+
+[17.03.2026 14:23:13] WRN
+HTTP GET /images/master.jpg -> 404 за 2мс
+
+[17.03.2026 14:23:13] INF
+HTTP GET /About -> 200 за 692мс
+
+[17.03.2026 14:23:29] INF
+HTTP GET / -> 200 за 131мс
+
+[17.03.2026 14:23:38] WRN
+No store type was specified for the decimal property 'Price' on entity type 'Service'. This will cause values to be silently truncated if they do not fit in the default precision and scale. Explicitly specify the SQL server column type that can accommodate all the values in 'OnModelCreating' using 'HasColumnType', specify precision and scale using 'HasPrecision', or configure a value converter using 'HasConversion'.
+
+[17.03.2026 14:23:44] INF
+HTTP GET /Reviews -> 200 за 13965мс
+
+[17.03.2026 14:23:44] INF
+HTTP GET /Reviews -> 200 за 7890мс
+
+[17.03.2026 14:24:37] INF
+Приложение запускается...
+
+[17.03.2026 14:24:38] INF
+Приложение запущено успешно
+
+[17.03.2026 14:24:39] INF
+Now listening on: https://localhost:7150
+
+[17.03.2026 14:24:39] INF
+Now listening on: http://localhost:5265
+
+[17.03.2026 14:24:39] INF
+Application started. Press Ctrl+C to shut down.
+
+[17.03.2026 14:24:39] INF
+Hosting environment: Development
+
+[17.03.2026 14:24:39] INF
+Content root path: C:\Users\Дарья\Desktop\LashSalon\LashSalon\LashBooking\LashBooking\LashBooking.Web.MVC
+
+[17.03.2026 14:24:51] INF
+HTTP GET / -> 200 за 8191мс
+
+[17.03.2026 14:25:02] WRN
+No store type was specified for the decimal property 'Price' on entity type 'Service'. This will cause values to be silently truncated if they do not fit in the default precision and scale. Explicitly specify the SQL server column type that can accommodate all the values in 'OnModelCreating' using 'HasColumnType', specify precision and scale using 'HasPrecision', or configure a value converter using 'HasConversion'.
+
+[17.03.2026 14:25:08] INF
+HTTP GET /Reviews -> 200 за 14357мс
+
+[17.03.2026 14:25:13] INF
+HTTP GET / -> 200 за 33мс
+
+[17.03.2026 14:25:14] INF
+HTTP GET /Gallery -> 200 за 142мс
+
+[17.03.2026 14:25:51] INF
+Приложение запускается...
+
+[17.03.2026 14:25:53] INF
+Приложение запущено успешно
+
+[17.03.2026 14:25:53] INF
+Now listening on: https://localhost:7150
+
+[17.03.2026 14:25:53] INF
+Now listening on: http://localhost:5265
+
+[17.03.2026 14:25:53] INF
+Application started. Press Ctrl+C to shut down.
+
+[17.03.2026 14:25:53] INF
+Hosting environment: Development
+
+[17.03.2026 14:25:53] INF
+Content root path: C:\Users\Дарья\Desktop\LashSalon\LashSalon\LashBooking\LashBooking\LashBooking.Web.MVC
+
+[17.03.2026 14:26:04] INF
+HTTP GET / -> 200 за 6504мс
+
+[17.03.2026 14:26:14] WRN
+No store type was specified for the decimal property 'Price' on entity type 'Service'. This will cause values to be silently truncated if they do not fit in the default precision and scale. Explicitly specify the SQL server column type that can accommodate all the values in 'OnModelCreating' using 'HasColumnType', specify precision and scale using 'HasPrecision', or configure a value converter using 'HasConversion'.
+
+[17.03.2026 14:26:21] INF
+HTTP GET /Calendar -> 200 за 14647мс
+
+[17.03.2026 14:26:24] INF
+HTTP GET /Calendar/Slots -> 200 за 718мс
+
+[17.03.2026 14:26:28] INF
+HTTP GET /Booking -> 200 за 1557мс
+
+[17.03.2026 14:26:33] INF
+HTTP GET /Calendar -> 200 за 759мс
+
+[17.03.2026 14:26:36] INF
+HTTP GET /Calendar -> 200 за 971мс
+
+[17.03.2026 14:26:39] INF
+HTTP GET / -> 200 за 32мс
+
+[17.03.2026 14:26:49] INF
+HTTP GET /Admin -> 302 за 234мс
+
+[17.03.2026 14:26:49] INF
+HTTP GET /Admin/Login -> 200 за 421мс
+
+[17.03.2026 14:26:58] INF
+HTTP POST /Admin/Authorize -> 302 за 129мс
+
+[17.03.2026 14:27:00] INF
+HTTP GET /Admin -> 200 за 1642мс
+
+[17.03.2026 14:27:11] INF
+HTTP GET / -> 200 за 2мс
+
+[17.03.2026 14:27:13] INF
+HTTP GET /Auth/Login -> 200 за 116мс
+
+[17.03.2026 14:27:23] INF
+HTTP POST /Auth/HandleLogin -> 302 за 443мс
+
+[17.03.2026 14:27:23] INF
+HTTP GET /Profile -> 200 за 256мс
+
+[17.03.2026 14:27:30] INF
+HTTP GET / -> 200 за 7мс
+
+[17.03.2026 14:34:05] INF
+Приложение запускается...
+
+[17.03.2026 14:34:05] FTL
+Приложение упало при запуске
+Microsoft.Extensions.Hosting.HostAbortedException: The host was aborted.
+   at Microsoft.Extensions.Hosting.HostFactoryResolver.HostingListener.ThrowHostAborted()
+   at Microsoft.Extensions.Hosting.HostFactoryResolver.HostingListener.OnNext(KeyValuePair`2 value)
+   at System.Diagnostics.DiagnosticListener.Write(String name, Object value)
+   at Microsoft.Extensions.Hosting.HostBuilder.ResolveHost(IServiceProvider serviceProvider, DiagnosticListener diagnosticListener)
+   at Microsoft.Extensions.Hosting.HostApplicationBuilder.Build()
+   at Microsoft.AspNetCore.Builder.WebApplicationBuilder.Build()
+   at Program.<Main>$(String[] args) in C:\Users\Дарья\Desktop\LashSalon\LashSalon\LashBooking\LashBooking\LashBooking.Web.MVC\Program.cs:line 67
+
+[17.03.2026 14:35:32] INF
+Приложение запускается...
+
+[17.03.2026 14:35:32] FTL
+Приложение упало при запуске
+Microsoft.Extensions.Hosting.HostAbortedException: The host was aborted.
+   at Microsoft.Extensions.Hosting.HostFactoryResolver.HostingListener.ThrowHostAborted()
+   at Microsoft.Extensions.Hosting.HostFactoryResolver.HostingListener.OnNext(KeyValuePair`2 value)
+   at System.Diagnostics.DiagnosticListener.Write(String name, Object value)
+   at Microsoft.Extensions.Hosting.HostBuilder.ResolveHost(IServiceProvider serviceProvider, DiagnosticListener diagnosticListener)
+   at Microsoft.Extensions.Hosting.HostApplicationBuilder.Build()
+   at Microsoft.AspNetCore.Builder.WebApplicationBuilder.Build()
+   at Program.<Main>$(String[] args) in C:\Users\Дарья\Desktop\LashSalon\LashSalon\LashBooking\LashBooking\LashBooking.Web.MVC\Program.cs:line 67
+
+[17.03.2026 14:42:43] INF
+Приложение запускается...
+
+[17.03.2026 14:42:48] INF
+Приложение запущено успешно
+
+[17.03.2026 14:42:49] INF
+Now listening on: https://localhost:7150
+
+[17.03.2026 14:42:49] INF
+Now listening on: http://localhost:5265
+
+[17.03.2026 14:42:49] INF
+Application started. Press Ctrl+C to shut down.
+
+[17.03.2026 14:42:49] INF
+Hosting environment: Development
+
+[17.03.2026 14:42:49] INF
+Content root path: C:\Users\Дарья\Desktop\LashSalon\LashSalon\LashBooking\LashBooking\LashBooking.Web.MVC
+
+[17.03.2026 14:43:05] INF
+HTTP GET / -> 200 за 9660мс
+
+[17.03.2026 14:43:20] WRN
+No store type was specified for the decimal property 'Price' on entity type 'Service'. This will cause values to be silently truncated if they do not fit in the default precision and scale. Explicitly specify the SQL server column type that can accommodate all the values in 'OnModelCreating' using 'HasColumnType', specify precision and scale using 'HasPrecision', or configure a value converter using 'HasConversion'.
+
+[17.03.2026 14:43:21] INF
+HTTP GET /Admin -> 302 за 12595мс
+
+[17.03.2026 14:43:22] INF
+HTTP GET /Admin/Login -> 200 за 736мс
+
+[17.03.2026 14:43:33] INF
+HTTP POST /Admin/Authorize -> 302 за 127мс
+
+[17.03.2026 14:43:44] INF
+HTTP GET /Admin -> 200 за 10340мс
+
+[17.03.2026 14:43:46] INF
+HTTP GET /Admin/Index -> 200 за 1129мс
+
+[17.03.2026 14:44:18] INF
+HTTP POST /Admin/BlockSlot -> 302 за 6818мс
+
+[17.03.2026 14:44:18] INF
+HTTP GET /Admin -> 200 за 203мс
+
+[17.03.2026 14:44:32] INF
+HTTP GET /Admin -> 200 за 1136мс
+
+[17.03.2026 14:48:44] INF
+Приложение запускается...
+
+[17.03.2026 14:48:45] INF
+Приложение запущено успешно
+
+[17.03.2026 14:48:46] INF
+Now listening on: https://localhost:7150
+
+[17.03.2026 14:48:46] INF
+Now listening on: http://localhost:5265
+
+[17.03.2026 14:48:46] INF
+Application started. Press Ctrl+C to shut down.
+
+[17.03.2026 14:48:46] INF
+Hosting environment: Development
+
+[17.03.2026 14:48:46] INF
+Content root path: C:\Users\Дарья\Desktop\LashSalon\LashSalon\LashBooking\LashBooking\LashBooking.Web.MVC
+
+[17.03.2026 14:49:02] INF
+HTTP GET / -> 200 за 7589мс
+
+[17.03.2026 14:49:17] WRN
+No store type was specified for the decimal property 'Price' on entity type 'Service'. This will cause values to be silently truncated if they do not fit in the default precision and scale. Explicitly specify the SQL server column type that can accommodate all the values in 'OnModelCreating' using 'HasColumnType', specify precision and scale using 'HasPrecision', or configure a value converter using 'HasConversion'.
+
+[17.03.2026 14:49:18] INF
+HTTP GET /Admin -> 302 за 6950мс
+
+[17.03.2026 14:49:19] INF
+HTTP GET /Admin/Login -> 200 за 576мс
+
+[17.03.2026 14:49:26] INF
+HTTP POST /Admin/Authorize -> 302 за 255мс
+
+[17.03.2026 14:49:27] INF
+HTTP GET /Admin/Login -> 200 за 125мс
+
+[17.03.2026 14:49:34] INF
+HTTP POST /Admin/Authorize -> 302 за 22мс
+
+[17.03.2026 14:49:44] INF
+HTTP GET /Admin -> 200 за 10221мс
+
+[17.03.2026 14:49:47] INF
+HTTP GET /Admin/Index -> 200 за 700мс
+
+[17.03.2026 14:50:00] INF
+HTTP GET / -> 200 за 21мс
+
+[17.03.2026 14:50:05] INF
+HTTP GET /Calendar -> 200 за 3792мс
+
+[17.03.2026 14:50:08] INF
+HTTP GET /Calendar/Slots -> 200 за 1151мс
+
+[17.03.2026 14:50:15] INF
+HTTP GET / -> 200 за 3мс
+
+[17.03.2026 14:50:22] INF
+HTTP GET /Booking -> 200 за 954мс
+
+[17.03.2026 14:50:28] INF
+HTTP GET / -> 200 за 3мс
+
+[17.03.2026 14:51:04] INF
+HTTP GET /Calendar -> 200 за 1669мс
+
+[17.03.2026 15:15:33] INF
+Приложение запускается...
+
+[17.03.2026 15:15:35] INF
+Приложение запущено успешно
+
+[17.03.2026 15:15:35] INF
+Now listening on: https://localhost:7150
+
+[17.03.2026 15:15:35] INF
+Now listening on: http://localhost:5265
+
+[17.03.2026 15:15:35] INF
+Application started. Press Ctrl+C to shut down.
+
+[17.03.2026 15:15:35] INF
+Hosting environment: Development
+
+[17.03.2026 15:15:35] INF
+Content root path: C:\Users\Дарья\Desktop\LashSalon\LashSalon\LashBooking\LashBooking\LashBooking.Web.MVC
+
+[17.03.2026 15:15:57] INF
+HTTP GET / -> 200 за 8523мс
+
+[17.03.2026 15:16:09] WRN
+No store type was specified for the decimal property 'Price' on entity type 'Service'. This will cause values to be silently truncated if they do not fit in the default precision and scale. Explicitly specify the SQL server column type that can accommodate all the values in 'OnModelCreating' using 'HasColumnType', specify precision and scale using 'HasPrecision', or configure a value converter using 'HasConversion'.
+
+[17.03.2026 15:16:10] INF
+HTTP GET /Admin -> 302 за 8551мс
+
+[17.03.2026 15:16:11] INF
+HTTP GET /Admin/Login -> 200 за 901мс
+
+[17.03.2026 15:16:17] INF
+HTTP POST /Admin/Authorize -> 302 за 391мс
+
+[17.03.2026 15:16:28] INF
+HTTP GET /Admin -> 200 за 10787мс
+
+[17.03.2026 15:16:38] INF
+HTTP GET /Admin/Index -> 200 за 560мс
+
+[17.03.2026 15:16:44] INF
+HTTP GET /Admin/Index -> 200 за 1059мс
+
+[17.03.2026 15:17:23] INF
+HTTP GET /Admin/Index -> 200 за 1394мс
+
+[17.03.2026 15:17:50] INF
+HTTP GET /Admin/ExportAppointments -> 200 за 24339мс
+
+[17.03.2026 15:22:48] INF
+Приложение запускается...
+
+[17.03.2026 15:22:49] INF
+Приложение запущено успешно
+
+[17.03.2026 15:22:50] INF
+Now listening on: https://localhost:7150
+
+[17.03.2026 15:22:50] INF
+Now listening on: http://localhost:5265
+
+[17.03.2026 15:22:50] INF
+Application started. Press Ctrl+C to shut down.
+
+[17.03.2026 15:22:50] INF
+Hosting environment: Development
+
+[17.03.2026 15:22:50] INF
+Content root path: C:\Users\Дарья\Desktop\LashSalon\LashSalon\LashBooking\LashBooking\LashBooking.Web.MVC
+
+[17.03.2026 15:22:55] INF
+HTTP GET / -> 200 за 872мс
+
+[17.03.2026 15:23:39] INF
+Приложение запускается...
+
+[17.03.2026 15:23:40] INF
+Приложение запущено успешно
+
+[17.03.2026 15:23:40] INF
+Now listening on: https://localhost:7150
+
+[17.03.2026 15:23:40] INF
+Now listening on: http://localhost:5265
+
+[17.03.2026 15:23:40] INF
+Application started. Press Ctrl+C to shut down.
+
+[17.03.2026 15:23:40] INF
+Hosting environment: Development
+
+[17.03.2026 15:23:40] INF
+Content root path: C:\Users\Дарья\Desktop\LashSalon\LashSalon\LashBooking\LashBooking\LashBooking.Web.MVC
+
+[17.03.2026 15:23:45] INF
+HTTP GET / -> 200 за 1429мс
+
+[17.03.2026 15:24:23] INF
+Приложение запускается...
+
+[17.03.2026 15:24:24] INF
+Приложение запущено успешно
+
+[17.03.2026 15:24:24] INF
+Now listening on: https://localhost:7150
+
+[17.03.2026 15:24:24] INF
+Now listening on: http://localhost:5265
+
+[17.03.2026 15:24:24] INF
+Application started. Press Ctrl+C to shut down.
+
+[17.03.2026 15:24:24] INF
+Hosting environment: Development
+
+[17.03.2026 15:24:24] INF
+Content root path: C:\Users\Дарья\Desktop\LashSalon\LashSalon\LashBooking\LashBooking\LashBooking.Web.MVC
+
+[17.03.2026 15:24:30] INF
+HTTP GET / -> 200 за 1900мс

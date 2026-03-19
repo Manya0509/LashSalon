@@ -88,6 +88,9 @@
         <a href="/Admin/Index?tab=services" class="nav-btn @(activeTab == "services" ? "active" : "")">
             <i class="bi bi-grid"></i> Услуги
         </a>
+        <a href="/Admin/Index?tab=schedule" class="nav-btn @(activeTab == "schedule" ? "active" : "")">
+            <i class="bi bi-calendar-x"></i> Расписание
+        </a>
     </div>
 
     <div class="admin-content">
@@ -109,6 +112,9 @@
                         <a href="/Admin/FilterAppointments?filter=tomorrow" class="filter-btn @(apptFilter == "tomorrow" ? "active" : "")">Завтра</a>
                         <a href="/Admin/FilterAppointments?filter=week" class="filter-btn @(apptFilter == "week" ? "active" : "")">Неделя</a>
                         <a href="/Admin/FilterAppointments?filter=all" class="filter-btn @(apptFilter == "all" ? "active" : "")">Все</a>
+                        <a href="/Admin/ExportAppointments" class="filter-btn" title="Экспорт в Excel">
+                            <i class="bi bi-file-earmark-excel"></i> Экспорт
+                        </a>
                     </div>
                 </div>
 
@@ -141,12 +147,12 @@
                         <table class="admin-table" id="appointmentsTable">
                             <thead>
                                 <tr>
-                                    <th>Дата и время</th>
-                                    <th>Клиент</th>
+                                    <th class="sortable" onclick="sortAppointments('date')">Дата и время <span id="appt-sort-date">↕</span></th>
+                                    <th class="sortable" onclick="sortAppointments('client')">Клиент <span id="appt-sort-client">↕</span></th>
                                     <th>Телефон</th>
-                                    <th>Услуга</th>
+                                    <th class="sortable" onclick="sortAppointments('service')">Услуга <span id="appt-sort-service">↕</span></th>
                                     <th>Длит.</th>
-                                    <th>Цена</th>
+                                    <th class="sortable" onclick="sortAppointments('price')">Цена <span id="appt-sort-price">↕</span></th>
                                     <th>Статус</th>
                                     <th>Действия</th>
                                 </tr>
@@ -175,7 +181,12 @@
                                     string dateStr = appt.DateStart.ToString("yyyy-MM-ddTHH:mm");
                                     string notes = (appt.Notes ?? "").Replace("'", "\\'").Replace("\n", " ");
 
-                                    <tr class="appt-row" data-client="@clientName.ToLower()" data-phone="@clientPhone" data-service="@serviceName.ToLower()">
+                                    <tr class="appt-row"
+                                        data-client="@clientName.ToLower()"
+                                        data-phone="@clientPhone"
+                                        data-service="@serviceName.ToLower()"
+                                        data-date="@appt.DateStart.ToString("yyyyMMddHHmm")"
+                                        data-price="@price">
                                         <td class="time-cell">
                                             <strong>@appt.DateStart.ToString("HH:mm")</strong>
                                             <small>@appt.DateStart.ToString("dd.MM.yyyy")</small>
@@ -217,7 +228,10 @@
 
             @* Устанавливаем выбранный статус через JS после рендера *@
             <script>
+                                // Когда страница загрузилась — устанавливаем статусы для всех записей
                 document.addEventListener('DOMContentLoaded', function () {
+                    // Razor-цикл: для каждой записи из C# генерирует строку JavaScript
+                    // Например: setSelectValue(5, 3); setSelectValue(12, 1);
                     @foreach (var appt in appointments)
                     {
                             <text>
@@ -225,20 +239,31 @@
                             </text>
                     }
                 });
+
+                // Находит select нужной записи по ID и устанавливает нужное значение
                 function setSelectValue(apptId, status) {
                     var rows = document.querySelectorAll('.appt-row');
                     rows.forEach(function(row) {
                         var sel = row.querySelector('.status-select');
+                        // Ищем select у которого в onchange есть нужный ID записи
                         if (sel && sel.getAttribute('onchange').includes('(' + apptId + ',')) {
-                            sel.value = status;
-                            updateSelectStyle(sel);
+                            sel.value = status;          // устанавливаем значение
+                            updateSelectStyle(sel);      // красим в нужный цвет
                         }
                     });
                 }
+
+                // Красит select в цвет соответствующий статусу
                 function updateSelectStyle(sel) {
-                    sel.className = 'status-select';
-                    var classes = { 1:'status-scheduled', 2:'status-confirmed', 3:'status-completed', 4:'status-cancelled', 5:'status-noshow' };
-                    sel.classList.add(classes[sel.value] || '');
+                    sel.className = 'status-select';     // сбрасываем старые классы
+                    var classes = {
+                        1: 'status-scheduled',           // Запланирована — голубой
+                        2: 'status-confirmed',           // Подтверждена  — зелёный
+                        3: 'status-completed',           // Выполнена     — серый
+                        4: 'status-cancelled',           // Отменена      — красный
+                        5: 'status-noshow'               // Не явился     — жёлтый
+                    };
+                    sel.classList.add(classes[sel.value] || '');  // добавляем класс нужного цвета
                 }
             </script>
 
@@ -434,14 +459,14 @@
                     </div>
 
                     <div class="table-responsive">
-                        <table class="admin-table">
+                        <table class="admin-table" id="clientsTable">
                             <thead>
                                 <tr>
-                                    <th>Имя</th>
-                                    <th>Телефон</th>
+                                    <th class="sortable" onclick="sortClients('name')">Имя <span id="sort-name">↕</span></th>
+                                    <th class="sortable" onclick="sortClients('phone')">Телефон <span id="sort-phone">↕</span></th>
                                     <th>Email</th>
-                                    <th>Записей</th>
-                                    <th>Дата регистрации</th>
+                                    <th class="sortable" onclick="sortClients('count')">Записей <span id="sort-count">↕</span></th>
+                                    <th class="sortable" onclick="sortClients('date')">Дата регистрации <span id="sort-date">↕</span></th>
                                     <th>Заметки</th>
                                 </tr>
                             </thead>
@@ -451,7 +476,9 @@
                                     int apptCount = appointmentCounts.TryGetValue(client.Id, out int cnt) ? cnt : 0;
                                     <tr class="client-row"
                                         data-name="@client.Name.ToLower()"
-                                        data-phone="@client.Phone">
+                                        data-phone="@client.Phone"
+                                        data-count="@apptCount"
+                                        data-date="@client.CreatedAt.ToString("yyyyMMdd")">
                                         <td><strong>@client.Name</strong></td>
                                         <td>@client.Phone</td>
                                         <td>@(client.Email ?? "—")</td>
@@ -496,13 +523,13 @@
                 else
                 {
                     <div class="table-responsive">
-                        <table class="admin-table">
+                        <table class="admin-table" id="servicesTable">
                             <thead>
                                 <tr>
-                                    <th>Название</th>
+                                    <th class="sortable" onclick="sortServices('name')">Название <span id="svc-sort-name">↕</span></th>
                                     <th>Описание</th>
-                                    <th>Цена</th>
-                                    <th>Длительность</th>
+                                    <th class="sortable" onclick="sortServices('price')">Цена <span id="svc-sort-price">↕</span></th>
+                                    <th class="sortable" onclick="sortServices('duration')">Длительность <span id="svc-sort-duration">↕</span></th>
                                     <th>Активна</th>
                                     <th>Действия</th>
                                 </tr>
@@ -516,7 +543,10 @@
                                     string activeText = svc.IsActive ? "✓ Да" : "✗ Нет";
                                     string toggleIcon = svc.IsActive ? "eye-slash" : "eye";
 
-                                    <tr>
+                                    <tr class="svc-row"
+                                        data-name="@svc.Name.ToLower()"
+                                        data-price="@svc.Price"
+                                        data-duration="@svc.DurationMinutes">
                                         <td><strong>@svc.Name</strong></td>
                                         <td>@(svc.Description ?? "—")</td>
                                         <td class="price-cell">@svc.Price.ToString("C")</td>
@@ -580,7 +610,104 @@
                 </div>
             </div>
         }
+        @* ==================== РАСПИСАНИЕ ==================== *@
+        else if (activeTab == "schedule")
+        {
+            var blockedSlots = ViewBag.BlockedSlots as List<LashBooking.Domain.Entities.BlockedSlot> ?? new();
 
+            <div class="management-section">
+                <div class="section-header">
+                    <h2><i class="bi bi-calendar-x"></i> Управление расписанием</h2>
+                </div>
+
+                @* Форма блокировки *@
+                <div class="schedule-form">
+                    <h3 class="schedule-form-title">Заблокировать время</h3>
+                    <form method="post" action="/Admin/BlockSlot">
+                        @Html.AntiForgeryToken()
+                        <div class="schedule-form-row">
+                            <div class="form-group">
+                                <label class="form-label">Дата</label>
+                                <input type="date" class="form-control" name="date"
+                                       min="@DateTime.Today.ToString("yyyy-MM-dd")"
+                                       value="@DateTime.Today.ToString("yyyy-MM-dd")" required />
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Время</label>
+                                <select class="form-control" name="hour">
+                                    <option value="-1">Весь день</option>
+                                    @for (int h = 9; h < 18; h++)
+                                    {
+                                        <option value="@h">@h:00</option>
+                                    }
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Причина (необязательно)</label>
+                                <input type="text" class="form-control" name="reason" placeholder="Например: выходной" />
+                            </div>
+                            <div class="form-group form-group-btn">
+                                <button type="submit" class="btn-primary">Заблокировать</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+
+                @* Список заблокированных слотов *@
+                <h3 class="schedule-list-title">Заблокированные слоты</h3>
+
+                @if (!blockedSlots.Any())
+                {
+                    <div class="empty-state">
+                        <div class="empty-icon">📅</div>
+                        <h4>Нет заблокированных слотов</h4>
+                    </div>
+                }
+                else
+                {
+                    <div class="table-responsive">
+                        <table class="admin-table">
+                            <thead>
+                                <tr>
+                                    <th>Дата</th>
+                                    <th>Время</th>
+                                    <th>Причина</th>
+                                    <th>Действия</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var slot in blockedSlots)
+                                {
+                                    <tr>
+                                        <td><strong>@slot.Date.ToString("dd.MM.yyyy")</strong></td>
+                                        <td>
+                                            @if (slot.BlockedHour == null)
+                                            {
+                                                <span class="block-badge day">Весь день</span>
+                                            }
+                                            else
+                                            {
+                                                <span class="block-badge hour">@slot.BlockedHour:00</span>
+                                            }
+                                        </td>
+                                        <td>@(slot.Reason ?? "—")</td>
+                                        <td>
+                                            <form method="post" action="/Admin/UnblockSlot" style="display:inline">
+                                                @Html.AntiForgeryToken()
+                                                <input type="hidden" name="slotId" value="@slot.Id" />
+                                                <button type="submit" class="btn-icon delete" title="Снять блокировку">
+                                                    <i class="bi bi-x-lg"></i>
+                                                </button>
+                                            </form>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                }
+            </div>
+        }
     </div>@* /admin-content *@
 </div>@* /admin-container *@
 
@@ -1361,6 +1488,15 @@
         font-size: 0.85rem;
     }
 
+    .sortable {
+        cursor: pointer;
+        user-select: none;
+    }
+
+        .sortable:hover {
+            background: #efefef;
+        }
+
     /* Модалки */
     .modal-overlay {
         position: fixed;
@@ -1585,6 +1721,57 @@
             text-align: center;
         }
     }
+
+    .schedule-form {
+        background: #f8f8f8;
+        border: 1px solid #eee;
+        border-radius: 10px;
+        padding: 20px;
+        margin-bottom: 30px;
+    }
+
+    .schedule-form-title, .schedule-list-title {
+        font-size: 1.1rem;
+        font-weight: 500;
+        color: #333;
+        margin-bottom: 16px;
+    }
+
+    .schedule-form-row {
+        display: flex;
+        gap: 16px;
+        align-items: flex-end;
+        flex-wrap: wrap;
+    }
+
+        .schedule-form-row .form-group {
+            flex: 1;
+            min-width: 160px;
+            margin-bottom: 0;
+        }
+
+        .schedule-form-row .form-group-btn {
+            flex: 0 0 auto;
+        }
+
+    .block-badge {
+        padding: 4px 10px;
+        border-radius: 4px;
+        font-size: 0.85rem;
+        font-weight: 500;
+    }
+
+        .block-badge.day {
+            background: #fef2f2;
+            color: #991b1b;
+            border: 1px solid #fecaca;
+        }
+
+        .block-badge.hour {
+            background: #fff3e0;
+            color: #92400e;
+            border: 1px solid #fed7aa;
+        }
 </style>
 
 @section Scripts {
@@ -1635,6 +1822,42 @@
             }
         }
 
+                // ===== ЗАПИСИ СОРТИРОВКА =====
+        let apptSortState = { col: null, asc: true };
+
+        function sortAppointments(col) {
+            const tbody = document.querySelector('#appointmentsTable tbody');
+            if (!tbody) return;
+
+            apptSortState.asc = apptSortState.col === col ? !apptSortState.asc : true;
+            apptSortState.col = col;
+
+            ['date','client','service','price'].forEach(c => {
+                const el = document.getElementById('appt-sort-' + c);
+                if (el) el.textContent = '↕';
+            });
+            const icon = document.getElementById('appt-sort-' + col);
+            if (icon) icon.textContent = apptSortState.asc ? '↑' : '↓';
+
+            const rows = Array.from(tbody.querySelectorAll('.appt-row'));
+            rows.sort((a, b) => {
+                let valA = a.dataset[col] ?? '';
+                let valB = b.dataset[col] ?? '';
+
+                if (col === 'price' || col === 'date') {
+                    valA = parseFloat(valA) || 0;
+                    valB = parseFloat(valB) || 0;
+                    return apptSortState.asc ? valA - valB : valB - valA;
+                }
+
+                return apptSortState.asc
+                    ? valA.localeCompare(valB, 'ru')
+                    : valB.localeCompare(valA, 'ru');
+            });
+
+            rows.forEach(r => tbody.appendChild(r));
+        }
+
         // ===== ОТЗЫВЫ =====
         function switchReviewTab(tab) {
             document.getElementById('reviewsPending').style.display  = tab === 'pending'  ? 'flex' : 'none';
@@ -1656,6 +1879,42 @@
             });
         }
 
+                let sortState = { col: null, asc: true };
+
+        function sortClients(col) {
+            const tbody = document.querySelector('#clientsTable tbody');
+            if (!tbody) return;
+
+            sortState.asc = sortState.col === col ? !sortState.asc : true;
+            sortState.col = col;
+
+            // Сбрасываем все иконки
+            ['name','phone','count','date'].forEach(c => {
+                const el = document.getElementById('sort-' + c);
+                if (el) el.textContent = '↕';
+            });
+            const icon = document.getElementById('sort-' + col);
+            if (icon) icon.textContent = sortState.asc ? '↑' : '↓';
+
+            const rows = Array.from(tbody.querySelectorAll('.client-row'));
+            rows.sort((a, b) => {
+                let valA = a.dataset[col] ?? '';
+                let valB = b.dataset[col] ?? '';
+
+                if (col === 'count') {
+                    valA = parseInt(valA) || 0;
+                    valB = parseInt(valB) || 0;
+                    return sortState.asc ? valA - valB : valB - valA;
+                }
+
+                return sortState.asc
+                    ? valA.localeCompare(valB, 'ru')
+                    : valB.localeCompare(valA, 'ru');
+            });
+
+            rows.forEach(r => tbody.appendChild(r));
+        }
+
         // ===== УСЛУГИ =====
         function openServiceModal(id, name, desc, price, duration) {
             document.getElementById('serviceId').value = id;
@@ -1670,6 +1929,42 @@
 
         function closeServiceModal() {
             document.getElementById('serviceModal').style.display = 'none';
+        }
+
+                // ===== УСЛУГИ СОРТИРОВКА =====
+        let svcSortState = { col: null, asc: true };
+
+        function sortServices(col) {
+            const tbody = document.querySelector('#servicesTable tbody');
+            if (!tbody) return;
+
+            svcSortState.asc = svcSortState.col === col ? !svcSortState.asc : true;
+            svcSortState.col = col;
+
+            ['name','price','duration'].forEach(c => {
+                const el = document.getElementById('svc-sort-' + c);
+                if (el) el.textContent = '↕';
+            });
+            const icon = document.getElementById('svc-sort-' + col);
+            if (icon) icon.textContent = svcSortState.asc ? '↑' : '↓';
+
+            const rows = Array.from(tbody.querySelectorAll('.svc-row'));
+            rows.sort((a, b) => {
+                let valA = a.dataset[col] ?? '';
+                let valB = b.dataset[col] ?? '';
+
+                if (col === 'price' || col === 'duration') {
+                    valA = parseFloat(valA) || 0;
+                    valB = parseFloat(valB) || 0;
+                    return svcSortState.asc ? valA - valB : valB - valA;
+                }
+
+                return svcSortState.asc
+                    ? valA.localeCompare(valB, 'ru')
+                    : valB.localeCompare(valA, 'ru');
+            });
+
+            rows.forEach(r => tbody.appendChild(r));
         }
     </script>
 }

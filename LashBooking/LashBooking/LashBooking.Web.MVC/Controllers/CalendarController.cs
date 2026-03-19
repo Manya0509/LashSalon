@@ -7,12 +7,16 @@ namespace LashBooking.Web.MVC.Controllers
     public class CalendarController : Controller
     {
         private readonly IRepository<Appointment> _appointmentRepo;
+        private readonly IRepository<BlockedSlot> _blockedSlotRepo;
         private const int StartHour = 9;
         private const int EndHour = 18;
 
-        public CalendarController(IRepository<Appointment> appointmentRepo)
+        public CalendarController(
+            IRepository<Appointment> appointmentRepo,
+            IRepository<BlockedSlot> blockedSlotRepo)
         {
             _appointmentRepo = appointmentRepo;
+            _blockedSlotRepo = blockedSlotRepo;
         }
 
         // GET: /Calendar?year=2026&month=3
@@ -23,6 +27,11 @@ namespace LashBooking.Web.MVC.Controllers
             var weeks = new List<List<object>>();
             var dayStates = new Dictionary<string, string>();
 
+            // Загружаем все блокировки за этот месяц
+            var blockedSlots = (await _blockedSlotRepo.GetAllAsync())
+                .Where(b => b.Date.Year == currentMonth.Year && b.Date.Month == currentMonth.Month)
+                .ToList();
+
             int shift = ((int)currentMonth.DayOfWeek + 6) % 7;
             var allDays = new List<DateTime>();
 
@@ -32,28 +41,45 @@ namespace LashBooking.Web.MVC.Controllers
                 var dateKey = d.Date.ToString("yyyy-MM-dd");
                 allDays.Add(d);
 
-                // Прошедшие дни
                 if (d.Date < today)
                 {
                     dayStates[dateKey] = "past";
                     continue;
                 }
 
-                // Выходные — суббота (6) и воскресенье (0)
                 if (d.DayOfWeek == DayOfWeek.Saturday || d.DayOfWeek == DayOfWeek.Sunday)
                 {
                     dayStates[dateKey] = "weekend";
                     continue;
                 }
 
-                // Рабочие дни — считаем занятость
-                var appts = (await _appointmentRepo.FindAsync(a => a.DateStart.Date == d.Date)).ToList();
-                int totalSlots = EndHour - StartHour;
-                int busy = appts.Count;
+                // Проверяем — заблокирован ли весь день
+                bool dayBlocked = blockedSlots.Any(b => b.Date.Date == d.Date && b.BlockedHour == null);
+                if (dayBlocked)
+                {
+                    dayStates[dateKey] = "full";
+                    continue;
+                }
 
-                if (busy == 0)
+                // Считаем занятость с учётом блокировок по часам
+                var appts = (await _appointmentRepo.FindAsync(a => a.DateStart.Date == d.Date)).ToList();
+                var blockedHours = blockedSlots.Where(b => b.Date.Date == d.Date && b.BlockedHour != null).Select(b => b.BlockedHour!.Value).ToHashSet();
+                int totalSlots = EndHour - StartHour;
+                int busySlots = 0;
+
+                for (int h = StartHour; h < EndHour; h++)
+                {
+                    var slotStart = d.Date.AddHours(h);
+                    var slotEnd = slotStart.AddHours(1);
+
+                    bool isBusy = blockedHours.Contains(h) ||
+                                  appts.Any(a => slotStart < a.DateEnd && slotEnd > a.DateStart);
+                    if (isBusy) busySlots++;
+                }
+
+                if (busySlots == 0)
                     dayStates[dateKey] = "free";
-                else if (busy >= totalSlots)
+                else if (busySlots >= totalSlots)
                     dayStates[dateKey] = "full";
                 else
                     dayStates[dateKey] = "partial";
@@ -96,17 +122,24 @@ namespace LashBooking.Web.MVC.Controllers
             if (selectedDate.Date < DateTime.Today)
                 return Json(new List<string>());
 
-            // Выходные — слотов нет
             if (selectedDate.DayOfWeek == DayOfWeek.Saturday || selectedDate.DayOfWeek == DayOfWeek.Sunday)
                 return Json(new List<string>());
 
+            // Проверяем — заблокирован ли весь день
+            var blockedSlots = (await _blockedSlotRepo.FindAsync(b => b.Date.Date == selectedDate.Date)).ToList();
+            bool dayBlocked = blockedSlots.Any(b => b.BlockedHour == null);
+            if (dayBlocked)
+                return Json(new List<string>());
+
+            var blockedHours = blockedSlots.Where(b => b.BlockedHour != null).Select(b => b.BlockedHour!.Value).ToHashSet();
             var appts = (await _appointmentRepo.FindAsync(a => a.DateStart.Date == selectedDate.Date)).ToList();
             var freeSlots = new List<string>();
 
             for (int h = StartHour; h < EndHour; h++)
             {
                 var slot = selectedDate.Date.AddHours(h);
-                bool busy = appts.Any(a => slot >= a.DateStart && slot < a.DateEnd);
+                bool busy = blockedHours.Contains(h) ||
+                            appts.Any(a => slot >= a.DateStart && slot < a.DateEnd);
                 if (!busy)
                     freeSlots.Add(slot.ToString("HH:mm"));
             }

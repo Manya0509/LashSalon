@@ -1,5 +1,4 @@
-﻿// LashBooking.Infrastructure/Repositories/GenericRepository.cs
-using LashBooking.Domain.Interfaces;  // Ссылаемся на интерфейс из Domain
+﻿using LashBooking.Domain.Interfaces;  // Ссылаемся на интерфейс из Domain
 using LashBooking.Infrastructure.Data; // Ссылаемся на DbContext из Infrastructure
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;

@@ -19,8 +19,4 @@
     <ProjectReference Include="..\LashBooking.Domain\LashBooking.Domain.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Reports\" />
-  </ItemGroup>
-
 </Project>

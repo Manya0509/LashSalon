@@ -10,6 +10,7 @@ namespace LashBooking.Web.MVC.Controllers
         private readonly IRepository<Service> _serviceRepo;
         private readonly IRepository<Client> _clientRepo;
         private readonly IRepository<Appointment> _appointmentRepo;
+        private readonly IRepository<BlockedSlot> _blockedSlotRepo;
 
         private const int StartHour = 9;
         private const int EndHour = 18;
@@ -18,17 +19,18 @@ namespace LashBooking.Web.MVC.Controllers
         public BookingController(
             IRepository<Service> serviceRepo,
             IRepository<Client> clientRepo,
-            IRepository<Appointment> appointmentRepo)
+            IRepository<Appointment> appointmentRepo,
+            IRepository<BlockedSlot> blockedSlotRepo)
         {
             _serviceRepo = serviceRepo;
             _clientRepo = clientRepo;
             _appointmentRepo = appointmentRepo;
+            _blockedSlotRepo = blockedSlotRepo;
         }
 
-        // GET: /Booking?date=2026-03-15T09:00:00
         public async Task<IActionResult> Index(string? date)
         {
-            var services = (await _serviceRepo.GetAllAsync()).ToList();
+            var services = (await _serviceRepo.GetAllAsync()).Where(s => s.IsActive).ToList();
             var selectedServiceId = services.FirstOrDefault()?.Id ?? 0;
 
             var clientId = HttpContext.Session.GetInt32("ClientId");
@@ -84,13 +86,12 @@ namespace LashBooking.Web.MVC.Controllers
             return View();
         }
 
-        // GET: /Booking/GetSlotsByDate?date=2026-03-15&serviceId=1
         public async Task<IActionResult> GetSlotsByDate(string date, int serviceId)
         {
             if (!DateTime.TryParse(date, out DateTime selectedDate))
                 return Json(new List<object>());
 
-            var services = (await _serviceRepo.GetAllAsync()).ToList();
+            var services = (await _serviceRepo.GetAllAsync()).Where(s => s.IsActive).ToList();
             var slots = await GetSlots(selectedDate, serviceId, services);
 
             return Json(slots.Select(s => new
@@ -101,33 +102,27 @@ namespace LashBooking.Web.MVC.Controllers
             }));
         }
 
-        // GET: /Booking/GetAvailableDatesAction?serviceId=1
         public async Task<IActionResult> GetAvailableDatesAction(int serviceId)
         {
-            var services = (await _serviceRepo.GetAllAsync()).ToList();
+            var services = (await _serviceRepo.GetAllAsync()).Where(s => s.IsActive).ToList();
             var dates = await GetAvailableDates(serviceId, services);
             return Json(dates.Select(d => d.ToString("yyyy-MM-dd")));
         }
 
-        // POST: /Booking/Save
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Save(BookingViewModel model)
         {
-            // Проверка атрибутов валидации
             if (!ModelState.IsValid)
             {
-                var errors = ModelState.Values
+                TempData["Message"] = ModelState.Values
                     .SelectMany(v => v.Errors)
                     .Select(e => e.ErrorMessage)
-                    .FirstOrDefault();
-
-                TempData["Message"] = errors ?? "Пожалуйста, заполните все поля";
+                    .FirstOrDefault() ?? "Пожалуйста, заполните все поля";
                 TempData["IsSuccess"] = false;
                 return RedirectToAction("Index");
             }
 
-            // Проверка времени
             if (!DateTime.TryParse(model.SelectedTime, out DateTime time) || time < DateTime.Now)
             {
                 TempData["Message"] = "Пожалуйста, выберите доступное время";
@@ -145,8 +140,30 @@ namespace LashBooking.Web.MVC.Controllers
             }
 
             var dateEnd = time.AddMinutes(service.DurationMinutes);
+            var workDayEnd = time.Date.AddHours(EndHour);
 
-            // Проверка на дубликат
+            if (dateEnd > workDayEnd)
+            {
+                TempData["Message"] = $"Недостаточно времени для услуги «{service.Name}». Выберите более раннее время.";
+                TempData["IsSuccess"] = false;
+                return RedirectToAction("Index");
+            }
+
+            // Проверка блокировок
+            var blockedSlots = (await _blockedSlotRepo.FindAsync(b => b.Date.Date == time.Date)).ToList();
+            if (blockedSlots.Any(b => b.BlockedHour == null))
+            {
+                TempData["Message"] = "Этот день недоступен для записи.";
+                TempData["IsSuccess"] = false;
+                return RedirectToAction("Index");
+            }
+            if (blockedSlots.Any(b => b.BlockedHour == time.Hour))
+            {
+                TempData["Message"] = "Выбранное время недоступно для записи.";
+                TempData["IsSuccess"] = false;
+                return RedirectToAction("Index");
+            }
+
             var existing = await _appointmentRepo.FindAsync(a =>
                 a.Client != null &&
                 a.Client.Phone == model.ClientPhone &&
@@ -159,7 +176,6 @@ namespace LashBooking.Web.MVC.Controllers
                 return RedirectToAction("Index");
             }
 
-            // Поиск или создание клиента
             Client? client = null;
 
             var clientId = HttpContext.Session.GetInt32("ClientId");
@@ -187,7 +203,6 @@ namespace LashBooking.Web.MVC.Controllers
                 await _clientRepo.SaveChangesAsync();
             }
 
-            // Создание записи
             var appointment = new Appointment
             {
                 ClientId = client.Id,
@@ -214,16 +229,35 @@ namespace LashBooking.Web.MVC.Controllers
             var service = services.FirstOrDefault(x => x.Id == serviceId);
             if (service == null) return slots;
 
-            var appointments = (await _appointmentRepo.FindAsync(a =>
-                a.ServiceId == serviceId &&
-                a.DateStart.Date == date.Date)).ToList();
+            if (date.DayOfWeek == DayOfWeek.Saturday || date.DayOfWeek == DayOfWeek.Sunday)
+                return slots;
+
+            // Проверяем блокировки
+            var blockedSlots = (await _blockedSlotRepo.FindAsync(b => b.Date.Date == date.Date)).ToList();
+            if (blockedSlots.Any(b => b.BlockedHour == null))
+                return slots; // весь день заблокирован
+
+            var blockedHours = blockedSlots
+                .Where(b => b.BlockedHour != null)
+                .Select(b => b.BlockedHour!.Value)
+                .ToHashSet();
+
+            var workDayEnd = date.Date.AddHours(EndHour);
+            var appointments = (await _appointmentRepo.FindAsync(a => a.DateStart.Date == date.Date)).ToList();
 
             for (int h = StartHour; h < EndHour; h++)
             {
                 var slotTime = date.Date.AddHours(h);
                 var slotEnd = slotTime.AddMinutes(service.DurationMinutes);
-                var conflict = appointments.Any(a =>
-                    slotTime < a.DateEnd && slotEnd > a.DateStart);
+
+                if (slotEnd > workDayEnd)
+                {
+                    slots.Add(new Slot { Time = slotTime, IsBusy = true });
+                    continue;
+                }
+
+                bool conflict = blockedHours.Contains(h) ||
+                                appointments.Any(a => slotTime < a.DateEnd && slotEnd > a.DateStart);
 
                 slots.Add(new Slot { Time = slotTime, IsBusy = conflict });
             }
@@ -237,20 +271,40 @@ namespace LashBooking.Web.MVC.Controllers
             var service = services.FirstOrDefault(x => x.Id == serviceId);
             if (service == null) return available;
 
+            // Загружаем все блокировки за период сразу
+            var allBlocked = (await _blockedSlotRepo.GetAllAsync())
+                .Where(b => b.Date >= DateTime.Today && b.Date <= DateTime.Today.AddDays(BookingDays))
+                .ToList();
+
             for (int i = 0; i < BookingDays; i++)
             {
                 var date = DateTime.Today.AddDays(i);
-                var appointments = (await _appointmentRepo.FindAsync(a =>
-                    a.ServiceId == serviceId &&
-                    a.DateStart.Date == date.Date)).ToList();
+
+                if (date.DayOfWeek == DayOfWeek.Saturday || date.DayOfWeek == DayOfWeek.Sunday)
+                    continue;
+
+                // Весь день заблокирован
+                var dayBlocked = allBlocked.Any(b => b.Date.Date == date && b.BlockedHour == null);
+                if (dayBlocked) continue;
+
+                var blockedHours = allBlocked
+                    .Where(b => b.Date.Date == date && b.BlockedHour != null)
+                    .Select(b => b.BlockedHour!.Value)
+                    .ToHashSet();
+
+                var workDayEnd = date.Date.AddHours(EndHour);
+                var appointments = (await _appointmentRepo.FindAsync(a => a.DateStart.Date == date.Date)).ToList();
 
                 for (int h = StartHour; h < EndHour; h++)
                 {
                     var slotTime = date.Date.AddHours(h);
                     var slotEnd = slotTime.AddMinutes(service.DurationMinutes);
+
                     if (slotTime < DateTime.Now) continue;
-                    var conflict = appointments.Any(a =>
-                        slotTime < a.DateEnd && slotEnd > a.DateStart);
+                    if (slotEnd > workDayEnd) continue;
+                    if (blockedHours.Contains(h)) continue;
+
+                    bool conflict = appointments.Any(a => slotTime < a.DateEnd && slotEnd > a.DateStart);
                     if (!conflict) { available.Add(date); break; }
                 }
             }

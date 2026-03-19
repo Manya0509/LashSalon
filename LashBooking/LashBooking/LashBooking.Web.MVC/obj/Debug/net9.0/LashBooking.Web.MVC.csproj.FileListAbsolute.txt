@@ -320,3 +320,11 @@ C:\Users\Дарья\Desktop\LashSalon\LashSalon\LashBooking\LashBooking\LashBook
 C:\Users\Дарья\Desktop\LashSalon\LashSalon\LashBooking\LashBooking\LashBooking.Web.MVC\bin\Debug\net9.0\Serilog.Sinks.Console.dll
 C:\Users\Дарья\Desktop\LashSalon\LashSalon\LashBooking\LashBooking\LashBooking.Web.MVC\bin\Debug\net9.0\Serilog.Sinks.Debug.dll
 C:\Users\Дарья\Desktop\LashSalon\LashSalon\LashBooking\LashBooking\LashBooking.Web.MVC\bin\Debug\net9.0\Serilog.Sinks.File.dll
+C:\Users\Дарья\Desktop\LashSalon\LashSalon\LashBooking\LashBooking\LashBooking.Web.MVC\bin\Debug\net9.0\ClosedXML.dll
+C:\Users\Дарья\Desktop\LashSalon\LashSalon\LashBooking\LashBooking\LashBooking.Web.MVC\bin\Debug\net9.0\ClosedXML.Parser.dll
+C:\Users\Дарья\Desktop\LashSalon\LashSalon\LashBooking\LashBooking\LashBooking.Web.MVC\bin\Debug\net9.0\DocumentFormat.OpenXml.dll
+C:\Users\Дарья\Desktop\LashSalon\LashSalon\LashBooking\LashBooking\LashBooking.Web.MVC\bin\Debug\net9.0\DocumentFormat.OpenXml.Framework.dll
+C:\Users\Дарья\Desktop\LashSalon\LashSalon\LashBooking\LashBooking\LashBooking.Web.MVC\bin\Debug\net9.0\ExcelNumberFormat.dll
+C:\Users\Дарья\Desktop\LashSalon\LashSalon\LashBooking\LashBooking\LashBooking.Web.MVC\bin\Debug\net9.0\RBush.dll
+C:\Users\Дарья\Desktop\LashSalon\LashSalon\LashBooking\LashBooking\LashBooking.Web.MVC\bin\Debug\net9.0\SixLabors.Fonts.dll
+C:\Users\Дарья\Desktop\LashSalon\LashSalon\LashBooking\LashBooking\LashBooking.Web.MVC\bin\Debug\net9.0\System.IO.Packaging.dll
