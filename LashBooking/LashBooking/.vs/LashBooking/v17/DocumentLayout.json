@@ -1,12 +1,410 @@
 {
   "Version": 1,
   "WorkspaceRootPath": "C:\\Users\\\u0414\u0430\u0440\u044C\u044F\\Desktop\\LashSalon\\LashSalon\\LashBooking\\LashBooking\\",
-  "Documents": [],
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{C8812370-A4C8-4BA0-A1EA-0D082FD69916}|LashBooking.Web.MVC\\LashBooking.Web.MVC.csproj|c:\\users\\\u0434\u0430\u0440\u044C\u044F\\desktop\\lashsalon\\lashsalon\\lashbooking\\lashbooking\\lashbooking.web.mvc\\controllers\\authcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{C8812370-A4C8-4BA0-A1EA-0D082FD69916}|LashBooking.Web.MVC\\LashBooking.Web.MVC.csproj|solutionrelative:lashbooking.web.mvc\\controllers\\authcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{C8812370-A4C8-4BA0-A1EA-0D082FD69916}|LashBooking.Web.MVC\\LashBooking.Web.MVC.csproj|c:\\users\\\u0434\u0430\u0440\u044C\u044F\\desktop\\lashsalon\\lashsalon\\lashbooking\\lashbooking\\lashbooking.web.mvc\\controllers\\homecontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{C8812370-A4C8-4BA0-A1EA-0D082FD69916}|LashBooking.Web.MVC\\LashBooking.Web.MVC.csproj|solutionrelative:lashbooking.web.mvc\\controllers\\homecontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\\u0414\u0430\u0440\u044C\u044F\\Downloads\\HomeController_1.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{C8812370-A4C8-4BA0-A1EA-0D082FD69916}|LashBooking.Web.MVC\\LashBooking.Web.MVC.csproj|c:\\users\\\u0434\u0430\u0440\u044C\u044F\\desktop\\lashsalon\\lashsalon\\lashbooking\\lashbooking\\lashbooking.web.mvc\\controllers\\reviewscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{C8812370-A4C8-4BA0-A1EA-0D082FD69916}|LashBooking.Web.MVC\\LashBooking.Web.MVC.csproj|solutionrelative:lashbooking.web.mvc\\controllers\\reviewscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{C8812370-A4C8-4BA0-A1EA-0D082FD69916}|LashBooking.Web.MVC\\LashBooking.Web.MVC.csproj|c:\\users\\\u0434\u0430\u0440\u044C\u044F\\desktop\\lashsalon\\lashsalon\\lashbooking\\lashbooking\\lashbooking.web.mvc\\controllers\\profilecontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{C8812370-A4C8-4BA0-A1EA-0D082FD69916}|LashBooking.Web.MVC\\LashBooking.Web.MVC.csproj|solutionrelative:lashbooking.web.mvc\\controllers\\profilecontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{C8812370-A4C8-4BA0-A1EA-0D082FD69916}|LashBooking.Web.MVC\\LashBooking.Web.MVC.csproj|c:\\users\\\u0434\u0430\u0440\u044C\u044F\\desktop\\lashsalon\\lashsalon\\lashbooking\\lashbooking\\lashbooking.web.mvc\\controllers\\admincontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{C8812370-A4C8-4BA0-A1EA-0D082FD69916}|LashBooking.Web.MVC\\LashBooking.Web.MVC.csproj|solutionrelative:lashbooking.web.mvc\\controllers\\admincontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{C8812370-A4C8-4BA0-A1EA-0D082FD69916}|LashBooking.Web.MVC\\LashBooking.Web.MVC.csproj|c:\\users\\\u0434\u0430\u0440\u044C\u044F\\desktop\\lashsalon\\lashsalon\\lashbooking\\lashbooking\\lashbooking.web.mvc\\controllers\\calendarcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{C8812370-A4C8-4BA0-A1EA-0D082FD69916}|LashBooking.Web.MVC\\LashBooking.Web.MVC.csproj|solutionrelative:lashbooking.web.mvc\\controllers\\calendarcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{C8812370-A4C8-4BA0-A1EA-0D082FD69916}|LashBooking.Web.MVC\\LashBooking.Web.MVC.csproj|c:\\users\\\u0434\u0430\u0440\u044C\u044F\\desktop\\lashsalon\\lashsalon\\lashbooking\\lashbooking\\lashbooking.web.mvc\\controllers\\bookingcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{C8812370-A4C8-4BA0-A1EA-0D082FD69916}|LashBooking.Web.MVC\\LashBooking.Web.MVC.csproj|solutionrelative:lashbooking.web.mvc\\controllers\\bookingcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{C8812370-A4C8-4BA0-A1EA-0D082FD69916}|LashBooking.Web.MVC\\LashBooking.Web.MVC.csproj|c:\\users\\\u0434\u0430\u0440\u044C\u044F\\desktop\\lashsalon\\lashsalon\\lashbooking\\lashbooking\\lashbooking.web.mvc\\controllers\\basecontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{C8812370-A4C8-4BA0-A1EA-0D082FD69916}|LashBooking.Web.MVC\\LashBooking.Web.MVC.csproj|solutionrelative:lashbooking.web.mvc\\controllers\\basecontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\\u0414\u0430\u0440\u044C\u044F\\Downloads\\BookingController_3.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{C8812370-A4C8-4BA0-A1EA-0D082FD69916}|LashBooking.Web.MVC\\LashBooking.Web.MVC.csproj|c:\\users\\\u0434\u0430\u0440\u044C\u044F\\desktop\\lashsalon\\lashsalon\\lashbooking\\lashbooking\\lashbooking.web.mvc\\views\\shared\\_layout.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{C8812370-A4C8-4BA0-A1EA-0D082FD69916}|LashBooking.Web.MVC\\LashBooking.Web.MVC.csproj|solutionrelative:lashbooking.web.mvc\\views\\shared\\_layout.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{9EC7BD48-B6E2-4F72-BA10-FD9256DDE799}|LashBooking.Domain\\LashBooking.Domain.csproj|c:\\users\\\u0434\u0430\u0440\u044C\u044F\\desktop\\lashsalon\\lashsalon\\lashbooking\\lashbooking\\lashbooking.domain\\constants\\errorlevel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{9EC7BD48-B6E2-4F72-BA10-FD9256DDE799}|LashBooking.Domain\\LashBooking.Domain.csproj|solutionrelative:lashbooking.domain\\constants\\errorlevel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{C8812370-A4C8-4BA0-A1EA-0D082FD69916}|LashBooking.Web.MVC\\LashBooking.Web.MVC.csproj|c:\\users\\\u0434\u0430\u0440\u044C\u044F\\desktop\\lashsalon\\lashsalon\\lashbooking\\lashbooking\\lashbooking.web.mvc\\data\\sharedservices\\pushnotificationsdequeuer.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{C8812370-A4C8-4BA0-A1EA-0D082FD69916}|LashBooking.Web.MVC\\LashBooking.Web.MVC.csproj|solutionrelative:lashbooking.web.mvc\\data\\sharedservices\\pushnotificationsdequeuer.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{C8812370-A4C8-4BA0-A1EA-0D082FD69916}|LashBooking.Web.MVC\\LashBooking.Web.MVC.csproj|c:\\users\\\u0434\u0430\u0440\u044C\u044F\\desktop\\lashsalon\\lashsalon\\lashbooking\\lashbooking\\lashbooking.web.mvc\\data\\sharedservices\\pushnotificationsqueue.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{C8812370-A4C8-4BA0-A1EA-0D082FD69916}|LashBooking.Web.MVC\\LashBooking.Web.MVC.csproj|solutionrelative:lashbooking.web.mvc\\data\\sharedservices\\pushnotificationsqueue.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{C8812370-A4C8-4BA0-A1EA-0D082FD69916}|LashBooking.Web.MVC\\LashBooking.Web.MVC.csproj|c:\\users\\\u0434\u0430\u0440\u044C\u044F\\desktop\\lashsalon\\lashsalon\\lashbooking\\lashbooking\\lashbooking.web.mvc\\data\\sharedservices\\loggerprovider.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{C8812370-A4C8-4BA0-A1EA-0D082FD69916}|LashBooking.Web.MVC\\LashBooking.Web.MVC.csproj|solutionrelative:lashbooking.web.mvc\\data\\sharedservices\\loggerprovider.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{C8812370-A4C8-4BA0-A1EA-0D082FD69916}|LashBooking.Web.MVC\\LashBooking.Web.MVC.csproj|c:\\users\\\u0434\u0430\u0440\u044C\u044F\\desktop\\lashsalon\\lashsalon\\lashbooking\\lashbooking\\lashbooking.web.mvc\\data\\sharedservices\\logger.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{C8812370-A4C8-4BA0-A1EA-0D082FD69916}|LashBooking.Web.MVC\\LashBooking.Web.MVC.csproj|solutionrelative:lashbooking.web.mvc\\data\\sharedservices\\logger.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{C8812370-A4C8-4BA0-A1EA-0D082FD69916}|LashBooking.Web.MVC\\LashBooking.Web.MVC.csproj|c:\\users\\\u0434\u0430\u0440\u044C\u044F\\desktop\\lashsalon\\lashsalon\\lashbooking\\lashbooking\\lashbooking.web.mvc\\data\\sharedservices\\logapplicationerrorservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{C8812370-A4C8-4BA0-A1EA-0D082FD69916}|LashBooking.Web.MVC\\LashBooking.Web.MVC.csproj|solutionrelative:lashbooking.web.mvc\\data\\sharedservices\\logapplicationerrorservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{C8812370-A4C8-4BA0-A1EA-0D082FD69916}|LashBooking.Web.MVC\\LashBooking.Web.MVC.csproj|c:\\users\\\u0434\u0430\u0440\u044C\u044F\\desktop\\lashsalon\\lashsalon\\lashbooking\\lashbooking\\lashbooking.web.mvc\\data\\sharedservices\\ipushnotificationsqueue.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{C8812370-A4C8-4BA0-A1EA-0D082FD69916}|LashBooking.Web.MVC\\LashBooking.Web.MVC.csproj|solutionrelative:lashbooking.web.mvc\\data\\sharedservices\\ipushnotificationsqueue.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{C8812370-A4C8-4BA0-A1EA-0D082FD69916}|LashBooking.Web.MVC\\LashBooking.Web.MVC.csproj|c:\\users\\\u0434\u0430\u0440\u044C\u044F\\desktop\\lashsalon\\lashsalon\\lashbooking\\lashbooking\\lashbooking.web.mvc\\data\\sharedservices\\ilogservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{C8812370-A4C8-4BA0-A1EA-0D082FD69916}|LashBooking.Web.MVC\\LashBooking.Web.MVC.csproj|solutionrelative:lashbooking.web.mvc\\data\\sharedservices\\ilogservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{C8812370-A4C8-4BA0-A1EA-0D082FD69916}|LashBooking.Web.MVC\\LashBooking.Web.MVC.csproj|c:\\users\\\u0434\u0430\u0440\u044C\u044F\\desktop\\lashsalon\\lashsalon\\lashbooking\\lashbooking\\lashbooking.web.mvc\\data\\models\\logmessageentry.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{C8812370-A4C8-4BA0-A1EA-0D082FD69916}|LashBooking.Web.MVC\\LashBooking.Web.MVC.csproj|solutionrelative:lashbooking.web.mvc\\data\\models\\logmessageentry.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{D187A183-0392-47FF-9314-A74C46B37C4A}|LashBooking.Infrastructure\\LashBooking.Infrastructure.csproj|c:\\users\\\u0434\u0430\u0440\u044C\u044F\\desktop\\lashsalon\\lashsalon\\lashbooking\\lashbooking\\lashbooking.infrastructure\\data\\applicationdbcontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{D187A183-0392-47FF-9314-A74C46B37C4A}|LashBooking.Infrastructure\\LashBooking.Infrastructure.csproj|solutionrelative:lashbooking.infrastructure\\data\\applicationdbcontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{9EC7BD48-B6E2-4F72-BA10-FD9256DDE799}|LashBooking.Domain\\LashBooking.Domain.csproj|c:\\users\\\u0434\u0430\u0440\u044C\u044F\\desktop\\lashsalon\\lashsalon\\lashbooking\\lashbooking\\lashbooking.domain\\entities\\logapplicationerror.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{9EC7BD48-B6E2-4F72-BA10-FD9256DDE799}|LashBooking.Domain\\LashBooking.Domain.csproj|solutionrelative:lashbooking.domain\\entities\\logapplicationerror.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{C8812370-A4C8-4BA0-A1EA-0D082FD69916}|LashBooking.Web.MVC\\LashBooking.Web.MVC.csproj|c:\\users\\\u0434\u0430\u0440\u044C\u044F\\desktop\\lashsalon\\lashsalon\\lashbooking\\lashbooking\\lashbooking.web.mvc\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{C8812370-A4C8-4BA0-A1EA-0D082FD69916}|LashBooking.Web.MVC\\LashBooking.Web.MVC.csproj|solutionrelative:lashbooking.web.mvc\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{C8812370-A4C8-4BA0-A1EA-0D082FD69916}|LashBooking.Web.MVC\\LashBooking.Web.MVC.csproj|c:\\users\\\u0434\u0430\u0440\u044C\u044F\\desktop\\lashsalon\\lashsalon\\lashbooking\\lashbooking\\lashbooking.web.mvc\\lashbooking.web.mvc.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|",
+      "RelativeMoniker": "D:0:0:{C8812370-A4C8-4BA0-A1EA-0D082FD69916}|LashBooking.Web.MVC\\LashBooking.Web.MVC.csproj|solutionrelative:lashbooking.web.mvc\\lashbooking.web.mvc.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|"
+    }
+  ],
   "DocumentGroupContainers": [
     {
       "Orientation": 0,
       "VerticalTabListWidth": 256,
-      "DocumentGroups": []
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 1,
+          "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "HomeController.cs",
+              "DocumentMoniker": "C:\\Users\\\u0414\u0430\u0440\u044C\u044F\\Desktop\\LashSalon\\LashSalon\\LashBooking\\LashBooking\\LashBooking.Web.MVC\\Controllers\\HomeController.cs",
+              "RelativeDocumentMoniker": "LashBooking.Web.MVC\\Controllers\\HomeController.cs",
+              "ToolTip": "C:\\Users\\\u0414\u0430\u0440\u044C\u044F\\Desktop\\LashSalon\\LashSalon\\LashBooking\\LashBooking\\LashBooking.Web.MVC\\Controllers\\HomeController.cs",
+              "RelativeToolTip": "LashBooking.Web.MVC\\Controllers\\HomeController.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABQAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-03-25T02:16:09.864Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "AuthController.cs",
+              "DocumentMoniker": "C:\\Users\\\u0414\u0430\u0440\u044C\u044F\\Desktop\\LashSalon\\LashSalon\\LashBooking\\LashBooking\\LashBooking.Web.MVC\\Controllers\\AuthController.cs",
+              "RelativeDocumentMoniker": "LashBooking.Web.MVC\\Controllers\\AuthController.cs",
+              "ToolTip": "C:\\Users\\\u0414\u0430\u0440\u044C\u044F\\Desktop\\LashSalon\\LashSalon\\LashBooking\\LashBooking\\LashBooking.Web.MVC\\Controllers\\AuthController.cs",
+              "RelativeToolTip": "LashBooking.Web.MVC\\Controllers\\AuthController.cs",
+              "ViewState": "AgIAAB8AAAAAAAAAAAAQwDgAAAARAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-03-24T10:31:54.371Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "HomeController_1.cs",
+              "DocumentMoniker": "C:\\Users\\\u0414\u0430\u0440\u044C\u044F\\Downloads\\HomeController_1.cs",
+              "RelativeDocumentMoniker": "..\\..\\..\\..\\..\\Downloads\\HomeController_1.cs",
+              "ToolTip": "C:\\Users\\\u0414\u0430\u0440\u044C\u044F\\Downloads\\HomeController_1.cs",
+              "RelativeToolTip": "..\\..\\..\\..\\..\\Downloads\\HomeController_1.cs",
+              "ViewState": "AgIAAA8AAAAAAAAAAAAwwCYAAAANAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-03-25T02:15:58.302Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "ReviewsController.cs",
+              "DocumentMoniker": "C:\\Users\\\u0414\u0430\u0440\u044C\u044F\\Desktop\\LashSalon\\LashSalon\\LashBooking\\LashBooking\\LashBooking.Web.MVC\\Controllers\\ReviewsController.cs",
+              "RelativeDocumentMoniker": "LashBooking.Web.MVC\\Controllers\\ReviewsController.cs",
+              "ToolTip": "C:\\Users\\\u0414\u0430\u0440\u044C\u044F\\Desktop\\LashSalon\\LashSalon\\LashBooking\\LashBooking\\LashBooking.Web.MVC\\Controllers\\ReviewsController.cs",
+              "RelativeToolTip": "LashBooking.Web.MVC\\Controllers\\ReviewsController.cs",
+              "ViewState": "AgIAAJcAAAAAAAAAAAAwwL8AAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-03-25T02:15:43.743Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "ProfileController.cs",
+              "DocumentMoniker": "C:\\Users\\\u0414\u0430\u0440\u044C\u044F\\Desktop\\LashSalon\\LashSalon\\LashBooking\\LashBooking\\LashBooking.Web.MVC\\Controllers\\ProfileController.cs",
+              "RelativeDocumentMoniker": "LashBooking.Web.MVC\\Controllers\\ProfileController.cs",
+              "ToolTip": "C:\\Users\\\u0414\u0430\u0440\u044C\u044F\\Desktop\\LashSalon\\LashSalon\\LashBooking\\LashBooking\\LashBooking.Web.MVC\\Controllers\\ProfileController.cs",
+              "RelativeToolTip": "LashBooking.Web.MVC\\Controllers\\ProfileController.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAGsAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-03-25T02:12:32.17Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "AdminController.cs",
+              "DocumentMoniker": "C:\\Users\\\u0414\u0430\u0440\u044C\u044F\\Desktop\\LashSalon\\LashSalon\\LashBooking\\LashBooking\\LashBooking.Web.MVC\\Controllers\\AdminController.cs",
+              "RelativeDocumentMoniker": "LashBooking.Web.MVC\\Controllers\\AdminController.cs",
+              "ToolTip": "C:\\Users\\\u0414\u0430\u0440\u044C\u044F\\Desktop\\LashSalon\\LashSalon\\LashBooking\\LashBooking\\LashBooking.Web.MVC\\Controllers\\AdminController.cs",
+              "RelativeToolTip": "LashBooking.Web.MVC\\Controllers\\AdminController.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAIMCAABYAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-03-24T07:12:52.13Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 6,
+              "Title": "CalendarController.cs",
+              "DocumentMoniker": "C:\\Users\\\u0414\u0430\u0440\u044C\u044F\\Desktop\\LashSalon\\LashSalon\\LashBooking\\LashBooking\\LashBooking.Web.MVC\\Controllers\\CalendarController.cs",
+              "RelativeDocumentMoniker": "LashBooking.Web.MVC\\Controllers\\CalendarController.cs",
+              "ToolTip": "C:\\Users\\\u0414\u0430\u0440\u044C\u044F\\Desktop\\LashSalon\\LashSalon\\LashBooking\\LashBooking\\LashBooking.Web.MVC\\Controllers\\CalendarController.cs",
+              "RelativeToolTip": "LashBooking.Web.MVC\\Controllers\\CalendarController.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAALMAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-03-24T10:33:51.815Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 7,
+              "Title": "BookingController.cs",
+              "DocumentMoniker": "C:\\Users\\\u0414\u0430\u0440\u044C\u044F\\Desktop\\LashSalon\\LashSalon\\LashBooking\\LashBooking\\LashBooking.Web.MVC\\Controllers\\BookingController.cs",
+              "RelativeDocumentMoniker": "LashBooking.Web.MVC\\Controllers\\BookingController.cs",
+              "ToolTip": "C:\\Users\\\u0414\u0430\u0440\u044C\u044F\\Desktop\\LashSalon\\LashSalon\\LashBooking\\LashBooking\\LashBooking.Web.MVC\\Controllers\\BookingController.cs",
+              "RelativeToolTip": "LashBooking.Web.MVC\\Controllers\\BookingController.cs",
+              "ViewState": "AgIAADkAAAAAAAAAAAAAwFEAAAA+AAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-03-24T06:40:39.784Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 8,
+              "Title": "BaseController.cs",
+              "DocumentMoniker": "C:\\Users\\\u0414\u0430\u0440\u044C\u044F\\Desktop\\LashSalon\\LashSalon\\LashBooking\\LashBooking\\LashBooking.Web.MVC\\Controllers\\BaseController.cs",
+              "RelativeDocumentMoniker": "LashBooking.Web.MVC\\Controllers\\BaseController.cs",
+              "ToolTip": "C:\\Users\\\u0414\u0430\u0440\u044C\u044F\\Desktop\\LashSalon\\LashSalon\\LashBooking\\LashBooking\\LashBooking.Web.MVC\\Controllers\\BaseController.cs",
+              "RelativeToolTip": "LashBooking.Web.MVC\\Controllers\\BaseController.cs",
+              "ViewState": "AgIAABkAAAAAAAAAAAAkwDgAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-03-24T05:49:03.394Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 9,
+              "Title": "BookingController_3.cs",
+              "DocumentMoniker": "C:\\Users\\\u0414\u0430\u0440\u044C\u044F\\Downloads\\BookingController_3.cs",
+              "RelativeDocumentMoniker": "..\\..\\..\\..\\..\\Downloads\\BookingController_3.cs",
+              "ToolTip": "C:\\Users\\\u0414\u0430\u0440\u044C\u044F\\Downloads\\BookingController_3.cs",
+              "RelativeToolTip": "..\\..\\..\\..\\..\\Downloads\\BookingController_3.cs",
+              "ViewState": "AgIAAFsBAAAAAAAAAAAwwHoBAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-03-24T06:44:33.09Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 10,
+              "Title": "_Layout.cshtml",
+              "DocumentMoniker": "C:\\Users\\\u0414\u0430\u0440\u044C\u044F\\Desktop\\LashSalon\\LashSalon\\LashBooking\\LashBooking\\LashBooking.Web.MVC\\Views\\Shared\\_Layout.cshtml",
+              "RelativeDocumentMoniker": "LashBooking.Web.MVC\\Views\\Shared\\_Layout.cshtml",
+              "ToolTip": "C:\\Users\\\u0414\u0430\u0440\u044C\u044F\\Desktop\\LashSalon\\LashSalon\\LashBooking\\LashBooking\\LashBooking.Web.MVC\\Views\\Shared\\_Layout.cshtml",
+              "RelativeToolTip": "LashBooking.Web.MVC\\Views\\Shared\\_Layout.cshtml",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAwAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2026-03-24T06:36:00.446Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 11,
+              "Title": "ErrorLevel.cs",
+              "DocumentMoniker": "C:\\Users\\\u0414\u0430\u0440\u044C\u044F\\Desktop\\LashSalon\\LashSalon\\LashBooking\\LashBooking\\LashBooking.Domain\\Constants\\ErrorLevel.cs",
+              "RelativeDocumentMoniker": "LashBooking.Domain\\Constants\\ErrorLevel.cs",
+              "ToolTip": "C:\\Users\\\u0414\u0430\u0440\u044C\u044F\\Desktop\\LashSalon\\LashSalon\\LashBooking\\LashBooking\\LashBooking.Domain\\Constants\\ErrorLevel.cs",
+              "RelativeToolTip": "LashBooking.Domain\\Constants\\ErrorLevel.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA8AAAAFAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-03-24T06:30:39.075Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 12,
+              "Title": "PushNotificationsDequeuer.cs",
+              "DocumentMoniker": "C:\\Users\\\u0414\u0430\u0440\u044C\u044F\\Desktop\\LashSalon\\LashSalon\\LashBooking\\LashBooking\\LashBooking.Web.MVC\\Data\\SharedServices\\PushNotificationsDequeuer.cs",
+              "RelativeDocumentMoniker": "LashBooking.Web.MVC\\Data\\SharedServices\\PushNotificationsDequeuer.cs",
+              "ToolTip": "C:\\Users\\\u0414\u0430\u0440\u044C\u044F\\Desktop\\LashSalon\\LashSalon\\LashBooking\\LashBooking\\LashBooking.Web.MVC\\Data\\SharedServices\\PushNotificationsDequeuer.cs",
+              "RelativeToolTip": "LashBooking.Web.MVC\\Data\\SharedServices\\PushNotificationsDequeuer.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAkAAAAZAQAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-03-24T05:48:47.246Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 13,
+              "Title": "PushNotificationsQueue.cs",
+              "DocumentMoniker": "C:\\Users\\\u0414\u0430\u0440\u044C\u044F\\Desktop\\LashSalon\\LashSalon\\LashBooking\\LashBooking\\LashBooking.Web.MVC\\Data\\SharedServices\\PushNotificationsQueue.cs",
+              "RelativeDocumentMoniker": "LashBooking.Web.MVC\\Data\\SharedServices\\PushNotificationsQueue.cs",
+              "ToolTip": "C:\\Users\\\u0414\u0430\u0440\u044C\u044F\\Desktop\\LashSalon\\LashSalon\\LashBooking\\LashBooking\\LashBooking.Web.MVC\\Data\\SharedServices\\PushNotificationsQueue.cs",
+              "RelativeToolTip": "LashBooking.Web.MVC\\Data\\SharedServices\\PushNotificationsQueue.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAYAAADlAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-03-24T05:48:28.095Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 14,
+              "Title": "LoggerProvider.cs",
+              "DocumentMoniker": "C:\\Users\\\u0414\u0430\u0440\u044C\u044F\\Desktop\\LashSalon\\LashSalon\\LashBooking\\LashBooking\\LashBooking.Web.MVC\\Data\\SharedServices\\LoggerProvider.cs",
+              "RelativeDocumentMoniker": "LashBooking.Web.MVC\\Data\\SharedServices\\LoggerProvider.cs",
+              "ToolTip": "C:\\Users\\\u0414\u0430\u0440\u044C\u044F\\Desktop\\LashSalon\\LashSalon\\LashBooking\\LashBooking\\LashBooking.Web.MVC\\Data\\SharedServices\\LoggerProvider.cs",
+              "RelativeToolTip": "LashBooking.Web.MVC\\Data\\SharedServices\\LoggerProvider.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABMAAAB4AAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-03-24T05:47:33.552Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 15,
+              "Title": "Logger.cs",
+              "DocumentMoniker": "C:\\Users\\\u0414\u0430\u0440\u044C\u044F\\Desktop\\LashSalon\\LashSalon\\LashBooking\\LashBooking\\LashBooking.Web.MVC\\Data\\SharedServices\\Logger.cs",
+              "RelativeDocumentMoniker": "LashBooking.Web.MVC\\Data\\SharedServices\\Logger.cs",
+              "ToolTip": "C:\\Users\\\u0414\u0430\u0440\u044C\u044F\\Desktop\\LashSalon\\LashSalon\\LashBooking\\LashBooking\\LashBooking.Web.MVC\\Data\\SharedServices\\Logger.cs",
+              "RelativeToolTip": "LashBooking.Web.MVC\\Data\\SharedServices\\Logger.cs",
+              "ViewState": "AgIAABQAAAAAAAAAAAAgwBkAAABQAQAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-03-24T05:46:27.862Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 16,
+              "Title": "LogApplicationErrorService.cs",
+              "DocumentMoniker": "C:\\Users\\\u0414\u0430\u0440\u044C\u044F\\Desktop\\LashSalon\\LashSalon\\LashBooking\\LashBooking\\LashBooking.Web.MVC\\Data\\SharedServices\\LogApplicationErrorService.cs",
+              "RelativeDocumentMoniker": "LashBooking.Web.MVC\\Data\\SharedServices\\LogApplicationErrorService.cs",
+              "ToolTip": "C:\\Users\\\u0414\u0430\u0440\u044C\u044F\\Desktop\\LashSalon\\LashSalon\\LashBooking\\LashBooking\\LashBooking.Web.MVC\\Data\\SharedServices\\LogApplicationErrorService.cs",
+              "RelativeToolTip": "LashBooking.Web.MVC\\Data\\SharedServices\\LogApplicationErrorService.cs",
+              "ViewState": "AgIAAAgAAAAAAAAAAAAAwBcAAAB+AAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-03-24T05:45:08.546Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 17,
+              "Title": "IPushNotificationsQueue.cs",
+              "DocumentMoniker": "C:\\Users\\\u0414\u0430\u0440\u044C\u044F\\Desktop\\LashSalon\\LashSalon\\LashBooking\\LashBooking\\LashBooking.Web.MVC\\Data\\SharedServices\\IPushNotificationsQueue.cs",
+              "RelativeDocumentMoniker": "LashBooking.Web.MVC\\Data\\SharedServices\\IPushNotificationsQueue.cs",
+              "ToolTip": "C:\\Users\\\u0414\u0430\u0440\u044C\u044F\\Desktop\\LashSalon\\LashSalon\\LashBooking\\LashBooking\\LashBooking.Web.MVC\\Data\\SharedServices\\IPushNotificationsQueue.cs",
+              "RelativeToolTip": "LashBooking.Web.MVC\\Data\\SharedServices\\IPushNotificationsQueue.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAgAAAB9AAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-03-24T05:44:25.564Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 18,
+              "Title": "ILogService.cs",
+              "DocumentMoniker": "C:\\Users\\\u0414\u0430\u0440\u044C\u044F\\Desktop\\LashSalon\\LashSalon\\LashBooking\\LashBooking\\LashBooking.Web.MVC\\Data\\SharedServices\\ILogService.cs",
+              "RelativeDocumentMoniker": "LashBooking.Web.MVC\\Data\\SharedServices\\ILogService.cs",
+              "ToolTip": "C:\\Users\\\u0414\u0430\u0440\u044C\u044F\\Desktop\\LashSalon\\LashSalon\\LashBooking\\LashBooking\\LashBooking.Web.MVC\\Data\\SharedServices\\ILogService.cs",
+              "RelativeToolTip": "LashBooking.Web.MVC\\Data\\SharedServices\\ILogService.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAQAAAC7AAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-03-24T05:44:08.742Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 19,
+              "Title": "LogMessageEntry.cs",
+              "DocumentMoniker": "C:\\Users\\\u0414\u0430\u0440\u044C\u044F\\Desktop\\LashSalon\\LashSalon\\LashBooking\\LashBooking\\LashBooking.Web.MVC\\Data\\Models\\LogMessageEntry.cs",
+              "RelativeDocumentMoniker": "LashBooking.Web.MVC\\Data\\Models\\LogMessageEntry.cs",
+              "ToolTip": "C:\\Users\\\u0414\u0430\u0440\u044C\u044F\\Desktop\\LashSalon\\LashSalon\\LashBooking\\LashBooking\\LashBooking.Web.MVC\\Data\\Models\\LogMessageEntry.cs",
+              "RelativeToolTip": "LashBooking.Web.MVC\\Data\\Models\\LogMessageEntry.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAQAAAC0AAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-03-24T05:43:52.451Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 20,
+              "Title": "ApplicationDbContext.cs",
+              "DocumentMoniker": "C:\\Users\\\u0414\u0430\u0440\u044C\u044F\\Desktop\\LashSalon\\LashSalon\\LashBooking\\LashBooking\\LashBooking.Infrastructure\\Data\\ApplicationDbContext.cs",
+              "RelativeDocumentMoniker": "LashBooking.Infrastructure\\Data\\ApplicationDbContext.cs",
+              "ToolTip": "C:\\Users\\\u0414\u0430\u0440\u044C\u044F\\Desktop\\LashSalon\\LashSalon\\LashBooking\\LashBooking\\LashBooking.Infrastructure\\Data\\ApplicationDbContext.cs",
+              "RelativeToolTip": "LashBooking.Infrastructure\\Data\\ApplicationDbContext.cs",
+              "ViewState": "AgIAAAYAAAAAAAAAAAAAABQAAACPAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-03-24T05:43:18.342Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 22,
+              "Title": "Program.cs",
+              "DocumentMoniker": "C:\\Users\\\u0414\u0430\u0440\u044C\u044F\\Desktop\\LashSalon\\LashSalon\\LashBooking\\LashBooking\\LashBooking.Web.MVC\\Program.cs",
+              "RelativeDocumentMoniker": "LashBooking.Web.MVC\\Program.cs",
+              "ToolTip": "C:\\Users\\\u0414\u0430\u0440\u044C\u044F\\Desktop\\LashSalon\\LashSalon\\LashBooking\\LashBooking\\LashBooking.Web.MVC\\Program.cs",
+              "RelativeToolTip": "LashBooking.Web.MVC\\Program.cs",
+              "ViewState": "AgIAAEoAAAAAAAAAAAAswG0AAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-03-24T05:37:52.432Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 21,
+              "Title": "LogApplicationError.cs",
+              "DocumentMoniker": "C:\\Users\\\u0414\u0430\u0440\u044C\u044F\\Desktop\\LashSalon\\LashSalon\\LashBooking\\LashBooking\\LashBooking.Domain\\Entities\\LogApplicationError.cs",
+              "RelativeDocumentMoniker": "LashBooking.Domain\\Entities\\LogApplicationError.cs",
+              "ToolTip": "C:\\Users\\\u0414\u0430\u0440\u044C\u044F\\Desktop\\LashSalon\\LashSalon\\LashBooking\\LashBooking\\LashBooking.Domain\\Entities\\LogApplicationError.cs",
+              "RelativeToolTip": "LashBooking.Domain\\Entities\\LogApplicationError.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABIAAABYAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-03-20T05:01:49.42Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 23,
+              "Title": "LashBooking.Web.MVC.csproj",
+              "DocumentMoniker": "C:\\Users\\\u0414\u0430\u0440\u044C\u044F\\Desktop\\LashSalon\\LashSalon\\LashBooking\\LashBooking\\LashBooking.Web.MVC\\LashBooking.Web.MVC.csproj",
+              "RelativeDocumentMoniker": "LashBooking.Web.MVC\\LashBooking.Web.MVC.csproj",
+              "ToolTip": "C:\\Users\\\u0414\u0430\u0440\u044C\u044F\\Desktop\\LashSalon\\LashSalon\\LashBooking\\LashBooking\\LashBooking.Web.MVC\\LashBooking.Web.MVC.csproj",
+              "RelativeToolTip": "LashBooking.Web.MVC\\LashBooking.Web.MVC.csproj",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABEAAAANAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000758|",
+              "WhenOpened": "2026-03-20T07:40:31.37Z"
+            }
+          ]
+        }
+      ]
     }
   ]
 }

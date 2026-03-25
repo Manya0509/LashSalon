@@ -167,7 +167,7 @@
       }
     },
     "C:\\Users\\Дарья\\Desktop\\LashSalon\\LashSalon\\LashBooking\\LashBooking\\LashBooking.Web.MVC\\LashBooking.Web.MVC.csproj": {
-      "version": "1.0.0",
+      "version": "0.1.0",
       "restore": {
         "projectUniqueName": "C:\\Users\\Дарья\\Desktop\\LashSalon\\LashSalon\\LashBooking\\LashBooking\\LashBooking.Web.MVC\\LashBooking.Web.MVC.csproj",
         "projectName": "LashBooking.Web.MVC",
@@ -231,14 +231,6 @@
               "suppressParent": "All",
               "target": "Package",
               "version": "[9.0.0, )"
-            },
-            "Serilog.AspNetCore": {
-              "target": "Package",
-              "version": "[9.0.0, )"
-            },
-            "Serilog.Sinks.File": {
-              "target": "Package",
-              "version": "[7.0.0, )"
             }
           },
           "imports": [

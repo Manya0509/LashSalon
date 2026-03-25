@@ -1,16 +1,19 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using LashBooking.Domain.Interfaces;
 using LashBooking.Domain.Entities;
+using LashBooking.Domain.Constants;
 using LashBooking.Web.MVC.Models;
 using System.Security.Cryptography;
 
 namespace LashBooking.Web.MVC.Controllers
 {
-    public class AuthController : Controller
+    public class AuthController : BaseController
     {
         private readonly IRepository<Client> _clientRepo;
 
-        public AuthController(IRepository<Client> clientRepo)
+        public AuthController(
+            IRepository<Client> clientRepo,
+            ILogger logger) : base(logger)
         {
             _clientRepo = clientRepo;
         }
@@ -29,35 +32,49 @@ namespace LashBooking.Web.MVC.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> HandleLogin(LoginViewModel model)
         {
-            if (!ModelState.IsValid)
+            try
             {
-                TempData["ErrorMessage"] = ModelState.Values
-                    .SelectMany(v => v.Errors)
-                    .Select(e => e.ErrorMessage)
-                    .FirstOrDefault() ?? "Заполните все поля";
+                InitRequestInfo();
+
+                if (!ModelState.IsValid)
+                {
+                    TempData["ErrorMessage"] = ModelState.Values
+                        .SelectMany(v => v.Errors)
+                        .Select(e => e.ErrorMessage)
+                        .FirstOrDefault() ?? "Заполните все поля";
+                    return RedirectToAction("Login");
+                }
+
+                var cleanPhone = CleanPhone(model.LoginPhone);
+                var clients = await _clientRepo.FindAsync(c => c.Phone == cleanPhone);
+                var client = clients.FirstOrDefault();
+
+                // Пользователь не найден — Warning, не ошибка приложения
+                if (client == null)
+                {
+                    TempData["ErrorMessage"] = "Пользователь не найден";
+                    return RedirectToAction("Login");
+                }
+
+                // Неверный пароль — Warning
+                if (!VerifyPassword(model.LoginPassword, client.Password ?? ""))
+                {
+                    TempData["ErrorMessage"] = "Неверный пароль";
+                    return RedirectToAction("Login");
+                }
+                
+                HttpContext.Session.SetInt32("ClientId", client.Id);
+                HttpContext.Session.SetString("ClientName", client.Name);
+
+                return RedirectToAction("Index", "Profile");
+            }
+            catch (Exception ex)
+            {
+                // Неожиданная ошибка при входе — Error
+                CatchException(ex, "AuthController/HandleLogin", ErrorLevel.Error);
+                TempData["ErrorMessage"] = "Произошла ошибка при входе. Попробуйте ещё раз.";
                 return RedirectToAction("Login");
             }
-
-            var cleanPhone = CleanPhone(model.LoginPhone);
-            var clients = await _clientRepo.FindAsync(c => c.Phone == cleanPhone);
-            var client = clients.FirstOrDefault();
-
-            if (client == null)
-            {
-                TempData["ErrorMessage"] = "Пользователь не найден";
-                return RedirectToAction("Login");
-            }
-
-            if (!VerifyPassword(model.LoginPassword, client.Password ?? ""))
-            {
-                TempData["ErrorMessage"] = "Неверный пароль";
-                return RedirectToAction("Login");
-            }
-
-            HttpContext.Session.SetInt32("ClientId", client.Id);
-            HttpContext.Session.SetString("ClientName", client.Name);
-
-            return RedirectToAction("Index", "Profile");
         }
 
         // POST: /Auth/HandleRegister
@@ -65,48 +82,70 @@ namespace LashBooking.Web.MVC.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> HandleRegister(RegisterViewModel model)
         {
-            if (!ModelState.IsValid)
+            try
             {
-                TempData["ErrorMessage"] = ModelState.Values
-                    .SelectMany(v => v.Errors)
-                    .Select(e => e.ErrorMessage)
-                    .FirstOrDefault() ?? "Заполните все поля";
+                InitRequestInfo();
+
+                if (!ModelState.IsValid)
+                {
+                    TempData["ErrorMessage"] = ModelState.Values
+                        .SelectMany(v => v.Errors)
+                        .Select(e => e.ErrorMessage)
+                        .FirstOrDefault() ?? "Заполните все поля";
+                    return RedirectToAction("Login", new { mode = "register" });
+                }
+
+                var cleanPhone = CleanPhone(model.RegPhone);
+                var existing = await _clientRepo.FindAsync(c => c.Phone == cleanPhone);
+
+                // Телефон уже зарегистрирован — Warning
+                if (existing.Any())
+                {
+                    TempData["ErrorMessage"] = "Этот телефон уже зарегистрирован";
+                    return RedirectToAction("Login", new { mode = "register" });
+                }
+
+                var newClient = new Client
+                {
+                    Name = model.RegName,
+                    Phone = cleanPhone,
+                    Password = HashPassword(model.RegPassword),
+                    Email = string.IsNullOrWhiteSpace(model.RegEmail) ? null : model.RegEmail,
+                    CreatedAt = DateTime.Now
+                };
+
+                await _clientRepo.AddAsync(newClient);
+                await _clientRepo.SaveChangesAsync();
+
+                HttpContext.Session.SetInt32("ClientId", newClient.Id);
+                HttpContext.Session.SetString("ClientName", newClient.Name);
+
+                return RedirectToAction("Index", "Profile");
+            }
+            catch (Exception ex)
+            {
+                // Неожиданная ошибка при регистрации — Error
+                CatchException(ex, "AuthController/HandleRegister", ErrorLevel.Error);
+                TempData["ErrorMessage"] = "Произошла ошибка при регистрации. Попробуйте ещё раз.";
                 return RedirectToAction("Login", new { mode = "register" });
             }
-
-            var cleanPhone = CleanPhone(model.RegPhone);
-            var existing = await _clientRepo.FindAsync(c => c.Phone == cleanPhone);
-
-            if (existing.Any())
-            {
-                TempData["ErrorMessage"] = "Этот телефон уже зарегистрирован";
-                return RedirectToAction("Login", new { mode = "register" });
-            }
-
-            var newClient = new Client
-            {
-                Name = model.RegName,
-                Phone = cleanPhone,
-                Password = HashPassword(model.RegPassword),
-                Email = string.IsNullOrWhiteSpace(model.RegEmail) ? null : model.RegEmail,
-                CreatedAt = DateTime.Now
-            };
-
-            await _clientRepo.AddAsync(newClient);
-            await _clientRepo.SaveChangesAsync();
-
-            HttpContext.Session.SetInt32("ClientId", newClient.Id);
-            HttpContext.Session.SetString("ClientName", newClient.Name);
-
-            return RedirectToAction("Index", "Profile");
         }
 
         // GET: /Auth/Logout
         public IActionResult Logout()
         {
-            HttpContext.Session.Remove("ClientId");
-            HttpContext.Session.Remove("ClientName");
-            return RedirectToAction("Index", "Home");
+            try
+            {
+                HttpContext.Session.Remove("ClientId");
+                HttpContext.Session.Remove("ClientName");
+                return RedirectToAction("Index", "Home");
+            }
+            catch (Exception ex)
+            {
+                // Ошибка при выходе — Warning, не критично
+                CatchException(ex, "AuthController/Logout", ErrorLevel.Warning);
+                return RedirectToAction("Index", "Home");
+            }
         }
 
         // ===== ВСПОМОГАТЕЛЬНЫЕ МЕТОДЫ =====
@@ -116,7 +155,8 @@ namespace LashBooking.Web.MVC.Controllers
             byte[] salt = new byte[16];
             RandomNumberGenerator.Fill(salt);
 
-            using var pbkdf2 = new Rfc2898DeriveBytes(password, salt, 100000, HashAlgorithmName.SHA256);
+            using var pbkdf2 = new Rfc2898DeriveBytes(
+                password, salt, 100000, HashAlgorithmName.SHA256);
             byte[] hash = pbkdf2.GetBytes(32);
 
             byte[] hashBytes = new byte[48];
@@ -136,7 +176,8 @@ namespace LashBooking.Web.MVC.Controllers
                 byte[] salt = new byte[16];
                 Buffer.BlockCopy(hashBytes, 0, salt, 0, 16);
 
-                using var pbkdf2 = new Rfc2898DeriveBytes(password, salt, 100000, HashAlgorithmName.SHA256);
+                using var pbkdf2 = new Rfc2898DeriveBytes(
+                    password, salt, 100000, HashAlgorithmName.SHA256);
                 byte[] hash = pbkdf2.GetBytes(32);
 
                 for (int i = 0; i < 32; i++)
@@ -144,7 +185,10 @@ namespace LashBooking.Web.MVC.Controllers
 
                 return true;
             }
-            catch { return false; }
+            catch
+            {
+                return false;
+            }
         }
 
         private string CleanPhone(string phone) =>

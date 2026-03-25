@@ -1,19 +1,21 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using LashBooking.Domain.Entities;
 using LashBooking.Domain.Interfaces;
+using LashBooking.Domain.Constants;
 using LashBooking.Web.MVC.Filters;
 
 namespace LashBooking.Web.MVC.Controllers
 {
-    [RequireClientAuth] // ← одна строка вместо проверки в каждом методе
-    public class ProfileController : Controller
+    [RequireClientAuth]
+    public class ProfileController : BaseController
     {
         private readonly IRepository<Appointment> _appointmentRepo;
         private readonly IRepository<Service> _serviceRepo;
 
         public ProfileController(
             IRepository<Appointment> appointmentRepo,
-            IRepository<Service> serviceRepo)
+            IRepository<Service> serviceRepo,
+            ILogger logger) : base(logger)
         {
             _appointmentRepo = appointmentRepo;
             _serviceRepo = serviceRepo;
@@ -21,45 +23,64 @@ namespace LashBooking.Web.MVC.Controllers
 
         public async Task<IActionResult> Index()
         {
-            var clientId = HttpContext.Session.GetInt32("ClientId")!.Value;
-            var clientName = HttpContext.Session.GetString("ClientName") ?? "Гость";
+            try
+            {
+                InitRequestInfo();
 
-            var allServices = await _serviceRepo.GetAllAsync();
-            var servicesDictionary = allServices
-                .Where(s => s.IsActive)
-                .ToDictionary(s => s.Id, s => s);
+                var clientId = HttpContext.Session.GetInt32("ClientId")!.Value;
+                var clientName = HttpContext.Session.GetString("ClientName") ?? "Гость";
 
-            var appointments = await _appointmentRepo.FindAsync(a => a.ClientId == clientId);
-            var appointmentList = appointments
-                .OrderByDescending(a => a.DateStart)
-                .ToList();
+                var allServices = await _serviceRepo.GetAllAsync();
+                var servicesDictionary = allServices
+                    .Where(s => s.IsActive)
+                    .ToDictionary(s => s.Id, s => s);
 
-            ViewBag.ClientName = clientName;
-            ViewBag.Appointments = appointmentList;
-            ViewBag.ServicesDictionary = servicesDictionary;
-            ViewBag.CancelSuccess = TempData["CancelSuccess"];
-            ViewBag.CancelError = TempData["CancelError"];
+                var appointments = await _appointmentRepo.FindAsync(a => a.ClientId == clientId);
+                var appointmentList = appointments
+                    .OrderByDescending(a => a.DateStart)
+                    .ToList();
 
-            return View();
+                ViewBag.ClientName = clientName;
+                ViewBag.Appointments = appointmentList;
+                ViewBag.ServicesDictionary = servicesDictionary;
+                ViewBag.CancelSuccess = TempData["CancelSuccess"];
+                ViewBag.CancelError = TempData["CancelError"];
+
+                return View();
+            }
+            catch (Exception ex)
+            {
+                // Ошибка загрузки профиля — Error
+                CatchException(ex, "ProfileController/Index", ErrorLevel.Error);
+                return RedirectToAction("Index", "Home");
+            }
         }
 
         [HttpPost]
         public async Task<IActionResult> Cancel(int appointmentId)
         {
-            var clientId = HttpContext.Session.GetInt32("ClientId")!.Value;
-
             try
             {
+                InitRequestInfo();
+
+                var clientId = HttpContext.Session.GetInt32("ClientId")!.Value;
+
                 var appointments = await _appointmentRepo.FindAsync(a =>
                     a.Id == appointmentId && a.ClientId == clientId);
                 var appointment = appointments.FirstOrDefault();
 
+                // Запись не найдена или не принадлежит клиенту — Warning
                 if (appointment == null)
                 {
+                    CatchException(
+                        new Exception($"Запись Id={appointmentId} не найдена для клиента Id={clientId}"),
+                        "ProfileController/Cancel — запись не найдена",
+                        ErrorLevel.Warning);
                     TempData["CancelError"] = "Запись не найдена";
                     return RedirectToAction("Index");
                 }
 
+                // Нельзя отменить завершённую или уже отменённую запись — Warning
                 if (appointment.Status != AppointmentStatus.Scheduled &&
                     appointment.Status != AppointmentStatus.Confirmed)
                 {
@@ -72,14 +93,15 @@ namespace LashBooking.Web.MVC.Controllers
                 await _appointmentRepo.SaveChangesAsync();
 
                 TempData["CancelSuccess"] = "Запись успешно отменена";
+                return RedirectToAction("Index");
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Ошибка при отмене записи: {ex.Message}");
-                TempData["CancelError"] = "Ошибка при отмене записи";
+                // Неожиданная ошибка при отмене — Error
+                CatchException(ex, "ProfileController/Cancel", ErrorLevel.Error);
+                TempData["CancelError"] = "Ошибка при отмене записи. Попробуйте ещё раз.";
+                return RedirectToAction("Index");
             }
-
-            return RedirectToAction("Index");
         }
     }
 }

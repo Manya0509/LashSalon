@@ -1,19 +1,51 @@
 ﻿<!DOCTYPE html>
-<html lang="ru">                                         <!-- язык страницы — русский -->
+<html lang="ru">
 <head>
-    <meta charset="utf-8" />                             <!-- кодировка UTF-8 для кириллицы -->
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" /> <!-- адаптивность на мобильных -->
-    <title>@ViewBag.Title</title>                        <!-- заголовок вкладки — берётся из каждого View -->
-
-    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />          <!-- Bootstrap — сетка и базовые стили -->
-    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />            <!-- наши стили, asp-append-version добавляет ?v=xxx чтобы браузер не кешировал старую версию -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet" /> <!-- иконки Bootstrap Icons -->
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewBag.Title</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet" />
 </head>
 <body>
-    @RenderBody()                                        <!-- сюда вставляется содержимое каждой страницы -->
+    @RenderBody()
 
-    <script src="~/lib/jquery/dist/jquery.min.js"></script>              <!-- jQuery -->
-    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script> <!-- Bootstrap JS -->
-    @await RenderSectionAsync("Scripts", required: false)  <!-- сюда вставляется @section Scripts {} из каждой страницы, required:false — секция необязательна -->
+    @if (TempData["ErrorOccurred"] != null)
+    {
+        bool needReload = (bool)(TempData["NeedReload"] ?? false);
+        string errorMessage = TempData["ErrorMessage"]?.ToString() ?? "Что-то пошло не так.";
+
+        <div class="modal-overlay" id="globalErrorDialog" style="display:flex">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3>⚠️ Ошибка</h3>
+                    <button class="modal-close"
+                            onclick="document.getElementById('globalErrorDialog').style.display='none'">
+                        ✕
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <p>@errorMessage</p>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn-secondary"
+                            onclick="document.getElementById('globalErrorDialog').style.display='none'">
+                        Закрыть
+                    </button>
+                    @if (needReload)
+                    {
+                        <button class="btn-primary" onclick="location.reload()">
+                            🔄 Обновить страницу
+                        </button>
+                    }
+                </div>
+            </div>
+        </div>
+    }
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>

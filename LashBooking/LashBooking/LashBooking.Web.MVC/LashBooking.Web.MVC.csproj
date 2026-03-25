@@ -4,7 +4,16 @@
     <TargetFramework>net9.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
+	  <Version>0.1.0</Version>
   </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="IPushNotificationsQueue.cs" />
+    <Compile Remove="Logger.cs" />
+    <Compile Remove="LoggerProvider.cs" />
+    <Compile Remove="PushNotificationsDequeuer.cs" />
+    <Compile Remove="PushNotificationsQueue.cs" />
+  </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="ClosedXML" Version="0.105.0" />
@@ -12,13 +21,17 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="Serilog.AspNetCore" Version="9.0.0" />
-    <PackageReference Include="Serilog.Sinks.File" Version="7.0.0" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\LashBooking.Domain\LashBooking.Domain.csproj" />
     <ProjectReference Include="..\LashBooking.Infrastructure\LashBooking.Infrastructure.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Data\Helpers\" />
+    <Folder Include="Data\Models\" />
+    <Folder Include="Новая папка\" />
   </ItemGroup>
 
 </Project>

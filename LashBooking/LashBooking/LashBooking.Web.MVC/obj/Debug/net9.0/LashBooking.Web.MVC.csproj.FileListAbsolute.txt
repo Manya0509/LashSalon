@@ -311,15 +311,6 @@ C:\Users\Дарья\Desktop\LashSalon\LashSalon\LashBooking\LashBooking\LashBook
 C:\Users\Дарья\Desktop\LashSalon\LashSalon\LashBooking\LashBooking\LashBooking.Web.MVC\bin\Debug\net9.0\zh-Hans\Microsoft.CodeAnalysis.Workspaces.MSBuild.BuildHost.resources.dll
 C:\Users\Дарья\Desktop\LashSalon\LashSalon\LashBooking\LashBooking\LashBooking.Web.MVC\bin\Debug\net9.0\zh-Hant\Microsoft.CodeAnalysis.Workspaces.MSBuild.BuildHost.resources.dll
 C:\Users\Дарья\Desktop\LashSalon\LashSalon\LashBooking\LashBooking\LashBooking.Web.MVC\bin\Debug\net9.0\appsettings.Production.json
-C:\Users\Дарья\Desktop\LashSalon\LashSalon\LashBooking\LashBooking\LashBooking.Web.MVC\bin\Debug\net9.0\Serilog.dll
-C:\Users\Дарья\Desktop\LashSalon\LashSalon\LashBooking\LashBooking\LashBooking.Web.MVC\bin\Debug\net9.0\Serilog.AspNetCore.dll
-C:\Users\Дарья\Desktop\LashSalon\LashSalon\LashBooking\LashBooking\LashBooking.Web.MVC\bin\Debug\net9.0\Serilog.Extensions.Hosting.dll
-C:\Users\Дарья\Desktop\LashSalon\LashSalon\LashBooking\LashBooking\LashBooking.Web.MVC\bin\Debug\net9.0\Serilog.Extensions.Logging.dll
-C:\Users\Дарья\Desktop\LashSalon\LashSalon\LashBooking\LashBooking\LashBooking.Web.MVC\bin\Debug\net9.0\Serilog.Formatting.Compact.dll
-C:\Users\Дарья\Desktop\LashSalon\LashSalon\LashBooking\LashBooking\LashBooking.Web.MVC\bin\Debug\net9.0\Serilog.Settings.Configuration.dll
-C:\Users\Дарья\Desktop\LashSalon\LashSalon\LashBooking\LashBooking\LashBooking.Web.MVC\bin\Debug\net9.0\Serilog.Sinks.Console.dll
-C:\Users\Дарья\Desktop\LashSalon\LashSalon\LashBooking\LashBooking\LashBooking.Web.MVC\bin\Debug\net9.0\Serilog.Sinks.Debug.dll
-C:\Users\Дарья\Desktop\LashSalon\LashSalon\LashBooking\LashBooking\LashBooking.Web.MVC\bin\Debug\net9.0\Serilog.Sinks.File.dll
 C:\Users\Дарья\Desktop\LashSalon\LashSalon\LashBooking\LashBooking\LashBooking.Web.MVC\bin\Debug\net9.0\ClosedXML.dll
 C:\Users\Дарья\Desktop\LashSalon\LashSalon\LashBooking\LashBooking\LashBooking.Web.MVC\bin\Debug\net9.0\ClosedXML.Parser.dll
 C:\Users\Дарья\Desktop\LashSalon\LashSalon\LashBooking\LashBooking\LashBooking.Web.MVC\bin\Debug\net9.0\DocumentFormat.OpenXml.dll

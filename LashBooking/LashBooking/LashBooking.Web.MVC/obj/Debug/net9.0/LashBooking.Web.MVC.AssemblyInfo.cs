@@ -13,11 +13,11 @@ using System.Reflection;
 
 [assembly: System.Reflection.AssemblyCompanyAttribute("LashBooking.Web.MVC")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
-[assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+ed6e9d2b24f9deb95f3b6eef9f7d1264325011bf")]
+[assembly: System.Reflection.AssemblyFileVersionAttribute("0.1.0.0")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("0.1.0+afaf7f48e4978de41be262559b5f9dc0e8fa5d83")]
 [assembly: System.Reflection.AssemblyProductAttribute("LashBooking.Web.MVC")]
 [assembly: System.Reflection.AssemblyTitleAttribute("LashBooking.Web.MVC")]
-[assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
+[assembly: System.Reflection.AssemblyVersionAttribute("0.1.0.0")]
 
 // Создано классом WriteCodeFragment MSBuild.
 

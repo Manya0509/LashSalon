@@ -1,11 +1,12 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using LashBooking.Domain.Interfaces;
 using LashBooking.Domain.Entities;
+using LashBooking.Domain.Constants;
 using LashBooking.Web.MVC.Models;
 
 namespace LashBooking.Web.MVC.Controllers
 {
-    public class BookingController : Controller
+    public class BookingController : BaseController
     {
         private readonly IRepository<Service> _serviceRepo;
         private readonly IRepository<Client> _clientRepo;
@@ -20,7 +21,8 @@ namespace LashBooking.Web.MVC.Controllers
             IRepository<Service> serviceRepo,
             IRepository<Client> clientRepo,
             IRepository<Appointment> appointmentRepo,
-            IRepository<BlockedSlot> blockedSlotRepo)
+            IRepository<BlockedSlot> blockedSlotRepo,
+            ILogger logger) : base(logger)
         {
             _serviceRepo = serviceRepo;
             _clientRepo = clientRepo;
@@ -28,197 +30,256 @@ namespace LashBooking.Web.MVC.Controllers
             _blockedSlotRepo = blockedSlotRepo;
         }
 
+        // GET: /Booking
         public async Task<IActionResult> Index(string? date)
         {
-            var services = (await _serviceRepo.GetAllAsync()).Where(s => s.IsActive).ToList();
-            var selectedServiceId = services.FirstOrDefault()?.Id ?? 0;
-
-            var clientId = HttpContext.Session.GetInt32("ClientId");
-            var isAuthenticated = clientId.HasValue;
-            string clientName = "";
-            string clientPhone = "";
-
-            if (isAuthenticated)
+            try
             {
-                var clients = await _clientRepo.FindAsync(c => c.Id == clientId!.Value);
-                var client = clients.FirstOrDefault();
-                if (client != null)
+                InitRequestInfo();
+
+                var services = (await _serviceRepo.GetAllAsync()).Where(s => s.IsActive).ToList();
+                var selectedServiceId = services.FirstOrDefault()?.Id ?? 0;
+
+                var clientId = HttpContext.Session.GetInt32("ClientId");
+                var isAuthenticated = clientId.HasValue;
+                string clientName = "";
+                string clientPhone = "";
+
+
+                if (isAuthenticated)
                 {
-                    clientName = client.Name ?? "";
-                    clientPhone = client.Phone ?? "";
+                    var clients = await _clientRepo.FindAsync(c => c.Id == clientId!.Value);
+                    var client = clients.FirstOrDefault();
+                    if (client != null)
+                    {
+                        clientName = client.Name ?? "";
+                        clientPhone = client.Phone ?? "";
+                    }
                 }
+
+                DateTime selectedDate = DateTime.Today;
+                DateTime selectedTime = default;
+
+                if (!string.IsNullOrEmpty(date) && DateTime.TryParse(date, out DateTime parsedDate))
+                {
+                    selectedDate = parsedDate.Date;
+                    selectedTime = parsedDate;
+                }
+
+                var slots = await GetSlots(selectedDate, selectedServiceId, services);
+
+                if (selectedTime == default)
+                {
+                    selectedTime = slots
+                        .Where(s => !s.IsBusy && s.Time >= DateTime.Now)
+                        .OrderBy(s => s.Time)
+                        .FirstOrDefault()?.Time ?? default;
+                }
+
+                var availableDates = await GetAvailableDates(selectedServiceId, services);
+
+                ViewBag.Services = services;
+                ViewBag.SelectedServiceId = selectedServiceId;
+                ViewBag.ClientName = clientName;
+                ViewBag.ClientPhone = clientPhone;
+                ViewBag.IsAuthenticated = isAuthenticated;
+                ViewBag.SelectedDate = selectedDate.ToString("yyyy-MM-dd");
+                ViewBag.SelectedDateDisplay = selectedDate.ToString("dd.MM.yyyy");
+                ViewBag.SelectedTime = selectedTime != default ? selectedTime.ToString("yyyy-MM-ddTHH:mm:ss") : "";
+                ViewBag.Slots = slots;
+                ViewBag.AvailableDates = availableDates.Select(d => d.ToString("yyyy-MM-dd")).ToList();
+                ViewBag.Message = TempData["Message"];
+                ViewBag.IsSuccess = TempData["IsSuccess"];
+
+                return View();
             }
-
-            DateTime selectedDate = DateTime.Today;
-            DateTime selectedTime = default;
-
-            if (!string.IsNullOrEmpty(date) && DateTime.TryParse(date, out DateTime parsedDate))
+            catch (Exception ex)
             {
-                selectedDate = parsedDate.Date;
-                selectedTime = parsedDate;
+                // Ошибка загрузки страницы — уровень Error
+                CatchException(ex, "BookingController/Index", ErrorLevel.Error);
+                return RedirectToAction("Index", "Home");
             }
-
-            var slots = await GetSlots(selectedDate, selectedServiceId, services);
-
-            if (selectedTime == default)
-            {
-                selectedTime = slots
-                    .Where(s => !s.IsBusy && s.Time >= DateTime.Now)
-                    .OrderBy(s => s.Time)
-                    .FirstOrDefault()?.Time ?? default;
-            }
-
-            var availableDates = await GetAvailableDates(selectedServiceId, services);
-
-            ViewBag.Services = services;
-            ViewBag.SelectedServiceId = selectedServiceId;
-            ViewBag.ClientName = clientName;
-            ViewBag.ClientPhone = clientPhone;
-            ViewBag.IsAuthenticated = isAuthenticated;
-            ViewBag.SelectedDate = selectedDate.ToString("yyyy-MM-dd");
-            ViewBag.SelectedDateDisplay = selectedDate.ToString("dd.MM.yyyy");
-            ViewBag.SelectedTime = selectedTime != default ? selectedTime.ToString("yyyy-MM-ddTHH:mm:ss") : "";
-            ViewBag.Slots = slots;
-            ViewBag.AvailableDates = availableDates.Select(d => d.ToString("yyyy-MM-dd")).ToList();
-            ViewBag.Message = TempData["Message"];
-            ViewBag.IsSuccess = TempData["IsSuccess"];
-
-            return View();
         }
 
+        // GET: /Booking/GetSlotsByDate?date=2026-03-15&serviceId=1
         public async Task<IActionResult> GetSlotsByDate(string date, int serviceId)
         {
-            if (!DateTime.TryParse(date, out DateTime selectedDate))
-                return Json(new List<object>());
-
-            var services = (await _serviceRepo.GetAllAsync()).Where(s => s.IsActive).ToList();
-            var slots = await GetSlots(selectedDate, serviceId, services);
-
-            return Json(slots.Select(s => new
+            try
             {
-                time = s.Time.ToString("yyyy-MM-ddTHH:mm:ss"),
-                timeDisplay = s.Time.ToString("HH:mm"),
-                isBusy = s.IsBusy
-            }));
+                if (!DateTime.TryParse(date, out DateTime selectedDate))
+                    return Json(new List<object>());
+
+                var services = (await _serviceRepo.GetAllAsync()).Where(s => s.IsActive).ToList();
+                var slots = await GetSlots(selectedDate, serviceId, services);
+
+                return Json(slots.Select(s => new
+                {
+                    time = s.Time.ToString("yyyy-MM-ddTHH:mm:ss"),
+                    timeDisplay = s.Time.ToString("HH:mm"),
+                    isBusy = s.IsBusy
+                }));
+            }
+            catch (Exception ex)
+            {
+                // Ошибка получения слотов — Warning, не критично
+                CatchException(ex, "BookingController/GetSlotsByDate", ErrorLevel.Warning);
+                return Json(new List<object>());
+            }
         }
 
+        // GET: /Booking/GetAvailableDatesAction?serviceId=1
         public async Task<IActionResult> GetAvailableDatesAction(int serviceId)
         {
-            var services = (await _serviceRepo.GetAllAsync()).Where(s => s.IsActive).ToList();
-            var dates = await GetAvailableDates(serviceId, services);
-            return Json(dates.Select(d => d.ToString("yyyy-MM-dd")));
+            try
+            {
+                var services = (await _serviceRepo.GetAllAsync()).Where(s => s.IsActive).ToList();
+                var dates = await GetAvailableDates(serviceId, services);
+                return Json(dates.Select(d => d.ToString("yyyy-MM-dd")));
+            }
+            catch (Exception ex)
+            {
+                // Ошибка получения доступных дат — Warning
+                CatchException(ex, "BookingController/GetAvailableDatesAction", ErrorLevel.Warning);
+                return Json(new List<string>());
+            }
         }
 
+        // POST: /Booking/Save
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Save(BookingViewModel model)
         {
-            if (!ModelState.IsValid)
+            try
             {
-                TempData["Message"] = ModelState.Values
-                    .SelectMany(v => v.Errors)
-                    .Select(e => e.ErrorMessage)
-                    .FirstOrDefault() ?? "Пожалуйста, заполните все поля";
-                TempData["IsSuccess"] = false;
-                return RedirectToAction("Index");
-            }
+                InitRequestInfo();
 
-            if (!DateTime.TryParse(model.SelectedTime, out DateTime time) || time < DateTime.Now)
-            {
-                TempData["Message"] = "Пожалуйста, выберите доступное время";
-                TempData["IsSuccess"] = false;
-                return RedirectToAction("Index");
-            }
-
-            var services = (await _serviceRepo.GetAllAsync()).ToList();
-            var service = services.FirstOrDefault(x => x.Id == model.ServiceId);
-            if (service == null)
-            {
-                TempData["Message"] = "Услуга не найдена";
-                TempData["IsSuccess"] = false;
-                return RedirectToAction("Index");
-            }
-
-            var dateEnd = time.AddMinutes(service.DurationMinutes);
-            var workDayEnd = time.Date.AddHours(EndHour);
-
-            if (dateEnd > workDayEnd)
-            {
-                TempData["Message"] = $"Недостаточно времени для услуги «{service.Name}». Выберите более раннее время.";
-                TempData["IsSuccess"] = false;
-                return RedirectToAction("Index");
-            }
-
-            // Проверка блокировок
-            var blockedSlots = (await _blockedSlotRepo.FindAsync(b => b.Date.Date == time.Date)).ToList();
-            if (blockedSlots.Any(b => b.BlockedHour == null))
-            {
-                TempData["Message"] = "Этот день недоступен для записи.";
-                TempData["IsSuccess"] = false;
-                return RedirectToAction("Index");
-            }
-            if (blockedSlots.Any(b => b.BlockedHour == time.Hour))
-            {
-                TempData["Message"] = "Выбранное время недоступно для записи.";
-                TempData["IsSuccess"] = false;
-                return RedirectToAction("Index");
-            }
-
-            var existing = await _appointmentRepo.FindAsync(a =>
-                a.Client != null &&
-                a.Client.Phone == model.ClientPhone &&
-                a.DateStart.Date == time.Date);
-
-            if (existing.Any())
-            {
-                TempData["Message"] = "У вас уже есть запись на этот день";
-                TempData["IsSuccess"] = false;
-                return RedirectToAction("Index");
-            }
-
-            Client? client = null;
-
-            var clientId = HttpContext.Session.GetInt32("ClientId");
-            if (clientId.HasValue)
-            {
-                var clients = await _clientRepo.FindAsync(c => c.Id == clientId.Value);
-                client = clients.FirstOrDefault();
-            }
-
-            if (client == null)
-            {
-                var clients = await _clientRepo.FindAsync(c => c.Phone == model.ClientPhone);
-                client = clients.FirstOrDefault();
-            }
-
-            if (client == null)
-            {
-                client = new Client
+                // Валидация модели — проверка атрибутов [Required], [StringLength] и т.д.
+                if (!ModelState.IsValid)
                 {
-                    Name = model.ClientName,
-                    Phone = model.ClientPhone,
+                    TempData["Message"] = ModelState.Values
+                        .SelectMany(v => v.Errors)
+                        .Select(e => e.ErrorMessage)
+                        .FirstOrDefault() ?? "Пожалуйста, заполните все поля";
+                    TempData["IsSuccess"] = false;
+                    return RedirectToAction("Index");
+                }
+
+                // Проверка времени — не в прошлом
+                if (!DateTime.TryParse(model.SelectedTime, out DateTime time) || time < DateTime.Now)
+                {
+                    TempData["Message"] = "Пожалуйста, выберите доступное время";
+                    TempData["IsSuccess"] = false;
+                    return RedirectToAction("Index");
+                }
+
+                // Проверка услуги
+                var services = (await _serviceRepo.GetAllAsync()).ToList();
+                var service = services.FirstOrDefault(x => x.Id == model.ServiceId);
+                if (service == null)
+                {
+                    // Услуга не найдена — Warning, скорее всего устаревшие данные на странице
+                    CatchException(
+                        new Exception($"Услуга с Id={model.ServiceId} не найдена"),
+                        "BookingController/Save — услуга не найдена",
+                        ErrorLevel.Warning);
+                    TempData["Message"] = "Услуга не найдена. Обновите страницу.";
+                    TempData["IsSuccess"] = false;
+                    return RedirectToAction("Index");
+                }
+
+                var dateEnd = time.AddMinutes(service.DurationMinutes);
+                var workDayEnd = time.Date.AddHours(EndHour);
+
+                // Проверка что услуга укладывается в рабочий день
+                if (dateEnd > workDayEnd)
+                {
+                    TempData["Message"] = $"Недостаточно времени для услуги «{service.Name}». Выберите более раннее время.";
+                    TempData["IsSuccess"] = false;
+                    return RedirectToAction("Index");
+                }
+
+                // Проверка блокировок
+                var blockedSlots = (await _blockedSlotRepo.FindAsync(b => b.Date.Date == time.Date)).ToList();
+                if (blockedSlots.Any(b => b.BlockedHour == null))
+                {
+                    TempData["Message"] = "Этот день недоступен для записи.";
+                    TempData["IsSuccess"] = false;
+                    return RedirectToAction("Index");
+                }
+                if (blockedSlots.Any(b => b.BlockedHour == time.Hour))
+                {
+                    TempData["Message"] = "Выбранное время недоступно для записи.";
+                    TempData["IsSuccess"] = false;
+                    return RedirectToAction("Index");
+                }
+
+                // Проверка дубликата записи
+                var existing = await _appointmentRepo.FindAsync(a =>
+                    a.Client != null &&
+                    a.Client.Phone == model.ClientPhone &&
+                    a.DateStart.Date == time.Date);
+
+                if (existing.Any())
+                {
+                    TempData["Message"] = "У вас уже есть запись на этот день";
+                    TempData["IsSuccess"] = false;
+                    return RedirectToAction("Index");
+                }
+
+                // Поиск или создание клиента
+                Client? client = null;
+
+                var clientId = HttpContext.Session.GetInt32("ClientId");
+                if (clientId.HasValue)
+                {
+                    var clients = await _clientRepo.FindAsync(c => c.Id == clientId.Value);
+                    client = clients.FirstOrDefault();
+                }
+
+                if (client == null)
+                {
+                    var clients = await _clientRepo.FindAsync(c => c.Phone == model.ClientPhone);
+                    client = clients.FirstOrDefault();
+                }
+
+                if (client == null)
+                {
+                    client = new Client
+                    {
+                        Name = model.ClientName,
+                        Phone = model.ClientPhone,
+                        CreatedAt = DateTime.Now
+                    };
+                    await _clientRepo.AddAsync(client);
+                    await _clientRepo.SaveChangesAsync();
+                }
+
+                // Создание записи
+                var appointment = new Appointment
+                {
+                    ClientId = client.Id,
+                    ServiceId = model.ServiceId,
+                    DateStart = time,
+                    DateEnd = dateEnd,
                     CreatedAt = DateTime.Now
                 };
-                await _clientRepo.AddAsync(client);
-                await _clientRepo.SaveChangesAsync();
+
+                await _appointmentRepo.AddAsync(appointment);
+                await _appointmentRepo.SaveChangesAsync();
+
+                TempData["Message"] = $"✅ Вы успешно записаны! {service.Name} — {time:dd.MM.yyyy HH:mm}";
+                TempData["IsSuccess"] = true;
+
+                return RedirectToAction("Index");
             }
-
-            var appointment = new Appointment
+            catch (Exception ex)
             {
-                ClientId = client.Id,
-                ServiceId = model.ServiceId,
-                DateStart = time,
-                DateEnd = dateEnd,
-                CreatedAt = DateTime.Now
-            };
-
-            await _appointmentRepo.AddAsync(appointment);
-            await _appointmentRepo.SaveChangesAsync();
-
-            TempData["Message"] = $"✅ Вы успешно записаны! {service.Name} — {time:dd.MM.yyyy HH:mm}";
-            TempData["IsSuccess"] = true;
-
-            return RedirectToAction("Index");
+                // Неожиданная ошибка при сохранении записи — Error
+                CatchException(ex, "BookingController/Save", ErrorLevel.Error);
+                TempData["Message"] = "Не удалось создать запись. Попробуйте ещё раз.";
+                TempData["IsSuccess"] = false;
+                return RedirectToAction("Index");
+            }
         }
 
         // ===== ВСПОМОГАТЕЛЬНЫЕ МЕТОДЫ =====
@@ -232,10 +293,9 @@ namespace LashBooking.Web.MVC.Controllers
             if (date.DayOfWeek == DayOfWeek.Saturday || date.DayOfWeek == DayOfWeek.Sunday)
                 return slots;
 
-            // Проверяем блокировки
             var blockedSlots = (await _blockedSlotRepo.FindAsync(b => b.Date.Date == date.Date)).ToList();
             if (blockedSlots.Any(b => b.BlockedHour == null))
-                return slots; // весь день заблокирован
+                return slots;
 
             var blockedHours = blockedSlots
                 .Where(b => b.BlockedHour != null)
@@ -271,7 +331,6 @@ namespace LashBooking.Web.MVC.Controllers
             var service = services.FirstOrDefault(x => x.Id == serviceId);
             if (service == null) return available;
 
-            // Загружаем все блокировки за период сразу
             var allBlocked = (await _blockedSlotRepo.GetAllAsync())
                 .Where(b => b.Date >= DateTime.Today && b.Date <= DateTime.Today.AddDays(BookingDays))
                 .ToList();
@@ -283,7 +342,6 @@ namespace LashBooking.Web.MVC.Controllers
                 if (date.DayOfWeek == DayOfWeek.Saturday || date.DayOfWeek == DayOfWeek.Sunday)
                     continue;
 
-                // Весь день заблокирован
                 var dayBlocked = allBlocked.Any(b => b.Date.Date == date && b.BlockedHour == null);
                 if (dayBlocked) continue;
 
