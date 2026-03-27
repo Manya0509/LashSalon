@@ -3,7 +3,7 @@ using LashBooking.Infrastructure.Data;
 using LashBooking.Infrastructure.Repositories;
 using Microsoft.EntityFrameworkCore;
 using LashBooking.Web.MVC.Data.SharedServices;
-
+using LashBooking.Web.MVC.Services;
 
 
 try
@@ -25,6 +25,9 @@ try
 
     // Репозитории
     builder.Services.AddScoped(typeof(IRepository<>), typeof(GenericRepository<>));
+    // Сервисы (бизнес-логика)
+    builder.Services.AddScoped<IScheduleService, ScheduleService>();
+    builder.Services.AddScoped<IBookingService, BookingService>();
 
     // Сессии с настройками безопасности
     builder.Services.AddSession(options =>

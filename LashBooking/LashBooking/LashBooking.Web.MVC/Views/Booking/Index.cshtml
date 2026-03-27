@@ -1,5 +1,6 @@
 ﻿@using System.Text.Json
-@using LashBooking.Web.MVC.Controllers
+@using LashBooking.Domain.Models
+
 @{
     Layout = "~/Views/Shared/_Layout.cshtml";
     ViewBag.Title = "Онлайн запись — LashLukина";
@@ -12,7 +13,7 @@
     string selectedDate = ViewBag.SelectedDate ?? DateTime.Today.ToString("yyyy-MM-dd");
     string selectedDateDisplay = ViewBag.SelectedDateDisplay ?? DateTime.Today.ToString("dd.MM.yyyy");
     string selectedTime = ViewBag.SelectedTime ?? "";
-    var slots = ViewBag.Slots as List<BookingController.Slot> ?? new();
+    var slots = ViewBag.Slots as List<SlotInfo> ?? new();
     var availableDates = ViewBag.AvailableDates as List<string> ?? new();
     string? message = ViewBag.Message as string;
     bool isSuccess = ViewBag.IsSuccess ?? false;

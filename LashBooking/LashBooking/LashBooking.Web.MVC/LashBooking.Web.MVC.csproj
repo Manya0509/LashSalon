@@ -8,6 +8,13 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Новая папка1\**" />
+    <Content Remove="Новая папка1\**" />
+    <EmbeddedResource Remove="Новая папка1\**" />
+    <None Remove="Новая папка1\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Compile Remove="IPushNotificationsQueue.cs" />
     <Compile Remove="Logger.cs" />
     <Compile Remove="LoggerProvider.cs" />
