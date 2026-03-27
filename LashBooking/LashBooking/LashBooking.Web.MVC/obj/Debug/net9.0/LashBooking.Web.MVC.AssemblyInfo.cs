@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("LashBooking.Web.MVC")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("0.1.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("0.1.0+afaf7f48e4978de41be262559b5f9dc0e8fa5d83")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("0.1.0+22438657f9cf9d685c6417756ecaac6018e78692")]
 [assembly: System.Reflection.AssemblyProductAttribute("LashBooking.Web.MVC")]
 [assembly: System.Reflection.AssemblyTitleAttribute("LashBooking.Web.MVC")]
 [assembly: System.Reflection.AssemblyVersionAttribute("0.1.0.0")]

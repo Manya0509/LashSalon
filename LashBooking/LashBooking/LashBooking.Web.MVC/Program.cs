@@ -42,7 +42,11 @@ try
     builder.Services.AddHttpContextAccessor();
     builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
-    builder.Services.AddSingleton<ILogger, Logger>();
+    builder.Services.AddSingleton<ILogger>(sp =>
+    new Logger(
+        sp.GetRequiredService<IPushNotificationsQueue>(),
+        sp.GetRequiredService<IHttpContextAccessor>()
+    ));
     builder.Services.AddSingleton<ILoggerProvider, LoggerProvider>();
     builder.Services.AddSingleton<IPushNotificationsQueue, PushNotificationsQueue>();
 
