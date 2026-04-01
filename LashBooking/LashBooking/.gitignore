@@ -6,3 +6,5 @@ obj/
 *.tar
 *.zip
 .env
+
+publish/

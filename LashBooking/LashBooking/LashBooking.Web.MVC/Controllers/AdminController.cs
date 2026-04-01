@@ -579,6 +579,76 @@ namespace LashBooking.Web.MVC.Controllers
         }
 
         // ===== ЭКСПОРТ =====
+        [HttpGet]
+        public async Task<IActionResult> ExportAppointments()
+        {
+            try
+            {
+                var appointments = await _appointments.GetAllAsync();
+                var clients = (await _clients.GetAllAsync()).ToDictionary(c => c.Id);
+                var services = (await _services.GetAllAsync()).ToDictionary(s => s.Id);
+
+                using var workbook = new XLWorkbook();
+                var worksheet = workbook.Worksheets.Add("Записи");
+
+                worksheet.Cell(1, 1).Value = "Дата";
+                worksheet.Cell(1, 2).Value = "Время";
+                worksheet.Cell(1, 3).Value = "Клиент";
+                worksheet.Cell(1, 4).Value = "Телефон";
+                worksheet.Cell(1, 5).Value = "Услуга";
+                worksheet.Cell(1, 6).Value = "Длительность (мин)";
+                worksheet.Cell(1, 7).Value = "Цена";
+                worksheet.Cell(1, 8).Value = "Статус";
+                worksheet.Cell(1, 9).Value = "Заметки";
+
+                var headerRow = worksheet.Row(1);
+                headerRow.Style.Font.Bold = true;
+
+                int row = 2;
+                foreach (var a in appointments.OrderBy(a => a.DateStart))
+                {
+                    clients.TryGetValue(a.ClientId, out var client);
+                    services.TryGetValue(a.ServiceId, out var service);
+
+                    worksheet.Cell(row, 1).Value = a.DateStart.ToString("dd.MM.yyyy");
+                    worksheet.Cell(row, 2).Value = a.DateStart.ToString("HH:mm");
+                    worksheet.Cell(row, 3).Value = client?.Name ?? "—";
+                    worksheet.Cell(row, 4).Value = client?.Phone ?? "—";
+                    worksheet.Cell(row, 5).Value = service?.Name ?? "—";
+                    worksheet.Cell(row, 6).Value = service?.DurationMinutes ?? 0;
+                    worksheet.Cell(row, 7).Value = (double)(service?.Price ?? 0);
+                    worksheet.Cell(row, 8).Value = a.Status switch
+                    {
+                        AppointmentStatus.Scheduled => "Запланирована",
+                        AppointmentStatus.Confirmed => "Подтверждена",
+                        AppointmentStatus.Completed => "Выполнена",
+                        AppointmentStatus.Cancelled => "Отменена",
+                        AppointmentStatus.NoShow => "Не явился",
+                        _ => "—"
+                    };
+                    worksheet.Cell(row, 9).Value = a.Notes ?? "";
+                    row++;
+                }
+
+                worksheet.Columns().AdjustToContents();
+
+                using var stream = new MemoryStream();
+                workbook.SaveAs(stream);
+                stream.Position = 0;
+
+                return File(stream.ToArray(),
+                    "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+                    $"Записи_{DateTime.Today:dd-MM-yyyy}.xlsx");
+            }
+            catch (Exception ex)
+            {
+                CatchException(ex, "AdminController/ExportAppointments", ErrorLevel.Error);
+                TempData["Message"] = "Ошибка при экспорте.";
+                TempData["IsSuccess"] = false;
+                return RedirectToAction("Index", new { tab = "appointments" });
+            }
+        }
+
 
         // ===== ОТЧЁТ PDF (DevExpress) =====
 
