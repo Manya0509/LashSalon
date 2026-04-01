@@ -33,6 +33,7 @@
   <ItemGroup>
     <ProjectReference Include="..\LashBooking.Domain\LashBooking.Domain.csproj" />
     <ProjectReference Include="..\LashBooking.Infrastructure\LashBooking.Infrastructure.csproj" />
+    <ProjectReference Include="..\LashBooking.Reports\LashBooking.Reports.csproj" />
   </ItemGroup>
 
   <ItemGroup>

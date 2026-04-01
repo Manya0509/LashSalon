@@ -1,9 +1,11 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using ClosedXML.Excel;
+using LashBooking.Domain.Constants;
 using LashBooking.Domain.Entities;
 using LashBooking.Domain.Interfaces;
-using LashBooking.Domain.Constants;
+using LashBooking.Reports;
+using LashBooking.Reports.Models;
 using LashBooking.Web.MVC.Filters;
-using ClosedXML.Excel;
+using Microsoft.AspNetCore.Mvc;
 
 namespace LashBooking.Web.MVC.Controllers
 {
@@ -171,7 +173,7 @@ namespace LashBooking.Web.MVC.Controllers
                 filtered = filtered.Where(a => cIds.Contains(a.ClientId) || svIds.Contains(a.ServiceId));
             }
 
-            var list = filtered.OrderByDescending(a => a.DateStart).ToList();
+            var list = filtered.OrderBy(a => a.DateStart).ToList();
             ViewBag.Appointments = list;
             ViewBag.AppointmentsClientsDict = clients.ToDictionary(c => c.Id);
             ViewBag.AppointmentsServicesDict = services.ToDictionary(s => s.Id);
@@ -578,76 +580,89 @@ namespace LashBooking.Web.MVC.Controllers
 
         // ===== ЭКСПОРТ =====
 
+        // ===== ОТЧЁТ PDF (DevExpress) =====
+
         [HttpGet]
-        public async Task<IActionResult> ExportAppointments()
+        public async Task<IActionResult> ReportAppointments(string? from, string? to)
         {
             try
             {
+                // Определяем период — по умолчанию текущий месяц
+                DateTime dateFrom;
+                DateTime dateTo;
+
+                if (!string.IsNullOrEmpty(from) && DateTime.TryParse(from, out var parsedFrom))
+                    dateFrom = parsedFrom;
+                else
+                    dateFrom = new DateTime(DateTime.Today.Year, DateTime.Today.Month, 1);
+
+                if (!string.IsNullOrEmpty(to) && DateTime.TryParse(to, out var parsedTo))
+                    dateTo = parsedTo;
+                else
+                    dateTo = dateFrom.AddMonths(1).AddDays(-1);
+
+                // Загружаем данные
                 var appointments = await _appointments.GetAllAsync();
                 var clients = (await _clients.GetAllAsync()).ToDictionary(c => c.Id);
                 var services = (await _services.GetAllAsync()).ToDictionary(s => s.Id);
 
-                using var workbook = new XLWorkbook();
-                var worksheet = workbook.Worksheets.Add("Записи");
+                // Фильтруем по периоду
+                var filtered = appointments
+                    .Where(a => a.DateStart.Date >= dateFrom && a.DateStart.Date <= dateTo)
+                    .OrderBy(a => a.DateStart)
+                    .ToList();
 
-                worksheet.Cell(1, 1).Value = "Дата";
-                worksheet.Cell(1, 2).Value = "Время";
-                worksheet.Cell(1, 3).Value = "Клиент";
-                worksheet.Cell(1, 4).Value = "Телефон";
-                worksheet.Cell(1, 5).Value = "Услуга";
-                worksheet.Cell(1, 6).Value = "Длительность (мин)";
-                worksheet.Cell(1, 7).Value = "Цена";
-                worksheet.Cell(1, 8).Value = "Статус";
-                worksheet.Cell(1, 9).Value = "Заметки";
+                // Формируем модель для отчёта
+                // Считаем итоговую сумму по завершённым записям
+                var totalSum = filtered
+                    .Where(a => a.Status == AppointmentStatus.Completed)
+                    .Sum(a => services.TryGetValue(a.ServiceId, out var s) ? s.Price : 0);
 
-                var headerRow = worksheet.Row(1);
-                headerRow.Style.Font.Bold = true;
-                headerRow.Style.Fill.BackgroundColor = XLColor.FromHtml("#f0f0f0");
-
-                int row = 2;
-                foreach (var appt in appointments.OrderByDescending(a => a.DateStart))
+                var model = new AppointmentReportModel
                 {
-                    clients.TryGetValue(appt.ClientId, out var client);
-                    services.TryGetValue(appt.ServiceId, out var service);
-
-                    string status = appt.Status switch
+                    Name = $"Отчёт по записям: {dateFrom:dd.MM.yyyy} — {dateTo:dd.MM.yyyy}",
+                    TotalSum = $"{totalSum:N2} ₽",
+                    Rows = filtered.Select(a =>
                     {
-                        AppointmentStatus.Scheduled => "Запланирована",
-                        AppointmentStatus.Confirmed => "Подтверждена",
-                        AppointmentStatus.Completed => "Выполнена",
-                        AppointmentStatus.Cancelled => "Отменена",
-                        AppointmentStatus.NoShow => "Не явился",
-                        _ => "—"
-                    };
+                        clients.TryGetValue(a.ClientId, out var client);
+                        services.TryGetValue(a.ServiceId, out var service);
 
-                    worksheet.Cell(row, 1).Value = appt.DateStart.ToString("dd.MM.yyyy");
-                    worksheet.Cell(row, 2).Value = appt.DateStart.ToString("HH:mm");
-                    worksheet.Cell(row, 3).Value = client?.Name ?? "—";
-                    worksheet.Cell(row, 4).Value = client?.Phone ?? "—";
-                    worksheet.Cell(row, 5).Value = service?.Name ?? "—";
-                    worksheet.Cell(row, 6).Value = service?.DurationMinutes ?? 0;
-                    worksheet.Cell(row, 7).Value = service?.Price ?? 0;
-                    worksheet.Cell(row, 8).Value = status;
-                    worksheet.Cell(row, 9).Value = appt.Notes ?? "—";
-                    row++;
-                }
+                        return new AppointmentReportRow
+                        {
+                            Date = a.DateStart.ToString("dd.MM.yyyy"),
+                            Time = a.DateStart.ToString("HH:mm"),
+                            ClientName = client?.Name ?? "—",
+                            ClientPhone = client?.Phone ?? "—",
+                            ServiceName = service?.Name ?? "—",
+                            Duration = $"{service?.DurationMinutes ?? 0} мин",
+                            Price = $"{service?.Price ?? 0} ₽",
+                            Status = a.Status switch
+                            {
+                                AppointmentStatus.Scheduled => "Запланирована",
+                                AppointmentStatus.Confirmed => "Подтверждена",
+                                AppointmentStatus.Completed => "Выполнена",
+                                AppointmentStatus.Cancelled => "Отменена",
+                                AppointmentStatus.NoShow => "Не явился",
+                                _ => "—"
+                            }
+                        };
+                    }).ToList()
+                };
 
-                worksheet.Columns().AdjustToContents();
+                // Генерируем PDF
+                var engine = new ReportEngine();
+                byte[] file = engine.GenerateAppointmentReport(model, "pdf");
 
-                using var stream = new MemoryStream();
-                workbook.SaveAs(stream);
-                stream.Position = 0;
-
-                string fileName = $"Записи_{DateTime.Today:dd-MM-yyyy}.xlsx";
-                return File(
-                    stream.ToArray(),
-                    "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+                // Отдаём файл браузеру на скачивание
+                string fileName = $"Отчёт_{dateFrom:dd-MM-yyyy}_{dateTo:dd-MM-yyyy}.pdf";
+                return File(file,
+                    "application/pdf",
                     fileName);
             }
             catch (Exception ex)
             {
-                CatchException(ex, "AdminController/ExportAppointments", ErrorLevel.Error);
-                TempData["Message"] = "Ошибка при экспорте. Попробуйте ещё раз.";
+                CatchException(ex, "AdminController/ReportAppointments", ErrorLevel.Error);
+                TempData["Message"] = "Ошибка при создании отчёта.";
                 TempData["IsSuccess"] = false;
                 return RedirectToAction("Index", new { tab = "appointments" });
             }

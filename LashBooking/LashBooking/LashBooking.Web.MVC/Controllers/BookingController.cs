@@ -8,8 +8,7 @@ namespace LashBooking.Web.MVC.Controllers
 {
     public class BookingController : BaseController
     {
-        // Репозитории — только те, что нужны контроллеру напрямую.
-        // Для получения списка услуг и данных клиента.
+
         private readonly IRepository<Service> _serviceRepo;
         private readonly IRepository<Client> _clientRepo;
 
@@ -18,11 +17,7 @@ namespace LashBooking.Web.MVC.Controllers
         private readonly IScheduleService _scheduleService;
         private readonly IBookingService _bookingService;
 
-        // Убрали: IRepository<Appointment>, IRepository<BlockedSlot>
-        // — они больше не нужны контроллеру, ими пользуются сервисы.
-        //
-        // Убрали: StartHour, EndHour, BookingDays
-        // — они теперь в WorkSchedule.
+
 
         public BookingController(
             IRepository<Service> serviceRepo,

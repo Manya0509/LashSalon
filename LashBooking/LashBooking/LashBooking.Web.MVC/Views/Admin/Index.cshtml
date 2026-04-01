@@ -113,7 +113,10 @@
                         <a href="/Admin/FilterAppointments?filter=week" class="filter-btn @(apptFilter == "week" ? "active" : "")">Неделя</a>
                         <a href="/Admin/FilterAppointments?filter=all" class="filter-btn @(apptFilter == "all" ? "active" : "")">Все</a>
                         <a href="/Admin/ExportAppointments" class="filter-btn" title="Экспорт в Excel">
-                            <i class="bi bi-file-earmark-excel"></i> Экспорт
+                            <i class="bi bi-file-earmark-excel"></i> Excel
+                        </a>
+                        <a href="/Admin/ReportAppointments" class="filter-btn" title="Отчёт в PDF">
+                            <i class="bi bi-file-earmark-pdf"></i> PDF отчёт
                         </a>
                     </div>
                 </div>
@@ -1693,6 +1696,16 @@
         .back-btn, .logout-admin-btn {
             width: 100%;
             justify-content: center;
+        }
+
+        .header-actions {
+            flex-wrap: wrap;
+            gap: 6px;
+        }
+
+        .filter-btn {
+            padding: 6px 10px;
+            font-size: 0.8rem;
         }
 
         .stats-grid {
