@@ -97,29 +97,47 @@ namespace LashBooking.Web.MVC.Controllers
 
                 var cleanPhone = CleanPhone(model.RegPhone);
                 var existing = await _clientRepo.FindAsync(c => c.Phone == cleanPhone);
+                var existingClient = existing.FirstOrDefault();
 
-                // Телефон уже зарегистрирован — Warning
-                if (existing.Any())
+                if (existingClient != null)
                 {
-                    TempData["ErrorMessage"] = "Этот телефон уже зарегистрирован";
-                    return RedirectToAction("Login", new { mode = "register" });
+                    // Клиент с таким телефоном уже есть
+                    if (!string.IsNullOrEmpty(existingClient.Password))
+                    {
+                        // У него уже есть пароль — значит он уже зарегистрирован
+                        TempData["ErrorMessage"] = "Этот телефон уже зарегистрирован. Войдите в аккаунт.";
+                        return RedirectToAction("Login");
+                    }
+
+                    // Пароля нет — клиент записывался без аккаунта
+                    // Привязываем пароль и обновляем данные
+                    existingClient.Password = HashPassword(model.RegPassword);
+                    existingClient.Name = model.RegName;
+                    existingClient.Email = string.IsNullOrWhiteSpace(model.RegEmail) ? null : model.RegEmail;
+                    _clientRepo.Update(existingClient);
+                    await _clientRepo.SaveChangesAsync();
+
+                    HttpContext.Session.SetInt32("ClientId", existingClient.Id);
+                    HttpContext.Session.SetString("ClientName", existingClient.Name);
                 }
-
-                var newClient = new Client
+                else
                 {
-                    Name = model.RegName,
-                    Phone = cleanPhone,
-                    Password = HashPassword(model.RegPassword),
-                    Email = string.IsNullOrWhiteSpace(model.RegEmail) ? null : model.RegEmail,
-                    CreatedAt = DateTime.Now
-                };
+                    // Телефон новый — создаём нового клиента
+                    var newClient = new Client
+                    {
+                        Name = model.RegName,
+                        Phone = cleanPhone,
+                        Password = HashPassword(model.RegPassword),
+                        Email = string.IsNullOrWhiteSpace(model.RegEmail) ? null : model.RegEmail,
+                        CreatedAt = DateTime.Now
+                    };
 
-                await _clientRepo.AddAsync(newClient);
-                await _clientRepo.SaveChangesAsync();
+                    await _clientRepo.AddAsync(newClient);
+                    await _clientRepo.SaveChangesAsync();
 
-                HttpContext.Session.SetInt32("ClientId", newClient.Id);
-                HttpContext.Session.SetString("ClientName", newClient.Name);
-
+                    HttpContext.Session.SetInt32("ClientId", newClient.Id);
+                    HttpContext.Session.SetString("ClientName", newClient.Name);
+                }
                 return RedirectToAction("Index", "Profile");
             }
             catch (Exception ex)
