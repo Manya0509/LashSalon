@@ -8,6 +8,8 @@
     var servicesDictionary = ViewBag.ServicesDictionary as Dictionary<int, Service> ?? new();
     string? cancelSuccess = ViewBag.CancelSuccess as string;
     string? cancelError = ViewBag.CancelError as string;
+    string currentFilter = ViewBag.CurrentFilter as string ?? "upcoming";
+    string? editSuccess = TempData["EditSuccess"] as string;
 }
 
 @* Шапка с аватаром — как в Blazor *@
@@ -37,8 +39,18 @@
 <div class="main-content">
     <div class="profile-header">
         <h3>Мои записи</h3>
-        <a href="/" class="btn-back-to-main">← На главную</a>
+        <div class="profile-header-actions">
+            <a href="/Profile/Edit" class="btn-edit-profile">Редактировать профиль</a>
+            <a href="/" class="btn-back-to-main">← На главную</a>
+        </div>
     </div>
+
+    <div class="filter-tabs">
+        <a href="/Profile?filter=upcoming" class="filter-tab @(currentFilter == "upcoming" ? "active" : "")">Предстоящие</a>
+        <a href="/Profile?filter=past" class="filter-tab @(currentFilter == "past" ? "active" : "")">Прошлые</a>
+        <a href="/Profile?filter=all" class="filter-tab @(currentFilter == "all" ? "active" : "")">Все</a>
+    </div>
+
 
     @* Уведомления об отмене — вместо StateHasChanged() в Blazor *@
     @if (!string.IsNullOrEmpty(cancelSuccess))
@@ -49,6 +61,11 @@
     {
         <div class="alert-banner danger">⚠️ @cancelError</div>
     }
+    @if (!string.IsNullOrEmpty(editSuccess))
+    {
+        <div class="alert-banner success">✅ @editSuccess</div>
+    }
+
 
     @if (!appointments.Any())
     {
@@ -290,6 +307,33 @@
             color: white;
             transform: translateX(-3px);
             box-shadow: 0 4px 10px rgba(128,128,128,0.3);
+        }
+
+    .profile-header-actions {
+        display: flex;
+        gap: 10px;
+        align-items: center;
+    }
+
+    .btn-edit-profile {
+        padding: 10px 20px;
+        background: transparent;
+        border: 2px solid #10b981;
+        border-radius: 30px;
+        color: #10b981;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+    }
+
+        .btn-edit-profile:hover {
+            background: #10b981;
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 10px rgba(16,185,129,0.3);
         }
 
     .alert-banner {
@@ -656,6 +700,35 @@
         }
     }
 
+    .filter-tabs {
+        display: flex;
+        gap: 10px;
+        margin-bottom: 25px;
+    }
+
+    .filter-tab {
+        padding: 10px 24px;
+        border-radius: 30px;
+        font-size: 0.95rem;
+        font-weight: 600;
+        text-decoration: none;
+        color: #6b7280;
+        background: #f3f4f6;
+        border: 2px solid transparent;
+        transition: all 0.3s ease;
+    }
+
+        .filter-tab:hover {
+            color: #1f2937;
+            background: #e5e7eb;
+        }
+
+        .filter-tab.active {
+            color: white;
+            background: #808080;
+            border-color: #808080;
+        }
+
     @@media (max-width: 768px) {
         .avatar-wrapper-fullscreen {
             height: 300px;
@@ -672,6 +745,17 @@
         .profile-header {
             flex-direction: column;
             gap: 15px;
+            text-align: center;
+        }
+
+        .profile-header-actions {
+            flex-direction: column;
+            width: 100%;
+        }
+
+        .btn-edit-profile, .btn-back-to-main {
+            width: 100%;
+            justify-content: center;
             text-align: center;
         }
 
@@ -722,6 +806,11 @@
     @@media (max-width: 480px) {
         .avatar-wrapper-fullscreen {
             height: 250px;
+        }
+
+        .filter-tabs {
+            flex-wrap: wrap;
+            justify-content: center;
         }
 
         .profile-header h3 {

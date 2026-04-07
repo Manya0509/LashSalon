@@ -11,17 +11,21 @@ namespace LashBooking.Web.MVC.Controllers
     {
         private readonly IRepository<Appointment> _appointmentRepo;
         private readonly IRepository<Service> _serviceRepo;
+        private readonly IRepository<Client> _clientRepo;
 
         public ProfileController(
             IRepository<Appointment> appointmentRepo,
             IRepository<Service> serviceRepo,
+            IRepository<Client> clientRepo,
             ILogger logger) : base(logger)
         {
             _appointmentRepo = appointmentRepo;
             _serviceRepo = serviceRepo;
+            _clientRepo = clientRepo;
         }
 
-        public async Task<IActionResult> Index()
+
+        public async Task<IActionResult> Index(string filter = "upcoming")
         {
             try
             {
@@ -36,7 +40,22 @@ namespace LashBooking.Web.MVC.Controllers
                     .ToDictionary(s => s.Id, s => s);
 
                 var appointments = await _appointmentRepo.FindAsync(a => a.ClientId == clientId);
-                var appointmentList = appointments
+                var now = DateTime.Now;
+
+                var filtered = filter switch
+                {
+                    "upcoming" => appointments.Where(a =>
+                        a.DateStart >= now &&
+                        (a.Status == AppointmentStatus.Scheduled || a.Status == AppointmentStatus.Confirmed)),
+                    "past" => appointments.Where(a =>
+                        a.DateStart < now ||
+                        a.Status == AppointmentStatus.Completed ||
+                        a.Status == AppointmentStatus.Cancelled ||
+                        a.Status == AppointmentStatus.NoShow),
+                    _ => appointments
+                };
+
+                var appointmentList = filtered
                     .OrderByDescending(a => a.DateStart)
                     .ToList();
 
@@ -45,6 +64,7 @@ namespace LashBooking.Web.MVC.Controllers
                 ViewBag.ServicesDictionary = servicesDictionary;
                 ViewBag.CancelSuccess = TempData["CancelSuccess"];
                 ViewBag.CancelError = TempData["CancelError"];
+                ViewBag.CurrentFilter = filter;
 
                 return View();
             }
@@ -101,6 +121,104 @@ namespace LashBooking.Web.MVC.Controllers
                 CatchException(ex, "ProfileController/Cancel", ErrorLevel.Error);
                 TempData["CancelError"] = "Ошибка при отмене записи. Попробуйте ещё раз.";
                 return RedirectToAction("Index");
+            }
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> Edit()
+        {
+            try
+            {
+                InitRequestInfo();
+
+                var clientId = HttpContext.Session.GetInt32("ClientId")!.Value;
+                var client = await _clientRepo.GetByIdAsync(clientId);
+
+                if (client == null)
+                {
+                    return RedirectToAction("Index");
+                }
+
+                ViewBag.ClientName = client.Name;
+                ViewBag.ClientPhone = client.Phone;
+                ViewBag.ClientEmail = client.Email ?? "";
+
+                return View();
+            }
+            catch (Exception ex)
+            {
+                CatchException(ex, "ProfileController/Edit GET", ErrorLevel.Error);
+                return RedirectToAction("Index");
+            }
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Edit(string name, string? email, string? currentPassword, string? newPassword)
+        {
+            try
+            {
+                InitRequestInfo();
+
+                var clientId = HttpContext.Session.GetInt32("ClientId")!.Value;
+                var client = await _clientRepo.GetByIdAsync(clientId);
+
+                if (client == null)
+                {
+                    return RedirectToAction("Index");
+                }
+
+                // Валидация имени
+                if (string.IsNullOrWhiteSpace(name))
+                {
+                    ViewBag.EditError = "Имя не может быть пустым";
+                    ViewBag.ClientName = name;
+                    ViewBag.ClientPhone = client.Phone;
+                    ViewBag.ClientEmail = email ?? "";
+                    return View();
+                }
+
+                // Смена пароля (только если заполнили оба поля)
+                if (!string.IsNullOrWhiteSpace(newPassword))
+                {
+                    if (string.IsNullOrWhiteSpace(currentPassword))
+                    {
+                        ViewBag.EditError = "Введите текущий пароль";
+                        ViewBag.ClientName = name;
+                        ViewBag.ClientPhone = client.Phone;
+                        ViewBag.ClientEmail = email ?? "";
+                        return View();
+                    }
+
+                    if (client.Password != currentPassword)
+                    {
+                        ViewBag.EditError = "Неверный текущий пароль";
+                        ViewBag.ClientName = name;
+                        ViewBag.ClientPhone = client.Phone;
+                        ViewBag.ClientEmail = email ?? "";
+                        return View();
+                    }
+
+                    client.Password = newPassword;
+                }
+
+                // Обновляем данные
+                client.Name = name.Trim();
+                client.Email = string.IsNullOrWhiteSpace(email) ? null : email.Trim();
+
+                _clientRepo.Update(client);
+                await _clientRepo.SaveChangesAsync();
+
+                // Обновляем имя в сессии, чтобы сразу отобразилось
+                HttpContext.Session.SetString("ClientName", client.Name);
+
+                TempData["EditSuccess"] = "Профиль обновлён";
+                return RedirectToAction("Index");
+            }
+            catch (Exception ex)
+            {
+                CatchException(ex, "ProfileController/Edit POST", ErrorLevel.Error);
+                TempData["EditError"] = "Ошибка при сохранении. Попробуйте ещё раз.";
+                return RedirectToAction("Edit");
             }
         }
     }

@@ -5,7 +5,6 @@ using System.IO;
 
 namespace LashBooking.Reports
 {
-    // Движок отчётов. Аналог XtraReportEngine из примера репетитора.
     // Принимает модель с данными, возвращает массив байтов (файл).
     // Контроллер потом отдаёт эти байты браузеру как скачиваемый файл.
     public class ReportEngine

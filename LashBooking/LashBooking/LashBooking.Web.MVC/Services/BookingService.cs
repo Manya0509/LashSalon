@@ -6,11 +6,6 @@ using LashBooking.Domain.Models;
 namespace LashBooking.Web.MVC.Services
 {
     // Реализация IBookingService.
-    // Содержит ВСЮ логику создания записи:
-    // проверки, поиск/создание клиента, сохранение в базу.
-    //
-    // Раньше это всё было внутри BookingController.Save() — 80 строк.
-    // Теперь контроллер вызывает один метод и читает результат.
     public class BookingService : IBookingService
     {
         private readonly IRepository<Service> _serviceRepo;
@@ -31,17 +26,6 @@ namespace LashBooking.Web.MVC.Services
         }
 
         // Создать новую запись со всеми проверками.
-        // Возвращает ServiceResult — успех или ошибка с сообщением.
-        //
-        // Порядок проверок:
-        // 1. Время корректное и в будущем?
-        // 2. Услуга существует?
-        // 3. Услуга влезает до конца рабочего дня?
-        // 4. День не заблокирован?
-        // 5. Час не заблокирован?
-        // 6. Нет другой записи на этот день у этого клиента?
-        // 7. Находим или создаём клиента
-        // 8. Создаём запись
         public async Task<ServiceResult> CreateBookingAsync(
             int serviceId,
             string selectedTime,

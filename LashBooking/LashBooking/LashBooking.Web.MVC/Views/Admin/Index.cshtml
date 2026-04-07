@@ -198,7 +198,7 @@
                                         <td>@clientPhone</td>
                                         <td>@serviceName</td>
                                         <td>@duration мин</td>
-                                        <td class="price-cell">@price.ToString("C")</td>
+                                        <td class="price-cell">@price.ToString("N2") ₽</td>
                                         <td>
                                             <select class="status-select @sc"
                                                     onchange="updateStatus(@appt.Id, this.value, this)">
@@ -552,7 +552,7 @@
                                         data-duration="@svc.DurationMinutes">
                                         <td><strong>@svc.Name</strong></td>
                                         <td>@(svc.Description ?? "—")</td>
-                                        <td class="price-cell">@svc.Price.ToString("C")</td>
+                                        <td class="price-cell">@svc.Price.ToString("N2") ₽</td>
                                         <td>@svc.DurationMinutes мин</td>
                                         <td><span style="color:@activeColor">@activeText</span></td>
                                         <td class="actions-cell">

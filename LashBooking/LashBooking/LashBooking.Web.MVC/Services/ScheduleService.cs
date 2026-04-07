@@ -6,13 +6,10 @@ using LashBooking.Domain.Models;
 namespace LashBooking.Web.MVC.Services
 {
     // Реализация IScheduleService.
-    // Содержит ВСЮ логику работы с расписанием:
-    // слоты, доступные даты, состояния дней.
-    // Раньше эта логика была раскидана по BookingController и CalendarController.
+    // Содержит всю логику работы с расписанием:
     public class ScheduleService : IScheduleService
     {
         // Репозитории для доступа к базе данных.
-        // Сервис не ходит в базу напрямую — он просит репозитории.
         private readonly IRepository<Service> _serviceRepo;
         private readonly IRepository<Appointment> _appointmentRepo;
         private readonly IRepository<BlockedSlot> _blockedSlotRepo;
@@ -31,17 +28,6 @@ namespace LashBooking.Web.MVC.Services
 
         // =====================================================
         // Получить слоты на конкретную дату для конкретной услуги.
-        // Возвращает список: [{Time: 9:00, IsBusy: false}, {Time: 10:00, IsBusy: true}, ...]
-        //
-        // Логика:
-        // 1. Находим услугу (чтобы знать длительность)
-        // 2. Проверяем: не выходной ли день?
-        // 3. Проверяем: не заблокирован ли весь день?
-        // 4. Для каждого часа (9, 10, 11, ... 17):
-        //    — хватит ли времени до конца рабочего дня?
-        //    — не заблокирован ли этот час?
-        //    — нет ли пересечения с другими записями?
-        // =====================================================
         public async Task<List<SlotInfo>> GetSlotsAsync(DateTime date, int serviceId)
         {
             var slots = new List<SlotInfo>();
@@ -86,8 +72,6 @@ namespace LashBooking.Web.MVC.Services
                 if (slotEnd > workDayEnd) continue;
 
                 // Проверяем: час заблокирован ИЛИ пересекается с другой записью?
-                // Пересечение: слот 10:00-11:30 пересекается с записью 10:30-11:30
-                // Формула: slotTime < a.DateEnd && slotEnd > a.DateStart
                 bool conflict = blockedHours.Contains(h) ||
                     appointments.Any(a => slotTime < a.DateEnd && slotEnd > a.DateStart);
 
@@ -97,13 +81,7 @@ namespace LashBooking.Web.MVC.Services
             return slots;
         }
 
-        // =====================================================
         // Получить даты, на которые можно записаться (ближайшие 30 дней).
-        // Дата считается доступной, если на ней есть хотя бы один свободный слот.
-        //
-        // Используется для подсветки дней в календаре на странице бронирования:
-        // зелёный = есть свободное время, серый = всё занято.
-        // =====================================================
         public async Task<List<DateTime>> GetAvailableDatesAsync(int serviceId)
         {
             var available = new List<DateTime>();
@@ -114,7 +92,6 @@ namespace LashBooking.Web.MVC.Services
             if (service == null) return available;
 
             // Загружаем все блокировки на ближайшие 30 дней одним запросом
-            // (а не по одному запросу на каждый день — так быстрее)
             var allBlocked = (await _blockedSlotRepo.GetAllAsync())
                 .Where(b => b.Date >= DateTime.Today
                     && b.Date <= DateTime.Today.AddDays(WorkSchedule.BookingDays))
@@ -150,9 +127,9 @@ namespace LashBooking.Web.MVC.Services
                     var slotTime = date.Date.AddHours(h);
                     var slotEnd = slotTime.AddMinutes(service.DurationMinutes);
 
-                    if (slotTime < DateTime.Now) continue;   // Прошедшее время — пропускаем
-                    if (slotEnd > workDayEnd) continue;       // Не влезает — пропускаем
-                    if (blockedHours.Contains(h)) continue;   // Заблокирован — пропускаем
+                    if (slotTime < DateTime.Now) continue;  
+                    if (slotEnd > workDayEnd) continue;    
+                    if (blockedHours.Contains(h)) continue; 
 
                     bool conflict = appointments.Any(a =>
                         slotTime < a.DateEnd && slotEnd > a.DateStart);
@@ -168,14 +145,7 @@ namespace LashBooking.Web.MVC.Services
             return available;
         }
 
-        // =====================================================
         // Получить свободные часы на конкретную дату.
-        // Возвращает строки: ["09:00", "11:00", "14:00"]
-        //
-        // Используется в CalendarController — при клике на день
-        // показывает свободные часы.
-        // Не привязан к услуге — просто свободен ли час.
-        // =====================================================
         public async Task<List<string>> GetFreeSlotsForDateAsync(DateTime date)
         {
             var freeSlots = new List<string>();
@@ -212,17 +182,7 @@ namespace LashBooking.Web.MVC.Services
             return freeSlots;
         }
 
-        // =====================================================
         // Определить состояние дня для календаря.
-        // Возвращает строку:
-        //   "past"    — день уже прошёл (серый)
-        //   "weekend" — выходной (серый)
-        //   "full"    — всё занято или заблокировано (красный)
-        //   "partial" — часть слотов занята (жёлтый)
-        //   "free"    — всё свободно (зелёный)
-        //
-        // Используется в CalendarController для раскраски календаря.
-        // =====================================================
         public async Task<string> GetDayStateAsync(DateTime date)
         {
             if (date.Date < DateTime.Today) return "past";
