@@ -86,209 +86,195 @@ namespace LashBooking.Reports
 
             this.objectDataSource1 = new ObjectDataSource(this.components);
 
+            // Новые элементы
+            var lblPeriod = new XRLabel();
+            var headerPhone = new XRTableCell();
+            var headerDuration = new XRTableCell();
+            var cellPhone = new XRTableCell();
+            var cellDuration = new XRTableCell();
+
             ((ISupportInitialize)(this.headerTable)).BeginInit();
             ((ISupportInitialize)(this.dataTable)).BeginInit();
             ((ISupportInitialize)(this.objectDataSource1)).BeginInit();
             ((ISupportInitialize)(this)).BeginInit();
 
-            // --- Верхний отступ ---
-            this.topMarginBand1.HeightF = 30F;
+            // --- Отступы ---
+            this.topMarginBand1.HeightF = 20F;
             this.topMarginBand1.Name = "topMarginBand1";
-
-            // --- Нижний отступ ---
-            this.bottomMarginBand1.HeightF = 30F;
+            this.bottomMarginBand1.HeightF = 20F;
             this.bottomMarginBand1.Name = "bottomMarginBand1";
 
             // --- Пустая основная полоса ---
             this.detailBand1.HeightF = 0F;
             this.detailBand1.Name = "detailBand1";
 
-            // ===== ЗАГОЛОВОК ОТЧЁТА =====
-            // Привязан к полю [Name] из AppointmentReportModel
-            this.lblTitle.ExpressionBindings.AddRange(new ExpressionBinding[] {
-                new ExpressionBinding("BeforePrint", "Text", "[Name]")
-            });
-            this.lblTitle.LocationFloat = new DevExpress.Utils.PointFloat(0F, 0F);
-            this.lblTitle.SizeF = new System.Drawing.SizeF(650F, 35F);
-            this.lblTitle.Name = "lblTitle";
-            this.lblTitle.Font = new DevExpress.Drawing.DXFont("Arial", 14F,
-                DevExpress.Drawing.DXFontStyle.Bold);
-            this.lblTitle.TextAlignment =
-                DevExpress.XtraPrinting.TextAlignment.MiddleCenter;
+            // ===== ШАПКА ОТЧЁТА (тёмный фон) =====
+            var darkBg = System.Drawing.Color.FromArgb(45, 45, 45);
+            var white = System.Drawing.Color.White;
 
-            this.reportHeader.Controls.AddRange(new XRControl[] { this.lblTitle });
-            this.reportHeader.HeightF = 45F;
+            // Название студии
+            this.lblTitle.ExpressionBindings.AddRange(new ExpressionBinding[] {
+        new ExpressionBinding("BeforePrint", "Text", "[Name]")
+    });
+            this.lblTitle.LocationFloat = new DevExpress.Utils.PointFloat(0F, 10F);
+            this.lblTitle.SizeF = new System.Drawing.SizeF(1040F, 35F);
+            this.lblTitle.Name = "lblTitle";
+            this.lblTitle.Font = new DevExpress.Drawing.DXFont("Arial", 18F,
+                DevExpress.Drawing.DXFontStyle.Bold);
+            this.lblTitle.TextAlignment = DevExpress.XtraPrinting.TextAlignment.MiddleCenter;
+            this.lblTitle.ForeColor = white;
+            this.lblTitle.BackColor = darkBg;
+            this.lblTitle.Padding = new DevExpress.XtraPrinting.PaddingInfo(10, 10, 5, 0, 100F);
+
+            // Период
+            lblPeriod.ExpressionBindings.AddRange(new ExpressionBinding[] {
+        new ExpressionBinding("BeforePrint", "Text", "[Period]")
+    });
+            lblPeriod.LocationFloat = new DevExpress.Utils.PointFloat(0F, 45F);
+            lblPeriod.SizeF = new System.Drawing.SizeF(1040F, 25F);
+            lblPeriod.Name = "lblPeriod";
+            lblPeriod.Font = new DevExpress.Drawing.DXFont("Arial", 11F);
+            lblPeriod.TextAlignment = DevExpress.XtraPrinting.TextAlignment.MiddleCenter;
+            lblPeriod.ForeColor = System.Drawing.Color.FromArgb(200, 200, 200);
+            lblPeriod.BackColor = darkBg;
+            lblPeriod.Padding = new DevExpress.XtraPrinting.PaddingInfo(10, 10, 0, 5, 100F);
+
+            this.reportHeader.Controls.AddRange(new XRControl[] {
+        this.lblTitle, lblPeriod, this.headerTable
+    });
+            this.reportHeader.HeightF = 100F;
             this.reportHeader.Name = "reportHeader";
 
-            // ===== ШАПКА ТАБЛИЦЫ (заголовки колонок) =====
-            // Жирный шрифт + серый фон
+            // ===== ШАПКА ТАБЛИЦЫ =====
             var headerFont = new DevExpress.Drawing.DXFont("Arial", 9F,
                 DevExpress.Drawing.DXFontStyle.Bold);
-            var headerBg = System.Drawing.Color.FromArgb(230, 230, 230);
+            var headerBg = System.Drawing.Color.FromArgb(68, 68, 68);
+            var headerFg = System.Drawing.Color.White;
+            var borderColor = System.Drawing.Color.FromArgb(200, 200, 200);
 
+            XRTableCell[] headerCells = new XRTableCell[] {
+        this.headerDate, this.headerTime, headerPhone,
+        this.headerClient, this.headerService, headerDuration,
+        this.headerPrice, this.headerStatus
+    };
+            string[] headerTexts = new string[] {
+        "Дата", "Время", "Телефон", "Клиент", "Услуга", "Длит.", "Цена", "Статус"
+    };
+            double[] weights = new double[] {
+    0.9, 0.6, 1.1, 1.2, 1.5, 0.6, 0.7, 0.9
+};
 
-            this.headerDate.Text = "Дата";
-            this.headerDate.Name = "headerDate";
-            this.headerDate.Font = headerFont;
-            this.headerDate.BackColor = headerBg;
-            this.headerDate.Weight = 1D;
-            this.headerDate.Padding = new DevExpress.XtraPrinting.PaddingInfo(3, 3, 0, 0, 100F);
-            this.headerDate.Borders = DevExpress.XtraPrinting.BorderSide.All;
+            string[] headerNames = new string[] {
+        "headerDate", "headerTime", "headerPhone", "headerClient",
+        "headerService", "headerDuration", "headerPrice", "headerStatus"
+    };
 
-            this.headerTime.Text = "Время";
-            this.headerTime.Name = "headerTime";
-            this.headerTime.Font = headerFont;
-            this.headerTime.BackColor = headerBg;
-            this.headerTime.Weight = 0.7D;
-            this.headerTime.Padding = new DevExpress.XtraPrinting.PaddingInfo(3, 3, 0, 0, 100F);
-            this.headerTime.Borders = DevExpress.XtraPrinting.BorderSide.All;
+            for (int i = 0; i < headerCells.Length; i++)
+            {
+                headerCells[i].Text = headerTexts[i];
+                headerCells[i].Name = headerNames[i];
+                headerCells[i].Font = headerFont;
+                headerCells[i].BackColor = headerBg;
+                headerCells[i].ForeColor = headerFg;
+                headerCells[i].Weight = weights[i];
+                headerCells[i].Padding = new DevExpress.XtraPrinting.PaddingInfo(5, 5, 3, 3, 100F);
+                headerCells[i].Borders = DevExpress.XtraPrinting.BorderSide.All;
+                headerCells[i].BorderColor = borderColor;
+                headerCells[i].TextAlignment = DevExpress.XtraPrinting.TextAlignment.MiddleCenter;
+            }
 
-            this.headerClient.Text = "Клиент";
-            this.headerClient.Name = "headerClient";
-            this.headerClient.Font = headerFont;
-            this.headerClient.BackColor = headerBg;
-            this.headerClient.Weight = 1.5D;
-            this.headerClient.Padding = new DevExpress.XtraPrinting.PaddingInfo(3, 3, 0, 0, 100F);
-            this.headerClient.Borders = DevExpress.XtraPrinting.BorderSide.All;
-
-            this.headerService.Text = "Услуга";
-            this.headerService.Name = "headerService";
-            this.headerService.Font = headerFont;
-            this.headerService.BackColor = headerBg;
-            this.headerService.Weight = 1.5D;
-            this.headerService.Padding = new DevExpress.XtraPrinting.PaddingInfo(3, 3, 0, 0, 100F);
-            this.headerService.Borders = DevExpress.XtraPrinting.BorderSide.All;
-
-            this.headerPrice.Text = "Цена";
-            this.headerPrice.Name = "headerPrice";
-            this.headerPrice.Font = headerFont;
-            this.headerPrice.BackColor = headerBg;
-            this.headerPrice.Weight = 0.8D;
-            this.headerPrice.Padding = new DevExpress.XtraPrinting.PaddingInfo(3, 3, 0, 0, 100F);
-            this.headerPrice.Borders = DevExpress.XtraPrinting.BorderSide.All;
-
-            this.headerStatus.Text = "Статус";
-            this.headerStatus.Name = "headerStatus";
-            this.headerStatus.Font = headerFont;
-            this.headerStatus.BackColor = headerBg;
-            this.headerStatus.Weight = 1D;
-            this.headerStatus.Padding = new DevExpress.XtraPrinting.PaddingInfo(3, 3, 0, 0, 100F);
-            this.headerStatus.Borders = DevExpress.XtraPrinting.BorderSide.All;
-
-            this.headerRow.Cells.AddRange(new XRTableCell[] {
-                this.headerDate, this.headerTime, this.headerClient,
-                this.headerService, this.headerPrice, this.headerStatus
-            });
+            this.headerRow.Cells.AddRange(headerCells);
             this.headerRow.Name = "headerRow";
             this.headerRow.Weight = 1D;
 
-            this.headerTable.LocationFloat = new DevExpress.Utils.PointFloat(0F, 0F);
+            this.headerTable.LocationFloat = new DevExpress.Utils.PointFloat(0F, 75F);
             this.headerTable.Rows.AddRange(new XRTableRow[] { this.headerRow });
-            this.headerTable.SizeF = new System.Drawing.SizeF(650F, 25F);
+            this.headerTable.SizeF = new System.Drawing.SizeF(1040F, 25F);
             this.headerTable.Name = "headerTable";
 
             // ===== СТРОКИ ДАННЫХ =====
-            // Привязки к полям из AppointmentReportRow
-            var dataFont = new DevExpress.Drawing.DXFont("Arial", 9F);
+            var dataFont = new DevExpress.Drawing.DXFont("Arial", 8.5F);
+            var stripeBg = System.Drawing.Color.FromArgb(245, 245, 245);
 
-            this.cellDate.ExpressionBindings.AddRange(new ExpressionBinding[] {
-                new ExpressionBinding("BeforePrint", "Text", "[Date]")
-            });
-            this.cellDate.Name = "cellDate";
-            this.cellDate.Font = dataFont;
-            this.cellDate.Weight = 1D;
-            this.cellDate.Padding = new DevExpress.XtraPrinting.PaddingInfo(3, 3, 0, 0, 100F);
-            this.cellDate.Borders = DevExpress.XtraPrinting.BorderSide.All;
+            XRTableCell[] dataCells = new XRTableCell[] {
+        this.cellDate, this.cellTime, cellPhone,
+        this.cellClient, this.cellService, cellDuration,
+        this.cellPrice, this.cellStatus
+    };
+            string[] dataFields = new string[] {
+        "[Date]", "[Time]", "[ClientPhone]",
+        "[ClientName]", "[ServiceName]", "[Duration]",
+        "[Price]", "[Status]"
+    };
+            string[] dataNames = new string[] {
+        "cellDate", "cellTime", "cellPhone", "cellClient",
+        "cellService", "cellDuration", "cellPrice", "cellStatus"
+    };
 
-            this.cellTime.ExpressionBindings.AddRange(new ExpressionBinding[] {
-                new ExpressionBinding("BeforePrint", "Text", "[Time]")
-            });
-            this.cellTime.Name = "cellTime";
-            this.cellTime.Font = dataFont;
-            this.cellTime.Weight = 0.7D;
-            this.cellTime.Padding = new DevExpress.XtraPrinting.PaddingInfo(3, 3, 0, 0, 100F);
-            this.cellTime.Borders = DevExpress.XtraPrinting.BorderSide.All;
+            for (int i = 0; i < dataCells.Length; i++)
+            {
+                dataCells[i].ExpressionBindings.AddRange(new ExpressionBinding[] {
+            new ExpressionBinding("BeforePrint", "Text", dataFields[i])
+        });
+                dataCells[i].Name = dataNames[i];
+                dataCells[i].Font = dataFont;
+                dataCells[i].Weight = weights[i];
+                dataCells[i].Padding = new DevExpress.XtraPrinting.PaddingInfo(5, 5, 3, 3, 100F);
+                dataCells[i].Borders = DevExpress.XtraPrinting.BorderSide.All;
+                dataCells[i].BorderColor = borderColor;
+            }
 
-            this.cellClient.ExpressionBindings.AddRange(new ExpressionBinding[] {
-                new ExpressionBinding("BeforePrint", "Text", "[ClientName]")
-            });
-            this.cellClient.Name = "cellClient";
-            this.cellClient.Font = dataFont;
-            this.cellClient.Weight = 1.5D;
-            this.cellClient.Padding = new DevExpress.XtraPrinting.PaddingInfo(3, 3, 0, 0, 100F);
-            this.cellClient.Borders = DevExpress.XtraPrinting.BorderSide.All;
-
-            this.cellService.ExpressionBindings.AddRange(new ExpressionBinding[] {
-                new ExpressionBinding("BeforePrint", "Text", "[ServiceName]")
-            });
-            this.cellService.Name = "cellService";
-            this.cellService.Font = dataFont;
-            this.cellService.Weight = 1.5D;
-            this.cellService.Padding = new DevExpress.XtraPrinting.PaddingInfo(3, 3, 0, 0, 100F);
-            this.cellService.Borders = DevExpress.XtraPrinting.BorderSide.All;
-
-            this.cellPrice.ExpressionBindings.AddRange(new ExpressionBinding[] {
-                new ExpressionBinding("BeforePrint", "Text", "[Price]")
-            });
-            this.cellPrice.Name = "cellPrice";
-            this.cellPrice.Font = dataFont;
-            this.cellPrice.Weight = 0.8D;
-            this.cellPrice.Padding = new DevExpress.XtraPrinting.PaddingInfo(3, 3, 0, 0, 100F);
-            this.cellPrice.Borders = DevExpress.XtraPrinting.BorderSide.All;
-
-            this.cellStatus.ExpressionBindings.AddRange(new ExpressionBinding[] {
-                new ExpressionBinding("BeforePrint", "Text", "[Status]")
-            });
-            this.cellStatus.Name = "cellStatus";
-            this.cellStatus.Font = dataFont;
-            this.cellStatus.Weight = 1D;
-            this.cellStatus.Padding = new DevExpress.XtraPrinting.PaddingInfo(3, 3, 0, 0, 100F);
-            this.cellStatus.Borders = DevExpress.XtraPrinting.BorderSide.All;
-
-            this.dataRow.Cells.AddRange(new XRTableCell[] {
-                this.cellDate, this.cellTime, this.cellClient,
-                this.cellService, this.cellPrice, this.cellStatus
-            });
+            this.dataRow.Cells.AddRange(dataCells);
             this.dataRow.Name = "dataRow";
             this.dataRow.Weight = 1D;
 
             this.dataTable.LocationFloat = new DevExpress.Utils.PointFloat(0F, 0F);
             this.dataTable.Rows.AddRange(new XRTableRow[] { this.dataRow });
-            this.dataTable.SizeF = new System.Drawing.SizeF(650F, 25F);
+            this.dataTable.SizeF = new System.Drawing.SizeF(1040F, 25F);
             this.dataTable.Name = "dataTable";
 
-            // ===== СБОРКА ОТЧЁТА =====
-
-            // Полоса шапки таблицы — вставляем в ReportHeader под заголовком
-            this.reportHeader.Controls.Add(this.headerTable);
-            this.headerTable.LocationFloat = new DevExpress.Utils.PointFloat(0F, 40F);
-            this.reportHeader.HeightF = 70F;
-
-            // Полоса данных — строки таблицы
+            // Чередование строк
+            var styleEven = new DevExpress.XtraReports.UI.XRControlStyle();
+            styleEven.Name = "EvenRow";
+            styleEven.BackColor = stripeBg;
+            this.StyleSheet.Add(styleEven);
+            this.detailBand2 = new DetailBand();
             this.detailBand2.Controls.AddRange(new XRControl[] { this.dataTable });
             this.detailBand2.HeightF = 25F;
             this.detailBand2.Name = "detailBand2";
+            this.detailBand2.EvenStyleName = "EvenRow";
 
-            // DetailReport привязан к коллекции Rows из AppointmentReportModel
+            // DetailReport — привязан к коллекции Rows
             this.detailReport.Bands.AddRange(new Band[] { this.detailBand2 });
             this.detailReport.DataMember = "Rows";
             this.detailReport.DataSource = this.objectDataSource1;
             this.detailReport.Level = 0;
             this.detailReport.Name = "detailReport";
 
-            // Источник данных — тип AppointmentReportModel
+            // Источник данных
             this.objectDataSource1.DataSource =
                 typeof(LashBooking.Reports.Models.AppointmentReportModel);
             this.objectDataSource1.Name = "objectDataSource1";
 
-            // ===== ИТОГО =====
+            // ===== ПОДВАЛ =====
             this.reportFooter = new ReportFooterBand();
             this.lblTotalText = new XRLabel();
             this.lblTotalSum = new XRLabel();
+            var lblCount = new XRLabel();
+            var lblGenerated = new XRLabel();
+            var footerLine = new XRLabel();
 
-            this.lblTotalText.Text = "ИТОГО:";
-            this.lblTotalText.LocationFloat = new DevExpress.Utils.PointFloat(0F, 5F);
-            this.lblTotalText.SizeF = new System.Drawing.SizeF(400F, 25F);
+            // Разделительная линия
+            footerLine.LocationFloat = new DevExpress.Utils.PointFloat(0F, 0F);
+            footerLine.SizeF = new System.Drawing.SizeF(1040F, 2F);
+            footerLine.Name = "footerLine";
+            footerLine.BackColor = System.Drawing.Color.FromArgb(68, 68, 68);
+            footerLine.Text = "";
+
+            // ИТОГО
+            this.lblTotalText.Text = "ИТОГО (завершённые):";
+            this.lblTotalText.LocationFloat = new DevExpress.Utils.PointFloat(0F, 10F);
+            this.lblTotalText.SizeF = new System.Drawing.SizeF(500F, 25F);
             this.lblTotalText.Name = "lblTotalText";
             this.lblTotalText.Font = new DevExpress.Drawing.DXFont("Arial", 11F,
                 DevExpress.Drawing.DXFontStyle.Bold);
@@ -297,33 +283,59 @@ namespace LashBooking.Reports
             this.lblTotalText.Padding = new DevExpress.XtraPrinting.PaddingInfo(0, 10, 0, 0, 100F);
 
             this.lblTotalSum.ExpressionBindings.AddRange(new ExpressionBinding[] {
-                new ExpressionBinding("BeforePrint", "Text", "[TotalSum]")
-            });
-            this.lblTotalSum.LocationFloat = new DevExpress.Utils.PointFloat(400F, 5F);
-            this.lblTotalSum.SizeF = new System.Drawing.SizeF(250F, 25F);
+        new ExpressionBinding("BeforePrint", "Text", "[TotalSum]")
+    });
+            this.lblTotalSum.LocationFloat = new DevExpress.Utils.PointFloat(500F, 10F);
+            this.lblTotalSum.SizeF = new System.Drawing.SizeF(540F, 25F);
             this.lblTotalSum.Name = "lblTotalSum";
             this.lblTotalSum.Font = new DevExpress.Drawing.DXFont("Arial", 11F,
                 DevExpress.Drawing.DXFontStyle.Bold);
             this.lblTotalSum.TextAlignment =
                 DevExpress.XtraPrinting.TextAlignment.MiddleLeft;
 
+            // Количество записей
+            lblCount.ExpressionBindings.AddRange(new ExpressionBinding[] {
+        new ExpressionBinding("BeforePrint", "Text", "[TotalCount]")
+    });
+            lblCount.LocationFloat = new DevExpress.Utils.PointFloat(0F, 40F);
+            lblCount.SizeF = new System.Drawing.SizeF(520F, 20F);
+            lblCount.Name = "lblCount";
+            lblCount.Font = new DevExpress.Drawing.DXFont("Arial", 9F);
+            lblCount.ForeColor = System.Drawing.Color.FromArgb(100, 100, 100);
+            lblCount.TextAlignment = DevExpress.XtraPrinting.TextAlignment.MiddleLeft;
+            lblCount.Padding = new DevExpress.XtraPrinting.PaddingInfo(5, 0, 0, 0, 100F);
+
+            // Дата генерации
+            lblGenerated.ExpressionBindings.AddRange(new ExpressionBinding[] {
+        new ExpressionBinding("BeforePrint", "Text", "[GeneratedDate]")
+    });
+            lblGenerated.LocationFloat = new DevExpress.Utils.PointFloat(540F, 40F);
+            lblGenerated.SizeF = new System.Drawing.SizeF(500F, 20F);
+            lblGenerated.Name = "lblGenerated";
+            lblGenerated.Font = new DevExpress.Drawing.DXFont("Arial", 9F);
+            lblGenerated.ForeColor = System.Drawing.Color.FromArgb(100, 100, 100);
+            lblGenerated.TextAlignment = DevExpress.XtraPrinting.TextAlignment.MiddleRight;
+            lblGenerated.Padding = new DevExpress.XtraPrinting.PaddingInfo(0, 5, 0, 0, 100F);
+
             this.reportFooter.Controls.AddRange(new XRControl[] {
-                this.lblTotalText, this.lblTotalSum });
-            this.reportFooter.HeightF = 35F;
+        footerLine, this.lblTotalText, this.lblTotalSum, lblCount, lblGenerated
+    });
+            this.reportFooter.HeightF = 65F;
             this.reportFooter.Name = "reportFooter";
 
-            // Собираем все полосы в отчёт
+            // ===== СБОРКА ОТЧЁТА =====
             this.Bands.AddRange(new Band[] {
-                this.topMarginBand1,
-                this.bottomMarginBand1,
-                this.detailBand1,
-                this.reportHeader,
-                this.detailReport,
-                this.reportFooter
-            });
+        this.topMarginBand1,
+        this.bottomMarginBand1,
+        this.detailBand1,
+        this.reportHeader,
+        this.detailReport,
+        this.reportFooter
+    });
             this.ComponentStorage.AddRange(new IComponent[] {
-                this.objectDataSource1
-            });
+        this.objectDataSource1
+    });
+            this.Margins = new System.Drawing.Printing.Margins(20, 20, 20, 20);
             this.DataSource = this.objectDataSource1;
             this.Font = new DevExpress.Drawing.DXFont("Arial", 9.75F);
             this.Landscape = true;

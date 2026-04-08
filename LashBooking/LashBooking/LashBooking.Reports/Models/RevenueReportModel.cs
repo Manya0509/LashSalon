@@ -2,13 +2,13 @@
 
 namespace LashBooking.Reports.Models
 {
-    public class AppointmentReportModel
+    public class RevenueReportModel
     {
         public string Name { get; set; }
         public string Period { get; set; }
-        public string TotalSum { get; set; }
-        public string TotalCount { get; set; }
+        public string TotalRevenue { get; set; }
+        public string TotalAvgCheck { get; set; }
         public string GeneratedDate { get; set; }
-        public List<AppointmentReportRow> Rows { get; set; }
+        public List<RevenueReportRow> Rows { get; set; }
     }
 }

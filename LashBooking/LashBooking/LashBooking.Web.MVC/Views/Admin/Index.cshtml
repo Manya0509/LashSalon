@@ -115,9 +115,19 @@
                         <a href="/Admin/ExportAppointments" class="filter-btn" title="Экспорт в Excel">
                             <i class="bi bi-file-earmark-excel"></i> Excel
                         </a>
-                        <a href="/Admin/ReportAppointments" class="filter-btn" title="Отчёт в PDF">
-                            <i class="bi bi-file-earmark-pdf"></i> PDF отчёт
-                        </a>
+                        <div class="dropdown-wrapper">
+                            <button class="filter-btn" onclick="toggleReportsMenu()">
+                                <i class="bi bi-file-earmark-pdf"></i> Отчёты ▾
+                            </button>
+                            <div class="dropdown-menu-reports" id="reportsMenu" style="display:none">
+                                <a href="/Admin/ReportAppointments" class="dropdown-item-report">
+                                    <i class="bi bi-calendar-check"></i> Отчёт за период
+                                </a>
+                                <a href="/Admin/ReportRevenue" class="dropdown-item-report">
+                                    <i class="bi bi-graph-up"></i> Выручка по месяцам
+                                </a>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
@@ -1785,6 +1795,47 @@
             color: #92400e;
             border: 1px solid #fed7aa;
         }
+
+    .dropdown-wrapper {
+        position: relative;
+        display: inline-block;
+    }
+
+    .dropdown-menu-reports {
+        position: absolute;
+        top: 100%;
+        right: 0;
+        background: white;
+        border-radius: 12px;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+        border: 1px solid #e5e7eb;
+        z-index: 100;
+        min-width: 220px;
+        margin-top: 5px;
+        overflow: hidden;
+    }
+
+    .dropdown-item-report {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 12px 18px;
+        color: #374151;
+        text-decoration: none;
+        font-size: 0.95rem;
+        font-weight: 500;
+        transition: background 0.2s ease;
+    }
+
+        .dropdown-item-report:hover {
+            background: #f3f4f6;
+            color: #1f2937;
+        }
+
+        .dropdown-item-report i {
+            font-size: 1.1rem;
+            color: #6b7280;
+        }
 </style>
 
 @section Scripts {
@@ -1979,5 +2030,20 @@
 
             rows.forEach(r => tbody.appendChild(r));
         }
+
+                function toggleReportsMenu() {
+            var menu = document.getElementById('reportsMenu');
+            menu.style.display = menu.style.display === 'none' ? 'block' : 'none';
+        }
+
+        // Закрываем при клике вне меню
+        document.addEventListener('click', function(e) {
+            var wrapper = e.target.closest('.dropdown-wrapper');
+            if (!wrapper) {
+                var menu = document.getElementById('reportsMenu');
+                if (menu) menu.style.display = 'none';
+            }
+        });
+
     </script>
 }

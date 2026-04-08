@@ -690,8 +690,11 @@ namespace LashBooking.Web.MVC.Controllers
 
                 var model = new AppointmentReportModel
                 {
-                    Name = $"Отчёт по записям: {dateFrom:dd.MM.yyyy} — {dateTo:dd.MM.yyyy}",
+                    Name = "Студия LashLukina",
+                    Period = $"Отчёт по записям за период: {dateFrom:dd.MM.yyyy} — {dateTo:dd.MM.yyyy}",
                     TotalSum = $"{totalSum:N2} ₽",
+                    TotalCount = $"Всего записей: {filtered.Count}",
+                    GeneratedDate = $"Сформировано: {DateTime.Now:dd.MM.yyyy HH:mm}",
                     Rows = filtered.Select(a =>
                     {
                         clients.TryGetValue(a.ClientId, out var client);
@@ -732,6 +735,89 @@ namespace LashBooking.Web.MVC.Controllers
             catch (Exception ex)
             {
                 CatchException(ex, "AdminController/ReportAppointments", ErrorLevel.Error);
+                TempData["Message"] = "Ошибка при создании отчёта.";
+                TempData["IsSuccess"] = false;
+                return RedirectToAction("Index", new { tab = "appointments" });
+            }
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> ReportRevenue(int? year)
+        {
+            try
+            {
+                int reportYear = year ?? DateTime.Today.Year;
+
+                // Загружаем данные
+                var appointments = await _appointments.GetAllAsync();
+                var services = (await _services.GetAllAsync()).ToDictionary(s => s.Id);
+
+                // Фильтруем по году
+                var yearAppointments = appointments
+                    .Where(a => a.DateStart.Year == reportYear)
+                    .ToList();
+
+                // Группируем по месяцам
+                var monthNames = new[] {
+            "", "Январь", "Февраль", "Март", "Апрель", "Май", "Июнь",
+            "Июль", "Август", "Сентябрь", "Октябрь", "Ноябрь", "Декабрь"
+        };
+
+                var rows = new List<RevenueReportRow>();
+                decimal totalRevenue = 0;
+                int totalCompleted = 0;
+
+                for (int month = 1; month <= 12; month++)
+                {
+                    var monthApps = yearAppointments
+                        .Where(a => a.DateStart.Month == month)
+                        .ToList();
+
+                    if (monthApps.Count == 0) continue;
+
+                    var completed = monthApps
+                        .Where(a => a.Status == AppointmentStatus.Completed)
+                        .ToList();
+
+                    decimal revenue = completed
+                        .Sum(a => services.TryGetValue(a.ServiceId, out var s) ? s.Price : 0);
+
+                    decimal avgCheck = completed.Count > 0 ? revenue / completed.Count : 0;
+
+                    totalRevenue += revenue;
+                    totalCompleted += completed.Count;
+
+                    rows.Add(new RevenueReportRow
+                    {
+                        Month = $"{monthNames[month]} {reportYear}",
+                        TotalCount = monthApps.Count.ToString(),
+                        CompletedCount = completed.Count.ToString(),
+                        Revenue = $"{revenue:N2} ₽",
+                        AvgCheck = completed.Count > 0 ? $"{avgCheck:N2} ₽" : "—"
+                    });
+                }
+
+                decimal totalAvg = totalCompleted > 0 ? totalRevenue / totalCompleted : 0;
+
+                var model = new RevenueReportModel
+                {
+                    Name = "Студия LashLukina",
+                    Period = $"Выручка по месяцам за {reportYear} год",
+                    TotalRevenue = $"{totalRevenue:N2} ₽",
+                    TotalAvgCheck = $"{totalAvg:N2} ₽",
+                    GeneratedDate = $"Сформировано: {DateTime.Now:dd.MM.yyyy HH:mm}",
+                    Rows = rows
+                };
+
+                var engine = new ReportEngine();
+                byte[] file = engine.GenerateRevenueReport(model, "pdf");
+
+                string fileName = $"Выручка_{reportYear}.pdf";
+                return File(file, "application/pdf", fileName);
+            }
+            catch (Exception ex)
+            {
+                CatchException(ex, "AdminController/ReportRevenue", ErrorLevel.Error);
                 TempData["Message"] = "Ошибка при создании отчёта.";
                 TempData["IsSuccess"] = false;
                 return RedirectToAction("Index", new { tab = "appointments" });
