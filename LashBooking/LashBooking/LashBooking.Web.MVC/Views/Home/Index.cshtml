@@ -6,6 +6,7 @@
     string clientName = ViewBag.ClientName ?? "";
     bool isAdmin = Context.Session.GetString("IsAdmin") == "true";
     string phoneNumber = "+7 (999) 410-38-01";
+    decimal minPrice = ViewBag.MinPrice ?? 0;
 }
 
 <div class="avatar-wrapper-fullscreen">
@@ -57,17 +58,22 @@
 <div class="main-content text-center mt-3">
 
     <div class="d-flex justify-content-center mb-4 flex-wrap gap-2">
+        <a href="/Services" class="btn btn-outline-primary">Услуги и цены</a>
         <a href="/Calendar" class="btn btn-outline-primary">Календарь</a>
         <a href="/Gallery" class="btn btn-outline-primary">Фото работ</a>
         <a href="/Reviews" class="btn btn-outline-primary">Отзывы</a>
         <a href="/About" class="btn btn-outline-primary">Обо мне</a>
     </div>
 
-    <h4>Добро пожаловать, запишитесь онлайн:</h4>
+    <div class="services-line">
+        <span>Услуги от @minPrice.ToString("N0") ₽</span>
+        <a href="/Services" class="services-link">Подробнее →</a>
+    </div>
 
     <a href="/Booking" class="btn btn-success mt-2 mb-4">
         Записаться онлайн
     </a>
+
 
     <h5 class="mt-4 mb-3">Связаться со мной:</h5>
 
@@ -102,6 +108,31 @@
 </div>
 
 <style>
+    .services-line {
+        display: inline-flex;
+        align-items: center;
+        gap: 12px;
+        background: #f8f8f8;
+        padding: 10px 24px;
+        border-radius: 30px;
+        border: 1px solid #eee;
+        margin-bottom: 16px;
+        font-size: 1rem;
+        color: #333;
+        font-weight: 500;
+    }
+
+    .services-link {
+        color: #666;
+        text-decoration: none;
+        font-weight: 600;
+        transition: color 0.2s;
+    }
+
+        .services-link:hover {
+            color: #333;
+        }
+
     .avatar-wrapper-fullscreen {
         position: relative;
         width: 100%;

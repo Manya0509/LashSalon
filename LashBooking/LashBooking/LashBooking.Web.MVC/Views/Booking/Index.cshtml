@@ -20,7 +20,7 @@
 }
 
 <div class="back-button-container">
-    <a href="/" class="back-btn">
+    <a href="javascript:history.back()" class="back-btn">
         <span class="back-icon">←</span> Назад
     </a>
 </div>
@@ -654,16 +654,14 @@
                 btn.className   = 'calendar-day';
 
                 //  выходные получают класс weekend-day и блокируются
-                        if (isSelected)           btn.classList.add('active');
+         if (isSelected)           btn.classList.add('active');
         else if (isPast)          btn.classList.add('past');
         else if (isWknd)          btn.classList.add('weekend-day');
         else if (!isCurrentMonth) btn.classList.add('other-month');
         else if (isAvailable)     btn.classList.add('available');
         else                      btn.classList.add('unavailable');
 
-        if (isToday) btn.classList.add('today');
-
-        if (isPast || isWknd || !isAvailable || !isCurrentMonth) {
+                if (isToday) btn.classList.add('today');
 
                 if (isPast || isWknd || !isAvailable || !isCurrentMonth) {
                     btn.disabled = true;

@@ -1,0 +1,212 @@
+﻿@using LashBooking.Domain.Entities
+@model List<Service>
+
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewBag.Title = "Услуги и цены — LashLukina";
+}
+
+<div class="container mt-5">
+
+    <div class="back-button-container">
+        <a href="/" class="back-btn">
+            <span class="back-icon">←</span> Назад
+        </a>
+    </div>
+
+    <h2 class="services-title">Услуги и цены</h2>
+
+    @if (!Model.Any())
+    {
+        <div class="text-center my-5">
+            <p class="text-muted">Список услуг пока пуст.</p>
+        </div>
+    }
+    else
+    {
+        <div class="services-list">
+            @foreach (var service in Model)
+            {
+                <div class="service-card">
+                    <div class="service-info">
+                        <h4 class="service-name">@service.Name</h4>
+                        @if (!string.IsNullOrEmpty(service.Description))
+                        {
+                            <p class="service-description">@service.Description</p>
+                        }
+                        <div class="service-meta">
+                            <span class="service-duration">
+                                <i class="bi bi-clock"></i> @service.DurationMinutes мин
+                            </span>
+                        </div>
+                    </div>
+                    <div class="service-right">
+                        <span class="service-price">@service.Price.ToString("N0") ₽</span>
+                        <a href="/Booking?serviceId=@service.Id" class="btn-book">Записаться</a>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+
+</div>
+
+<style>
+    .back-button-container {
+        margin: 0 0 10px 0;
+    }
+
+    .back-btn {
+        background: transparent;
+        color: #444;
+        border: 2px solid #333;
+        border-radius: 30px;
+        padding: 8px 20px;
+        font-size: 1rem;
+        font-weight: 600;
+        cursor: pointer;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        transition: all 0.3s ease;
+        text-decoration: none;
+    }
+
+        .back-btn:hover {
+            background: #555;
+            color: white;
+            transform: translateX(-3px);
+        }
+
+    .back-icon {
+        font-size: 1.2rem;
+        line-height: 1;
+    }
+
+    .services-title {
+        font-size: 2rem;
+        font-weight: 600;
+        text-align: center;
+        color: #333;
+        margin: 20px 0 30px;
+    }
+
+    .services-list {
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+        max-width: 700px;
+        margin: 0 auto 40px;
+    }
+
+    .service-card {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        background: white;
+        border: 1px solid #eee;
+        border-radius: 12px;
+        padding: 20px 24px;
+        transition: all 0.2s ease;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+    }
+
+        .service-card:hover {
+            border-color: #ddd;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            transform: translateY(-2px);
+        }
+
+    .service-info {
+        flex: 1;
+        min-width: 0;
+    }
+
+    .service-name {
+        font-size: 1.15rem;
+        font-weight: 600;
+        color: #333;
+        margin: 0 0 6px;
+    }
+
+    .service-description {
+        font-size: 0.9rem;
+        color: #777;
+        margin: 0 0 8px;
+        line-height: 1.4;
+    }
+
+    .service-meta {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+    }
+
+    .service-duration {
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+        font-size: 0.85rem;
+        color: #999;
+    }
+
+    .service-right {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-end;
+        gap: 10px;
+        margin-left: 20px;
+        flex-shrink: 0;
+    }
+
+    .service-price {
+        font-size: 1.3rem;
+        font-weight: 700;
+        color: #333;
+    }
+
+    .btn-book {
+        display: inline-block;
+        padding: 8px 20px;
+        background-color: #28a745;
+        color: white;
+        border-radius: 30px;
+        font-size: 0.85rem;
+        font-weight: 500;
+        text-decoration: none;
+        transition: all 0.3s ease;
+        white-space: nowrap;
+    }
+
+        .btn-book:hover {
+            background-color: #218838;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 10px rgba(40, 167, 69, 0.3);
+            color: white;
+        }
+
+    @@media (max-width: 576px) {
+        .service-card {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 14px;
+            padding: 16px;
+        }
+
+        .service-right {
+            flex-direction: row;
+            align-items: center;
+            justify-content: space-between;
+            width: 100%;
+            margin-left: 0;
+        }
+
+        .service-price {
+            font-size: 1.2rem;
+        }
+
+        .services-title {
+            font-size: 1.5rem;
+        }
+    }
+</style>

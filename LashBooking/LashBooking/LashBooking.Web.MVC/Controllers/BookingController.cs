@@ -34,7 +34,7 @@ namespace LashBooking.Web.MVC.Controllers
 
         // GET: /Booking
         // Страница бронирования — показывает услуги, календарь, слоты.
-        public async Task<IActionResult> Index(string? date)
+        public async Task<IActionResult> Index(string? date, int? serviceId)
         {
             try
             {
@@ -43,7 +43,9 @@ namespace LashBooking.Web.MVC.Controllers
                 // Получаем активные услуги для выпадающего списка
                 var services = (await _serviceRepo.GetAllAsync())
                     .Where(s => s.IsActive).ToList();
-                var selectedServiceId = services.FirstOrDefault()?.Id ?? 0;
+                var selectedServiceId = serviceId.HasValue && services.Any(s => s.Id == serviceId.Value)
+                    ? serviceId.Value
+                    : services.FirstOrDefault()?.Id ?? 0;
 
                 // Проверяем авторизован ли клиент, чтобы подставить имя и телефон
                 var clientId = HttpContext.Session.GetInt32("ClientId");
