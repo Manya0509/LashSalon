@@ -80,11 +80,15 @@
                 {
                     if (s.Id == selectedServiceId)
                     {
-                        <option value="@s.Id" selected>@s.Name — @s.Price.ToString("C")</option>
+                        <option value="@s.Id" selected>
+                            @s.Name — @s.Price.ToString("N2") ₽
+                        </option>
                     }
                     else
                     {
-                        <option value="@s.Id">@s.Name — @s.Price.ToString("C")</option>
+                        <option value="@s.Id">
+                            @s.Name — @s.Price.ToString("N2") ₽
+                        </option>
                     }
                 }
             </select>
@@ -260,7 +264,7 @@
         display: block;
         margin-top: 5px;
         font-size: 0.8rem;
-        color: #10b981;
+        color: #555555;
         font-weight: 500;
     }
 
@@ -524,6 +528,12 @@
             font-size: 1.2rem;
         }
     }
+
+    .calendar-day.today {
+        border: 2px solid #555;
+        font-weight: 700;
+    }
+
 </style>
 
 @section Scripts {
@@ -635,6 +645,8 @@
                 const isWknd         = isWeekend(d);  
                 const isAvailable    = availableDates.includes(dateStr);
                 const isSelected     = dateStr === selectedDateStr;
+                const isToday = dateStr === formatDate(new Date());
+
 
                 const btn = document.createElement('button');
                 btn.type        = 'button';
@@ -642,12 +654,16 @@
                 btn.className   = 'calendar-day';
 
                 //  выходные получают класс weekend-day и блокируются
-                if (isSelected)           btn.classList.add('active');
-                else if (isPast)          btn.classList.add('past');
-                else if (isWknd)          btn.classList.add('weekend-day');
-                else if (!isCurrentMonth) btn.classList.add('other-month');
-                else if (isAvailable)     btn.classList.add('available');
-                else                      btn.classList.add('unavailable');
+                        if (isSelected)           btn.classList.add('active');
+        else if (isPast)          btn.classList.add('past');
+        else if (isWknd)          btn.classList.add('weekend-day');
+        else if (!isCurrentMonth) btn.classList.add('other-month');
+        else if (isAvailable)     btn.classList.add('available');
+        else                      btn.classList.add('unavailable');
+
+        if (isToday) btn.classList.add('today');
+
+        if (isPast || isWknd || !isAvailable || !isCurrentMonth) {
 
                 if (isPast || isWknd || !isAvailable || !isCurrentMonth) {
                     btn.disabled = true;

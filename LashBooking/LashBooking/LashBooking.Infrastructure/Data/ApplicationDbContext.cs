@@ -1,6 +1,7 @@
 ﻿using LashBooking.Domain.Entities;
 using LashBooking.Infrastructure.Configurations;
 using Microsoft.EntityFrameworkCore;
+using LashBooking.Domain.Entities;
 
 namespace LashBooking.Infrastructure.Data;
 
@@ -16,6 +17,7 @@ public class ApplicationDbContext : DbContext
     public DbSet<Appointment> Appointments => Set<Appointment>();
     public DbSet<Review> Reviews => Set<Review>();
     public DbSet<BlockedSlot> BlockedSlots { get; set; }
+    public DbSet<GalleryPhoto> GalleryPhotos => Set<GalleryPhoto>();
     public DbSet<LogApplicationError> LogApplicationErrors { get; set; }  // таблица логов ошибок
 
     public LogApplicationError Insert(LogApplicationError logApplicationError) // сохраняет запись лога напрямую через контекст без репозитория
@@ -33,5 +35,7 @@ public class ApplicationDbContext : DbContext
         modelBuilder.ApplyConfiguration(new ServiceConfiguration());
         modelBuilder.ApplyConfiguration(new AppointmentConfiguration());
         modelBuilder.ApplyConfiguration(new ReviewConfiguration());
+        modelBuilder.ApplyConfiguration(new GalleryPhotoConfiguration());
+        modelBuilder.Entity<LogApplicationError>().ToTable("LogApplicationError", t => t.ExcludeFromMigrations());
     }
 }

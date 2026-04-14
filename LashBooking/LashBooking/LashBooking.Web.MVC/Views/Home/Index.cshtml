@@ -4,18 +4,22 @@
 
     bool isAuthenticated = ViewBag.IsAuthenticated ?? false;
     string clientName = ViewBag.ClientName ?? "";
+    bool isAdmin = Context.Session.GetString("IsAdmin") == "true";
     string phoneNumber = "+7 (999) 410-38-01";
 }
 
 <div class="avatar-wrapper-fullscreen">
     <img src="/images/avatar.jpg" class="avatar-img-fullscreen" />
 
-    <div class="admin-login-header">
-        <a href="/Admin" class="btn-admin-header">
-            <i class="bi bi-shield-lock"></i>
-            <span>Админ</span>
-        </a>
-    </div>
+    @if (isAdmin)
+    {
+        <div class="admin-login-header">
+            <a href="/Admin" class="btn-admin-header">
+                <i class="bi bi-shield-lock"></i>
+                <span>Админ-панель</span>
+            </a>
+        </div>
+    }
 
     @if (isAuthenticated)
     {

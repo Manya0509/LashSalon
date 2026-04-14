@@ -62,11 +62,18 @@ namespace LashBooking.Web.MVC.Controllers
                     TempData["ErrorMessage"] = "Неверный пароль";
                     return RedirectToAction("Login");
                 }
-                
+
                 HttpContext.Session.SetInt32("ClientId", client.Id);
                 HttpContext.Session.SetString("ClientName", client.Name);
 
+                if (client.IsAdmin)
+                {
+                    HttpContext.Session.SetString("IsAdmin", "true");
+                    return RedirectToAction("Index", "Admin");
+                }
+
                 return RedirectToAction("Index", "Profile");
+
             }
             catch (Exception ex)
             {
@@ -119,6 +126,11 @@ namespace LashBooking.Web.MVC.Controllers
 
                     HttpContext.Session.SetInt32("ClientId", existingClient.Id);
                     HttpContext.Session.SetString("ClientName", existingClient.Name);
+
+                    if (existingClient.IsAdmin)
+                    {
+                        HttpContext.Session.SetString("IsAdmin", "true");
+                    }
                 }
                 else
                 {
@@ -137,6 +149,11 @@ namespace LashBooking.Web.MVC.Controllers
 
                     HttpContext.Session.SetInt32("ClientId", newClient.Id);
                     HttpContext.Session.SetString("ClientName", newClient.Name);
+
+                    if (newClient.IsAdmin)
+                    {
+                        HttpContext.Session.SetString("IsAdmin", "true");
+                    }
                 }
                 return RedirectToAction("Index", "Profile");
             }
@@ -156,6 +173,7 @@ namespace LashBooking.Web.MVC.Controllers
             {
                 HttpContext.Session.Remove("ClientId");
                 HttpContext.Session.Remove("ClientName");
+                HttpContext.Session.Remove("IsAdmin");
                 return RedirectToAction("Index", "Home");
             }
             catch (Exception ex)

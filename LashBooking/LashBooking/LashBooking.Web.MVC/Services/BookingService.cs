@@ -1,11 +1,11 @@
-using LashBooking.Domain.Constants;
+п»їusing LashBooking.Domain.Constants;
 using LashBooking.Domain.Entities;
 using LashBooking.Domain.Interfaces;
 using LashBooking.Domain.Models;
 
 namespace LashBooking.Web.MVC.Services
 {
-    // Реализация IBookingService.
+    // Р РµР°Р»РёР·Р°С†РёСЏ IBookingService.
     public class BookingService : IBookingService
     {
         private readonly IRepository<Service> _serviceRepo;
@@ -25,7 +25,7 @@ namespace LashBooking.Web.MVC.Services
             _blockedSlotRepo = blockedSlotRepo;
         }
 
-        // Создать новую запись со всеми проверками.
+        // РЎРѕР·РґР°С‚СЊ РЅРѕРІСѓСЋ Р·Р°РїРёСЃСЊ СЃРѕ РІСЃРµРјРё РїСЂРѕРІРµСЂРєР°РјРё.
         public async Task<ServiceResult> CreateBookingAsync(
             int serviceId,
             string selectedTime,
@@ -33,60 +33,60 @@ namespace LashBooking.Web.MVC.Services
             string clientPhone,
             int? clientId)
         {
-            // === ПРОВЕРКА 1: Время ===
-            // Парсим строку "2026-03-28T10:00:00" в DateTime.
-            // Если строка кривая или время в прошлом — отказ.
+            // === РџР РћР’Р•Р РљРђ 1: Р’СЂРµРјСЏ ===
+            // РџР°СЂСЃРёРј СЃС‚СЂРѕРєСѓ "2026-03-28T10:00:00" РІ DateTime.
+            // Р•СЃР»Рё СЃС‚СЂРѕРєР° РєСЂРёРІР°СЏ РёР»Рё РІСЂРµРјСЏ РІ РїСЂРѕС€Р»РѕРј вЂ” РѕС‚РєР°Р·.
             if (!DateTime.TryParse(selectedTime, out DateTime time) || time < DateTime.Now)
-                return ServiceResult.Fail("Пожалуйста, выберите доступное время");
+                return ServiceResult.Fail("РџРѕР¶Р°Р»СѓР№СЃС‚Р°, РІС‹Р±РµСЂРёС‚Рµ РґРѕСЃС‚СѓРїРЅРѕРµ РІСЂРµРјСЏ");
 
-            // === ПРОВЕРКА 2: Услуга ===
-            // Ищем услугу по Id. Если не нашли — значит страница устарела.
+            // === РџР РћР’Р•Р РљРђ 2: РЈСЃР»СѓРіР° ===
+            // РС‰РµРј СѓСЃР»СѓРіСѓ РїРѕ Id. Р•СЃР»Рё РЅРµ РЅР°С€Р»Рё вЂ” Р·РЅР°С‡РёС‚ СЃС‚СЂР°РЅРёС†Р° СѓСЃС‚Р°СЂРµР»Р°.
             var service = (await _serviceRepo.GetAllAsync())
                 .FirstOrDefault(x => x.Id == serviceId);
 
             if (service == null)
-                return ServiceResult.Fail("Услуга не найдена. Обновите страницу.");
+                return ServiceResult.Fail("РЈСЃР»СѓРіР° РЅРµ РЅР°Р№РґРµРЅР°. РћР±РЅРѕРІРёС‚Рµ СЃС‚СЂР°РЅРёС†Сѓ.");
 
-            // === ПРОВЕРКА 3: Влезает в рабочий день? ===
-            // Если услуга 90 минут, а выбрано 17:00 — конец в 18:30,
-            // а рабочий день до 18:00. Не влезает.
+            // === РџР РћР’Р•Р РљРђ 3: Р’Р»РµР·Р°РµС‚ РІ СЂР°Р±РѕС‡РёР№ РґРµРЅСЊ? ===
+            // Р•СЃР»Рё СѓСЃР»СѓРіР° 90 РјРёРЅСѓС‚, Р° РІС‹Р±СЂР°РЅРѕ 17:00 вЂ” РєРѕРЅРµС† РІ 18:30,
+            // Р° СЂР°Р±РѕС‡РёР№ РґРµРЅСЊ РґРѕ 18:00. РќРµ РІР»РµР·Р°РµС‚.
             var dateEnd = time.AddMinutes(service.DurationMinutes);
             var workDayEnd = time.Date.AddHours(WorkSchedule.EndHour);
 
             if (dateEnd > workDayEnd)
                 return ServiceResult.Fail(
-                    $"Недостаточно времени для услуги «{service.Name}». " +
-                    $"Выберите более раннее время.");
+                    $"РќРµРґРѕСЃС‚Р°С‚РѕС‡РЅРѕ РІСЂРµРјРµРЅРё РґР»СЏ СѓСЃР»СѓРіРё В«{service.Name}В». " +
+                    $"Р’С‹Р±РµСЂРёС‚Рµ Р±РѕР»РµРµ СЂР°РЅРЅРµРµ РІСЂРµРјСЏ.");
 
-            // === ПРОВЕРКА 4-5: Блокировки ===
-            // Загружаем все блокировки на этот день.
+            // === РџР РћР’Р•Р РљРђ 4-5: Р‘Р»РѕРєРёСЂРѕРІРєРё ===
+            // Р—Р°РіСЂСѓР¶Р°РµРј РІСЃРµ Р±Р»РѕРєРёСЂРѕРІРєРё РЅР° СЌС‚РѕС‚ РґРµРЅСЊ.
             var blockedSlots = (await _blockedSlotRepo
                 .FindAsync(b => b.Date.Date == time.Date)).ToList();
 
-            // BlockedHour == null — значит заблокирован ВЕСЬ день
+            // BlockedHour == null вЂ” Р·РЅР°С‡РёС‚ Р·Р°Р±Р»РѕРєРёСЂРѕРІР°РЅ Р’Р•РЎР¬ РґРµРЅСЊ
             if (blockedSlots.Any(b => b.BlockedHour == null))
-                return ServiceResult.Fail("Этот день недоступен для записи.");
+                return ServiceResult.Fail("Р­С‚РѕС‚ РґРµРЅСЊ РЅРµРґРѕСЃС‚СѓРїРµРЅ РґР»СЏ Р·Р°РїРёСЃРё.");
 
-            // Конкретный час заблокирован
+            // РљРѕРЅРєСЂРµС‚РЅС‹Р№ С‡Р°СЃ Р·Р°Р±Р»РѕРєРёСЂРѕРІР°РЅ
             if (blockedSlots.Any(b => b.BlockedHour == time.Hour))
-                return ServiceResult.Fail("Выбранное время недоступно для записи.");
+                return ServiceResult.Fail("Р’С‹Р±СЂР°РЅРЅРѕРµ РІСЂРµРјСЏ РЅРµРґРѕСЃС‚СѓРїРЅРѕ РґР»СЏ Р·Р°РїРёСЃРё.");
 
-            // === ПРОВЕРКА 6: Дубликат ===
-            // Один клиент — одна запись в день.
-            // Ищем по телефону (не по Id), потому что клиент может быть не авторизован.
+            // === РџР РћР’Р•Р РљРђ 6: Р”СѓР±Р»РёРєР°С‚ ===
+            // РћРґРёРЅ РєР»РёРµРЅС‚ вЂ” РѕРґРЅР° Р·Р°РїРёСЃСЊ РІ РґРµРЅСЊ.
+            // РС‰РµРј РїРѕ С‚РµР»РµС„РѕРЅСѓ (РЅРµ РїРѕ Id), РїРѕС‚РѕРјСѓ С‡С‚Рѕ РєР»РёРµРЅС‚ РјРѕР¶РµС‚ Р±С‹С‚СЊ РЅРµ Р°РІС‚РѕСЂРёР·РѕРІР°РЅ.
             var existing = await _appointmentRepo.FindAsync(a =>
                 a.Client != null &&
                 a.Client.Phone == clientPhone &&
                 a.DateStart.Date == time.Date);
 
             if (existing.Any())
-                return ServiceResult.Fail("У вас уже есть запись на этот день");
+                return ServiceResult.Fail("РЈ РІР°СЃ СѓР¶Рµ РµСЃС‚СЊ Р·Р°РїРёСЃСЊ РЅР° СЌС‚РѕС‚ РґРµРЅСЊ");
 
-            // === ШАГИ 7: Поиск или создание клиента ===
-            // Приоритет:
-            // 1. Если клиент авторизован (clientId не null) — ищем по Id
-            // 2. Если не нашли по Id — ищем по телефону
-            // 3. Если вообще не нашли — создаём нового
+            // === РЁРђР“Р 7: РџРѕРёСЃРє РёР»Рё СЃРѕР·РґР°РЅРёРµ РєР»РёРµРЅС‚Р° ===
+            // РџСЂРёРѕСЂРёС‚РµС‚:
+            // 1. Р•СЃР»Рё РєР»РёРµРЅС‚ Р°РІС‚РѕСЂРёР·РѕРІР°РЅ (clientId РЅРµ null) вЂ” РёС‰РµРј РїРѕ Id
+            // 2. Р•СЃР»Рё РЅРµ РЅР°С€Р»Рё РїРѕ Id вЂ” РёС‰РµРј РїРѕ С‚РµР»РµС„РѕРЅСѓ
+            // 3. Р•СЃР»Рё РІРѕРѕР±С‰Рµ РЅРµ РЅР°С€Р»Рё вЂ” СЃРѕР·РґР°С‘Рј РЅРѕРІРѕРіРѕ
             Client? client = null;
 
             if (clientId.HasValue)
@@ -115,7 +115,7 @@ namespace LashBooking.Web.MVC.Services
                 await _clientRepo.SaveChangesAsync();
             }
 
-            // === ШАГ 8: Создание записи ===
+            // === РЁРђР“ 8: РЎРѕР·РґР°РЅРёРµ Р·Р°РїРёСЃРё ===
             var appointment = new Appointment
             {
                 ClientId = client.Id,
@@ -128,9 +128,10 @@ namespace LashBooking.Web.MVC.Services
             await _appointmentRepo.AddAsync(appointment);
             await _appointmentRepo.SaveChangesAsync();
 
-            // Всё прошло — возвращаем успех
+            // Р’СЃС‘ РїСЂРѕС€Р»Рѕ вЂ” РІРѕР·РІСЂР°С‰Р°РµРј СѓСЃРїРµС…
             return ServiceResult.Ok(
-                $"? Вы успешно записаны! {service.Name} — {time:dd.MM.yyyy HH:mm}");
+    $"Р’С‹ СѓСЃРїРµС€РЅРѕ Р·Р°РїРёСЃР°РЅС‹! {service.Name} вЂ” {time:dd.MM.yyyy HH:mm}");
+
         }
     }
 }

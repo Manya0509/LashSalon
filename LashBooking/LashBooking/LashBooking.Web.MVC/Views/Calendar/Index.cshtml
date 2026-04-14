@@ -42,7 +42,8 @@
                 bool isPast = day.isPast;
                 bool isWeekend = day.isWeekend;
 
-                string cssClass = "day-btn " + state;
+                bool isToday = date == DateTime.Today.ToString("yyyy-MM-dd");
+                string cssClass = "day-btn " + state + (isToday ? " today" : "");
 
                 if (isPast || isWeekend)
                 {
@@ -247,6 +248,12 @@
             position: relative;
             z-index: 2;
         }
+
+        .day-btn.today {
+            border: 2px solid #555;
+            font-weight: 700;
+        }
+
 
     /* Легенда */
     .legend {

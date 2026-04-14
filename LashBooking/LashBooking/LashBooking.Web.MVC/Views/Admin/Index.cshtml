@@ -91,6 +91,10 @@
         <a href="/Admin/Index?tab=schedule" class="nav-btn @(activeTab == "schedule" ? "active" : "")">
             <i class="bi bi-calendar-x"></i> Расписание
         </a>
+        <a href="/Admin/Index?tab=gallery" class="nav-btn @(activeTab == "gallery" ? "active" : "")">
+            <i class="bi bi-image"></i> Галерея
+        </a>
+
     </div>
 
     <div class="admin-content">
@@ -721,6 +725,89 @@
                 }
             </div>
         }
+        @* ==================== ГАЛЕРЕЯ ==================== *@
+        else if (activeTab == "gallery")
+        {
+            var galleryPhotos = ViewBag.GalleryPhotos as List<GalleryPhoto> ?? new List<GalleryPhoto>();
+
+            <div class="management-section">
+                <div class="section-header">
+                    <h2><i class="bi bi-image"></i> Управление галереей</h2>
+                    <div class="header-actions">
+                        <button class="filter-btn" onclick="document.getElementById('galleryModal').style.display='flex'">
+                            <i class="bi bi-plus-lg"></i> Добавить фото
+                        </button>
+                    </div>
+                </div>
+
+                @if (!galleryPhotos.Any())
+                {
+                    <div class="empty-state">
+                        <div class="empty-icon">🖼</div>
+                        <h4>Фотографий пока нет</h4>
+                        <p>Добавьте первое фото в галерею</p>
+                    </div>
+                }
+                else
+                {
+                    <div class="gallery-admin-grid">
+                        @foreach (var photo in galleryPhotos)
+                        {
+                            <div class="gallery-admin-item">
+                                <img src="/images/gallery/@photo.FileName" alt="@(photo.Description ?? "Фото")" class="gallery-admin-img" />
+                                <div class="gallery-admin-overlay">
+                                    <div class="gallery-admin-info">
+                                        @if (!string.IsNullOrEmpty(photo.Description))
+                                        {
+                                            <span class="gallery-admin-desc">@photo.Description</span>
+                                        }
+                                        <span class="gallery-admin-date">@photo.UploadedAt.ToString("dd.MM.yyyy")</span>
+                                    </div>
+                                    <form method="post" action="/Admin/DeleteGalleryPhoto" style="display:inline">
+                                        @Html.AntiForgeryToken()
+                                        <input type="hidden" name="photoId" value="@photo.Id" />
+                                        <button type="submit" class="gallery-admin-delete" onclick="return confirm('Удалить это фото?')" title="Удалить">
+                                            <i class="bi bi-trash"></i>
+                                        </button>
+                                    </form>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                    <div class="stats-summary" style="margin-top: 20px">
+                        <p><strong>Всего фото:</strong> @galleryPhotos.Count</p>
+                    </div>
+                }
+            </div>
+
+            @* Модалка загрузки фото *@
+            <div class="modal-overlay" id="galleryModal" style="display:none" onclick="if(event.target===this)this.style.display='none'">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h3><i class="bi bi-image"></i> Добавить фото</h3>
+                        <button class="modal-close" onclick="document.getElementById('galleryModal').style.display='none'">✕</button>
+                    </div>
+                    <form method="post" action="/Admin/UploadGalleryPhoto" enctype="multipart/form-data">
+                        @Html.AntiForgeryToken()
+                        <div class="modal-body">
+                            <div class="form-group">
+                                <label class="form-label">Фото</label>
+                                <input type="file" class="form-control" name="photo" accept="image/*" required />
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Описание (необязательно)</label>
+                                <input type="text" class="form-control" name="description" placeholder="Например: Классическое наращивание" />
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn-secondary" onclick="document.getElementById('galleryModal').style.display='none'">Отмена</button>
+                            <button type="submit" class="btn-primary">Загрузить</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        }
+
     </div>@* /admin-content *@
 </div>@* /admin-container *@
 
@@ -1836,6 +1923,94 @@
             font-size: 1.1rem;
             color: #6b7280;
         }
+
+    /* Галерея в админке */
+    .gallery-admin-grid {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 16px;
+    }
+
+    .gallery-admin-item {
+        position: relative;
+        border-radius: 8px;
+        overflow: hidden;
+        aspect-ratio: 4/3;
+        background: #f5f5f5;
+        border: 1px solid #eee;
+    }
+
+    .gallery-admin-img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        display: block;
+    }
+
+    .gallery-admin-overlay {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        background: linear-gradient(transparent, rgba(0,0,0,0.7));
+        padding: 30px 10px 10px;
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-end;
+        opacity: 0;
+        transition: opacity 0.3s;
+    }
+
+    .gallery-admin-item:hover .gallery-admin-overlay {
+        opacity: 1;
+    }
+
+    .gallery-admin-info {
+        display: flex;
+        flex-direction: column;
+        gap: 2px;
+    }
+
+    .gallery-admin-desc {
+        color: white;
+        font-size: 0.85rem;
+        font-weight: 500;
+    }
+
+    .gallery-admin-date {
+        color: rgba(255,255,255,0.7);
+        font-size: 0.75rem;
+    }
+
+    .gallery-admin-delete {
+        background: rgba(220,53,69,0.9);
+        border: none;
+        color: white;
+        width: 32px;
+        height: 32px;
+        border-radius: 6px;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: background 0.2s;
+    }
+
+        .gallery-admin-delete:hover {
+            background: #dc3545;
+        }
+
+    @@media (max-width: 992px) {
+        .gallery-admin-grid {
+            grid-template-columns: repeat(3, 1fr);
+        }
+    }
+
+    @@media (max-width: 768px) {
+        .gallery-admin-grid {
+            grid-template-columns: repeat(2, 1fr);
+        }
+    }
 </style>
 
 @section Scripts {

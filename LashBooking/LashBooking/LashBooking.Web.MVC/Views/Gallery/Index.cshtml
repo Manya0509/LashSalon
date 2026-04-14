@@ -1,19 +1,9 @@
-﻿@{
+﻿@model List<LashBooking.Domain.Entities.GalleryPhoto>
+@{
     Layout = "~/Views/Shared/_Layout.cshtml";
     ViewBag.Title = "Фото работ — LashLukina";
 
-    var allPhotos = new List<string>
-    {
-        "/images/gallery/photo1.jpg",
-        "/images/gallery/photo2.jpg",
-        "/images/gallery/photo3.jpg",
-        "/images/gallery/photo5.jpg",
-        "/images/gallery/photo8.jpg",
-        "/images/gallery/photo6.jpg",
-        "/images/gallery/photo7.jpg",
-        "/images/gallery/photo4.jpg",
-        "/images/gallery/photo9.jpg",
-    };
+    var allPhotos = Model.Select(p => "/images/gallery/" + p.FileName).ToList();
 }
 
 <div class="back-button-container">

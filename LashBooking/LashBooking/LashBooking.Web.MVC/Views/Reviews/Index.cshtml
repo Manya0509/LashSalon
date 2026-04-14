@@ -10,38 +10,49 @@
     bool isSuccess = ViewBag.IsSuccess ?? false;
 }
 
-<div class="back-button-container">
-    <a href="/" class="back-btn">
-        <span class="back-icon">←</span> Назад
-    </a>
-</div>
-
 <div class="container mt-5">
 
-    <h2 class="text-center mb-4">Отзывы клиентов</h2>
-
-    <div class="text-center mb-4">
-        <h4>Средняя оценка: @averageRating ⭐</h4>
+    <div class="back-button-container">
+        <a href="/" class="back-btn">
+            <span class="back-icon">←</span> Назад
+        </a>
     </div>
 
-    <div class="row">
-        @foreach (var review in reviews)
-        {
-            <div class="col-md-6 mb-4">
-                <div class="card shadow p-3 review-card">
-                    <h5>@(review.Client?.Name ?? "Анонимный клиент")</h5>
-                    <div class="stars">
-                        @for (int i = 1; i <= 5; i++)
-                        {
-                            <span class="@(i <= review.Rating ? "star-filled" : "star")">★</span>
-                        }
-                    </div>
-                    <p class="mt-2">@review.Text</p>
-                    <small class="text-muted">@review.CreatedAt.ToLocalTime().ToString("dd.MM.yyyy")</small>
+    <h2 class="reviews-title">Отзывы клиентов</h2>
+
+<div class="reviews-summary">
+    <div class="summary-rating">
+        <span class="summary-value">@averageRating.ToString("F1")</span>
+        <div class="summary-stars">
+            @for (int i = 1; i <= 5; i++)
+            {
+                <span class="@(i <= (int)Math.Round(averageRating) ? "star-filled" : "star")">★</span>
+            }
+        </div>
+        <span class="summary-count">@reviews.Count @(reviews.Count == 1 ? "отзыв" : reviews.Count < 5 ? "отзыва" : "отзывов")</span>
+    </div>
+</div>
+
+
+<div class="row">
+    @foreach (var review in reviews)
+    {
+        <div class="col-md-6 mb-4">
+            <div class="card shadow p-3 review-card">
+                <h5>@(review.Client?.Name ?? "Анонимный клиент")</h5>
+                <div class="stars">
+                    @for (int i = 1; i <= 5; i++)
+                    {
+                        <span class="@(i <= review.Rating ? "star-filled" : "star")">★</span>
+                    }
                 </div>
+                <p class="mt-2">@review.Text</p>
+                <small class="text-muted">@review.CreatedAt.ToLocalTime().ToString("dd.MM.yyyy")</small>
             </div>
-        }
-    </div>
+        </div>
+    }
+</div>
+
 
     @if (!reviews.Any())
     {
@@ -50,9 +61,12 @@
         </div>
     }
 
-    <hr class="my-5" />
+    <hr style="border: none; border-top: 1px solid #eee; margin: 30px 0;" />
 
+<div class="review-form-section">
     <h4>Оставить отзыв</h4>
+</div>
+
 
     @* Уведомление об успехе или ошибке *@
     @if (!string.IsNullOrEmpty(message))
@@ -123,7 +137,7 @@
 
 <style>
     .back-button-container {
-        margin: 20px 0 0 20px;
+        margin: 0 0 10px 0;
     }
 
     .back-btn {
@@ -146,7 +160,6 @@
             background: #555;
             color: white;
             transform: translateX(-3px);
-            box-shadow: 0 4px 10px rgba(79, 70, 229, 0.3);
         }
 
     .back-icon {
@@ -154,28 +167,160 @@
         line-height: 1;
     }
 
+    /* Заголовок и сводка */
+    .reviews-title {
+        font-size: 2rem;
+        font-weight: 600;
+        text-align: center;
+        color: #333;
+        margin: 20px 0 15px;
+    }
+
+    .reviews-summary {
+        text-align: center;
+        margin-bottom: 30px;
+    }
+
+    .summary-rating {
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        background: #f8f8f8;
+        padding: 12px 24px;
+        border-radius: 10px;
+        border: 1px solid #eee;
+    }
+
+    .summary-value {
+        font-size: 1.8rem;
+        font-weight: 700;
+        color: #333;
+    }
+
+    .summary-stars {
+        display: flex;
+        gap: 2px;
+    }
+
+    .summary-count {
+        font-size: 0.9rem;
+        color: #777;
+    }
+
+    /* Список отзывов */
+    .reviews-list {
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+        margin-bottom: 30px;
+    }
+
     .review-card {
-        border-radius: 20px;
-        background: #fff;
-        transition: transform 0.2s ease;
-        border: none;
-        box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+        background: white;
+        border: 1px solid #eee;
+        border-radius: 10px;
+        padding: 20px;
+        transition: all 0.2s;
+        border-left: 4px solid #27ae60;
     }
 
         .review-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+            background: #fafafa;
+            border-color: #ddd;
+            border-left-color: #27ae60;
         }
 
+    .review-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        margin-bottom: 15px;
+        flex-wrap: wrap;
+        gap: 12px;
+    }
+
+    .review-client-info {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+    }
+
+    .client-avatar {
+        width: 48px;
+        height: 48px;
+        border-radius: 8px;
+        background: #e0e0e0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.5rem;
+        color: #666;
+    }
+
+    .client-details strong {
+        font-size: 1.1rem;
+        color: #333;
+    }
+
+    .review-rating {
+        display: flex;
+        gap: 3px;
+        background: #f5f5f5;
+        padding: 6px 12px;
+        border-radius: 6px;
+    }
+
     .star {
-        color: #ddd;
-        font-size: 18px;
+        color: #ccc;
+        font-size: 1.2rem;
     }
 
     .star-filled {
-        color: #f8b400;
-        font-size: 18px;
+        color: #f39c12;
+        font-size: 1.2rem;
     }
+
+    .review-content {
+        margin: 0;
+        padding: 16px;
+        background: #fafafa;
+        border-radius: 8px;
+        border: 1px solid #eee;
+    }
+
+    .review-text {
+        margin: 0;
+        color: #444;
+        line-height: 1.5;
+    }
+
+    .review-meta {
+        display: flex;
+        align-items: center;
+        margin-top: 12px;
+        padding-top: 12px;
+        border-top: 1px dashed #ddd;
+    }
+
+    .review-date {
+        display: flex;
+        align-items: center;
+        gap: 5px;
+        color: #777;
+        font-size: 0.85rem;
+    }
+
+    /* Форма отзыва */
+    .review-form-section {
+        margin-top: 10px;
+    }
+
+        .review-form-section h4 {
+            font-size: 1.3rem;
+            font-weight: 500;
+            color: #333;
+            margin-bottom: 20px;
+        }
 
     .form-control[readonly] {
         background-color: #f0f0f0;
@@ -185,7 +330,7 @@
     }
 
     .text-success {
-        color: #10b981;
+        color: #555;
         font-size: 0.85rem;
         margin-top: 5px;
         display: block;
@@ -194,4 +339,19 @@
         .text-success i {
             margin-right: 4px;
         }
+
+    @@media (max-width: 768px) {
+        .review-header {
+            flex-direction: column;
+        }
+
+        .summary-rating {
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .summary-value {
+            font-size: 1.5rem;
+        }
+    }
 </style>

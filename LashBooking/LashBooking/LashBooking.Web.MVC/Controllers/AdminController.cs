@@ -17,57 +17,50 @@ namespace LashBooking.Web.MVC.Controllers
         private readonly IRepository<Service> _services;
         private readonly IRepository<Review> _reviews;
         private readonly IRepository<BlockedSlot> _blockedSlots;
+        private readonly IRepository<GalleryPhoto> _galleryPhotos;
+        private readonly IWebHostEnvironment _env;
+
         private readonly string _adminPassword;
 
         public AdminController(
-            IRepository<Appointment> appointments,
-            IRepository<Client> clients,
-            IRepository<Service> services,
-            IRepository<Review> reviews,
-            IRepository<BlockedSlot> blockedSlots,
-            IConfiguration configuration,
-            ILogger logger) : base(logger)
+    IRepository<Appointment> appointments,
+    IRepository<Client> clients,
+    IRepository<Service> services,
+    IRepository<Review> reviews,
+    IRepository<BlockedSlot> blockedSlots,
+    IRepository<GalleryPhoto> galleryPhotos,
+    IWebHostEnvironment env,
+    IConfiguration configuration,
+    ILogger logger) : base(logger)
         {
             _appointments = appointments;
             _clients = clients;
             _services = services;
             _reviews = reviews;
             _blockedSlots = blockedSlots;
+            _galleryPhotos = galleryPhotos;
+            _env = env;
             _adminPassword = configuration["AdminPassword"]
                 ?? throw new InvalidOperationException("Пароль администратора не настроен.");
         }
+
 
         // ===== АВТОРИЗАЦИЯ =====
 
         [SkipRequireAdminAuth]
         [HttpGet]
-        public IActionResult Login(string? error)
+        public IActionResult Login()
         {
             if (HttpContext.Session.GetString("IsAdmin") == "true")
                 return RedirectToAction("Index");
-            if (error != null) ViewBag.Error = error;
-            return View();
+            return Redirect("/Auth/Login");
         }
 
         [SkipRequireAdminAuth]
         [HttpPost]
-        public IActionResult Authorize(string adminPassword)
+        public IActionResult Authorize()
         {
-            try
-            {
-                if (adminPassword == _adminPassword)
-                {
-                    HttpContext.Session.SetString("IsAdmin", "true");
-                    return RedirectToAction("Index");
-                }
-                // Неверный пароль — Warning, не ошибка приложения
-                return RedirectToAction("Login", new { error = "Неверный пароль" });
-            }
-            catch (Exception ex)
-            {
-                CatchException(ex, "AdminController/Authorize", ErrorLevel.Error);
-                return RedirectToAction("Login", new { error = "Ошибка авторизации" });
-            }
+            return Redirect("/Auth/Login");
         }
 
         [SkipRequireAdminAuth]
@@ -75,7 +68,9 @@ namespace LashBooking.Web.MVC.Controllers
         public IActionResult Logout()
         {
             HttpContext.Session.Remove("IsAdmin");
-            return RedirectToAction("Login");
+            HttpContext.Session.Remove("ClientId");
+            HttpContext.Session.Remove("ClientName");
+            return Redirect("/Auth/Login");
         }
 
         // ===== ГЛАВНАЯ =====
@@ -104,6 +99,8 @@ namespace LashBooking.Web.MVC.Controllers
                 else if (tab == "clients") LoadClientsTab(allClients, allAppointments, "");
                 else if (tab == "services") ViewBag.Services = allServices.OrderBy(s => s.Name).ToList();
                 else if (tab == "schedule") await LoadScheduleTab();
+                else if (tab == "gallery") await LoadGalleryTab();
+
 
                 if (TempData["Message"] != null)
                 {
@@ -575,6 +572,101 @@ namespace LashBooking.Web.MVC.Controllers
                 TempData["Message"] = "Ошибка при снятии блокировки.";
                 TempData["IsSuccess"] = false;
                 return RedirectToAction("Index", new { tab = "schedule" });
+            }
+        }
+
+        // ===== ГАЛЕРЕЯ =====
+
+        private async Task LoadGalleryTab()
+        {
+            var photos = await _galleryPhotos.GetAllAsync();
+            ViewBag.GalleryPhotos = photos.OrderBy(p => p.SortOrder).ThenByDescending(p => p.UploadedAt).ToList();
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> UploadGalleryPhoto(IFormFile photo, string? description)
+        {
+            try
+            {
+                if (photo == null || photo.Length == 0)
+                {
+                    TempData["Message"] = "Файл не выбран.";
+                    TempData["IsSuccess"] = false;
+                    return RedirectToAction("Index", new { tab = "gallery" });
+                }
+
+                var ext = Path.GetExtension(photo.FileName).ToLower();
+                var fileName = $"{Guid.NewGuid()}{ext}";
+
+                var galleryPath = Path.Combine(_env.WebRootPath, "images", "gallery");
+                Directory.CreateDirectory(galleryPath);
+                var filePath = Path.Combine(galleryPath, fileName);
+
+                using (var stream = new FileStream(filePath, FileMode.Create))
+                {
+                    await photo.CopyToAsync(stream);
+                }
+
+                var allPhotos = await _galleryPhotos.GetAllAsync();
+                var maxOrder = allPhotos.Any() ? allPhotos.Max(p => p.SortOrder) : 0;
+
+                var galleryPhoto = new GalleryPhoto
+                {
+                    FileName = fileName,
+                    Description = description,
+                    SortOrder = maxOrder + 1,
+                    UploadedAt = DateTime.UtcNow
+                };
+                await _galleryPhotos.AddAsync(galleryPhoto);
+                await _galleryPhotos.SaveChangesAsync();
+
+                TempData["Message"] = "Фото загружено.";
+                TempData["IsSuccess"] = true;
+                return RedirectToAction("Index", new { tab = "gallery" });
+            }
+            catch (Exception ex)
+            {
+                CatchException(ex, "AdminController/UploadGalleryPhoto", ErrorLevel.Error);
+                TempData["Message"] = "Ошибка при загрузке фото.";
+                TempData["IsSuccess"] = false;
+                return RedirectToAction("Index", new { tab = "gallery" });
+            }
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeleteGalleryPhoto(int photoId)
+        {
+            try
+            {
+                var photo = await _galleryPhotos.GetByIdAsync(photoId);
+                if (photo == null)
+                {
+                    TempData["Message"] = "Фото не найдено.";
+                    TempData["IsSuccess"] = false;
+                    return RedirectToAction("Index", new { tab = "gallery" });
+                }
+
+                var filePath = Path.Combine(_env.WebRootPath, "images", "gallery", photo.FileName);
+                if (System.IO.File.Exists(filePath))
+                {
+                    System.IO.File.Delete(filePath);
+                }
+
+                _galleryPhotos.Delete(photo);
+                await _galleryPhotos.SaveChangesAsync();
+
+                TempData["Message"] = "Фото удалено.";
+                TempData["IsSuccess"] = true;
+                return RedirectToAction("Index", new { tab = "gallery" });
+            }
+            catch (Exception ex)
+            {
+                CatchException(ex, "AdminController/DeleteGalleryPhoto", ErrorLevel.Error);
+                TempData["Message"] = "Ошибка при удалении фото.";
+                TempData["IsSuccess"] = false;
+                return RedirectToAction("Index", new { tab = "gallery" });
             }
         }
 
