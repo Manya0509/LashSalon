@@ -98,7 +98,7 @@
                         <h4 class="service-name">@(service?.Name ?? "Услуга не найдена")</h4>
                         <div class="appointment-meta">
                             <span class="duration">⏱️ @(service?.DurationMinutes ?? 0) мин</span>
-                            <span class="price">💰 @(service?.Price.ToString("C") ?? "0 ₽")</span>
+                            <span class="price">💰 @(service?.Price.ToString("N0") ?? "0") ₽</span>
                         </div>
                         @if (!string.IsNullOrEmpty(appointment.Notes))
                         {

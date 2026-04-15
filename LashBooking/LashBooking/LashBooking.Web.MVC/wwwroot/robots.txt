@@ -1,0 +1,8 @@
+﻿User-agent: *
+Allow: /
+Disallow: /Admin
+Disallow: /Auth
+Disallow: /Profile
+Disallow: /Calendar
+
+Sitemap: https://l-studio.store/sitemap.xml

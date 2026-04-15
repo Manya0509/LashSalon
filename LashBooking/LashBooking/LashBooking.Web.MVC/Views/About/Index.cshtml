@@ -1,4 +1,5 @@
-﻿@{
+﻿@model LashBooking.Domain.Entities.AboutInfo
+@{
     Layout = "~/Views/Shared/_Layout.cshtml";
     ViewBag.Title = "Обо мне — LashLukina";
 }
@@ -9,128 +10,148 @@
     </a>
 </div>
 
-<div class="about-container">
-
-    <div class="about-header">
-        <div class="profile-image-wrapper">
-            <img src="/images/master.jpg" alt="Дарья Лукина" class="profile-image" />
-        </div>
-        <div class="profile-title">
-            <h1 class="master-name">Дарья Лукина</h1>
-            <p class="master-role">Мастер Lash-стилист</p>
-            <div class="experience-badge">Опыт работы 5+ лет</div>
-        </div>
-    </div>
-
-    <div class="quote-block">
-        <p class="quote-text">
-            "Ресницы — это не просто красота, это искусство подчеркнуть вашу индивидуальность"
+@if (Model == null)
+{
+    <div class="about-container">
+        <p style="text-align:center; padding: 60px 20px; color: #888; font-size: 1.2rem;">
+            Информация пока не заполнена
         </p>
     </div>
+}
+else
+{
+    <div class="about-container">
 
-    <div class="about-grid">
-        <div class="about-card">
-            <h3>✨ Обо мне</h3>
-            <p>
-                Привет! Меня зовут Дарья. Я сертифицированный Lash-стилист с опытом работы более 5 лет.
-                Моя специализация — создание натуральных и выразительных образов с помощью наращивания ресниц.
-            </p>
-            <p>
-                Я постоянно обучаюсь новым техникам, слежу за трендами и использую только премиальные
-                материалы, чтобы каждая клиентка чувствовала себя уверенно и красиво.
-            </p>
-        </div>
-
-        <div class="about-card">
-            <h3>🎓 Образование</h3>
-            <ul class="education-list">
-                <li>✓ Школа LashStudio (2019)</li>
-                <li>✓ Школа LashTime (2020)</li>
-                <li>✓ Сертифицированный мастер бровист (2021)</li>
-                <li>✓ Сертифицированный мастер по ламинированию бровей (2021)</li>
-            </ul>
-        </div>
-    </div>
-
-    <h3 class="section-title">Почему выбирают меня</h3>
-    <div class="advantages-grid">
-        <div class="advantage-item">
-            <div class="advantage-icon">🔬</div>
-            <h4>Стерильность</h4>
-            <p>Все инструменты проходят многоступенчатую обработку</p>
-        </div>
-        <div class="advantage-item">
-            <div class="advantage-icon">💎</div>
-            <h4>Материалы</h4>
-            <p>Только премиальные бренды: Lovely, Enigma, Be Perfect</p>
-        </div>
-        <div class="advantage-item">
-            <div class="advantage-icon">⏱️</div>
-            <h4>Скорость</h4>
-            <p>Наращивание за 1.5-2 часа без потери качества</p>
-        </div>
-        <div class="advantage-item">
-            <div class="advantage-icon">❤️</div>
-            <h4>Гарантия</h4>
-            <p>Даю гарантию на работу до 3-х недель</p>
-        </div>
-    </div>
-
-    <h3 class="section-title">Мои сертификаты</h3>
-
-    <div class="certificates-grid">
-        <div class="certificate-item">
-            <img src="/images/Certificate/cert1.jpg" alt="Сертификат 1" class="certificate-image" />
-        </div>
-        <div class="certificate-item">
-            <img src="/images/Certificate/cert3.jpg" alt="Сертификат 2" class="certificate-image" />
-        </div>
-        <div class="certificate-item">
-            <img src="/images/Certificate/cert2.jpg" alt="Сертификат 3" class="certificate-image" />
-        </div>
-        <div class="certificate-item">
-            <img src="/images/Certificate/cert4.jpg" alt="Сертификат 4" class="certificate-image" />
-        </div>
-        <div class="certificate-item">
-            <img src="/images/Certificate/cert5.jpg" alt="Сертификат 5" class="certificate-image" />
-        </div>
-    </div>
-
-    <div class="certificate-row-full">
-        <div class="certificate-item certificate-horizontal">
-            <img src="/images/Certificate/cert6.jpg" alt="Сертификат 6" class="certificate-image-horizontal" />
-        </div>
-    </div>
-
-    <div class="contact-section">
-        <h3 class="section-title">Как со мной связаться</h3>
-        <div class="contact-links">
-            <a href="https://wa.me/79994103801" class="contact-link whatsapp" target="_blank">
-                <i class="bi bi-whatsapp"></i> WhatsApp
-            </a>
-            <a href="https://t.me/79994103801" class="contact-link telegram" target="_blank">
-                <i class="bi bi-telegram"></i> Telegram
-            </a>
-            <button class="contact-link phone" onclick="showPhone()">
-                <i class="bi bi-telephone-fill"></i> Позвонить
-            </button>
-        </div>
-
-        <div class="info-block">
-            <p><i class="bi bi-geo-alt-fill"></i> г. Чита, ул. Журавлева, д. 72</p>
-            <p><i class="bi bi-clock-fill"></i> Ежедневно с 9:00 до 18:00</p>
-        </div>
-
-        <div class="phone-popup" id="phonePopup">
-            <div class="phone-popup-content">
-                <i class="bi bi-telephone-fill"></i>
-                <span class="phone-number">+7 (999) 410-38-01</span>
-                <button class="phone-popup-close" onclick="hidePhone()">✕</button>
+        <div class="about-header">
+            <div class="profile-image-wrapper">
+                @if (!string.IsNullOrEmpty(Model.PhotoFileName))
+                {
+                    <img src="/images/@Model.PhotoFileName" alt="@Model.MasterName" class="profile-image" />
+                }
+                else
+                {
+                    <img src="/images/master.jpg" alt="@Model.MasterName" class="profile-image" />
+                }
+            </div>
+            <div class="profile-title">
+                <h1 class="master-name">@Model.MasterName</h1>
+                <p class="master-role">@Model.Role</p>
+                <div class="experience-badge">@Model.Experience</div>
             </div>
         </div>
-    </div>
 
-</div>
+        <div class="quote-block">
+            <p class="quote-text">
+                "@Model.Quote"
+            </p>
+        </div>
+
+        <div class="about-grid">
+            <div class="about-card">
+                <h3>✨ Обо мне</h3>
+                @foreach (var paragraph in Model.AboutText.Split('\n', StringSplitOptions.RemoveEmptyEntries))
+                {
+                    <p>@paragraph.Trim()</p>
+                }
+            </div>
+
+            <div class="about-card">
+                <h3>🎓 Образование</h3>
+                <ul class="education-list">
+                    @foreach (var line in Model.EducationText.Split('\n', StringSplitOptions.RemoveEmptyEntries))
+                    {
+                        <li>✓ @line.Trim()</li>
+                    }
+                </ul>
+            </div>
+        </div>
+
+        <h3 class="section-title">Почему выбирают меня</h3>
+        <div class="advantages-grid">
+            <div class="advantage-item">
+                <div class="advantage-icon">🔬</div>
+                <h4>Стерильность</h4>
+                <p>Все инструменты проходят многоступенчатую обработку</p>
+            </div>
+            <div class="advantage-item">
+                <div class="advantage-icon">💎</div>
+                <h4>Материалы</h4>
+                <p>Только премиальные бренды: Lovely, Enigma, Be Perfect</p>
+            </div>
+            <div class="advantage-item">
+                <div class="advantage-icon">⏱️</div>
+                <h4>Скорость</h4>
+                <p>Наращивание за 1.5-2 часа без потери качества</p>
+            </div>
+            <div class="advantage-item">
+                <div class="advantage-icon">❤️</div>
+                <h4>Гарантия</h4>
+                <p>Даю гарантию на работу до 3-х недель</p>
+            </div>
+        </div>
+
+        <h3 class="section-title">Мои сертификаты</h3>
+
+        <div class="certificates-grid">
+            <div class="certificate-item">
+                <img src="/images/Certificate/cert1.jpg" alt="Сертификат 1" class="certificate-image" />
+            </div>
+            <div class="certificate-item">
+                <img src="/images/Certificate/cert3.jpg" alt="Сертификат 2" class="certificate-image" />
+            </div>
+            <div class="certificate-item">
+                <img src="/images/Certificate/cert2.jpg" alt="Сертификат 3" class="certificate-image" />
+            </div>
+            <div class="certificate-item">
+                <img src="/images/Certificate/cert4.jpg" alt="Сертификат 4" class="certificate-image" />
+            </div>
+            <div class="certificate-item">
+                <img src="/images/Certificate/cert5.jpg" alt="Сертификат 5" class="certificate-image" />
+            </div>
+        </div>
+
+        <div class="certificate-row-full">
+            <div class="certificate-item certificate-horizontal">
+                <img src="/images/Certificate/cert6.jpg" alt="Сертификат 6" class="certificate-image-horizontal" />
+            </div>
+        </div>
+
+        <div class="contact-section">
+            <h3 class="section-title">Как со мной связаться</h3>
+            <div class="contact-links">
+                @if (!string.IsNullOrEmpty(Model.WhatsAppLink))
+                {
+                    <a href="@Model.WhatsAppLink" class="contact-link whatsapp" target="_blank">
+                        <i class="bi bi-whatsapp"></i> WhatsApp
+                    </a>
+                }
+                @if (!string.IsNullOrEmpty(Model.TelegramLink))
+                {
+                    <a href="@Model.TelegramLink" class="contact-link telegram" target="_blank">
+                        <i class="bi bi-telegram"></i> Telegram
+                    </a>
+                }
+                <button class="contact-link phone" onclick="showPhone()">
+                    <i class="bi bi-telephone-fill"></i> Позвонить
+                </button>
+            </div>
+
+            <div class="info-block">
+                <p><i class="bi bi-geo-alt-fill"></i> @Model.Address</p>
+                <p><i class="bi bi-clock-fill"></i> @Model.WorkingHours</p>
+            </div>
+
+            <div class="phone-popup" id="phonePopup">
+                <div class="phone-popup-content">
+                    <i class="bi bi-telephone-fill"></i>
+                    <span class="phone-number">@Model.Phone</span>
+                    <button class="phone-popup-close" onclick="hidePhone()">✕</button>
+                </div>
+            </div>
+        </div>
+
+    </div>
+}
 
 <style>
     .back-button-container {
@@ -159,7 +180,6 @@
             background: #555;
             color: white;
             transform: translateX(-3px);
-            box-shadow: 0 4px 10px rgba(79, 70, 229, 0.3);
         }
 
     .back-icon {
@@ -599,7 +619,7 @@
         .about-card {
             padding: 20px;
         }
-        
+
         .contact-section {
             padding: 20px 15px;
         }
@@ -611,22 +631,18 @@
 </style>
 
 <script>
-        // Показывает попап — добавляет класс 'show' который делает его видимым
     function showPhone() {
         document.getElementById('phonePopup').classList.add('show');
     }
 
-    // Скрывает попап — убирает класс 'show'
     function hidePhone() {
         document.getElementById('phonePopup').classList.remove('show');
     }
 
-    // Слушает клики по всей странице
     document.addEventListener('click', function (event) {
-        var popup   = document.getElementById('phonePopup');
-        var phoneBtn = event.target.closest('.contact-link.phone'); // проверяем — кликнули ли на кнопку телефона
-
-        // Если клик был НЕ на кнопку телефона И НЕ внутри попапа — закрываем попап
+        var popup = document.getElementById('phonePopup');
+        if (!popup) return;
+        var phoneBtn = event.target.closest('.contact-link.phone');
         if (!phoneBtn && !popup.contains(event.target)) {
             popup.classList.remove('show');
         }

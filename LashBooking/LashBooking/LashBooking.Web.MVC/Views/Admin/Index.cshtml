@@ -94,7 +94,9 @@
         <a href="/Admin/Index?tab=gallery" class="nav-btn @(activeTab == "gallery" ? "active" : "")">
             <i class="bi bi-image"></i> Галерея
         </a>
-
+        <a href="/Admin/Index?tab=about" class="nav-btn @(activeTab == "about" ? "active" : "")">
+            <i class="bi bi-person-badge"></i> О себе
+        </a>
     </div>
 
     <div class="admin-content">
@@ -212,7 +214,7 @@
                                         <td>@clientPhone</td>
                                         <td>@serviceName</td>
                                         <td>@duration мин</td>
-                                        <td class="price-cell">@price.ToString("N2") ₽</td>
+                                        <td class="price-cell">@price.ToString("N0") ₽</td>
                                         <td>
                                             <select class="status-select @sc"
                                                     onchange="updateStatus(@appt.Id, this.value, this)">
@@ -566,7 +568,7 @@
                                         data-duration="@svc.DurationMinutes">
                                         <td><strong>@svc.Name</strong></td>
                                         <td>@(svc.Description ?? "—")</td>
-                                        <td class="price-cell">@svc.Price.ToString("N2") ₽</td>
+                                        <td class="price-cell">@svc.Price.ToString("N0") ₽</td>
                                         <td>@svc.DurationMinutes мин</td>
                                         <td><span style="color:@activeColor">@activeText</span></td>
                                         <td class="actions-cell">
@@ -807,7 +809,123 @@
                 </div>
             </div>
         }
+        @* ===== О СЕБЕ ===== *@
+        else if (activeTab == "about")
+        {
+            var aboutInfo = ViewBag.AboutInfo as AboutInfo;
 
+            <div class="management-section">
+                <div class="section-header">
+                    <h2><i class="bi bi-person-badge"></i> Информация «О себе»</h2>
+                </div>
+
+                <form method="post" action="/Admin/SaveAboutInfo" enctype="multipart/form-data">
+                    @Html.AntiForgeryToken()
+
+                    <div class="about-admin-form">
+                        @* Фото мастера *@
+                        <div class="form-group">
+                            <label class="form-label">Фото мастера</label>
+                            @if (!string.IsNullOrEmpty(aboutInfo?.PhotoFileName))
+                            {
+                                <div style="margin-bottom: 10px">
+                                    <img src="/images/@aboutInfo.PhotoFileName" alt="Фото мастера"
+                                         style="max-width: 200px; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.1)" />
+                                </div>
+                            }
+                            <input type="file" class="form-control" name="photo" accept="image/*" />
+                            <small style="color: #888">Оставьте пустым, чтобы сохранить текущее фото</small>
+                        </div>
+
+                        @* Основная информация *@
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label class="form-label">Имя</label>
+                                <input type="text" class="form-control" name="masterName"
+                                       value="@(aboutInfo?.MasterName ?? "")" required
+                                       placeholder="Дарья Лукина" />
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Роль / специализация</label>
+                                <input type="text" class="form-control" name="role"
+                                       value="@(aboutInfo?.Role ?? "")" required
+                                       placeholder="Мастер Lash-стилист" />
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">Опыт</label>
+                            <input type="text" class="form-control" name="experience"
+                                   value="@(aboutInfo?.Experience ?? "")" required
+                                   placeholder="Опыт работы 5+ лет" />
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">Цитата</label>
+                            <textarea class="form-control" name="quote" rows="2"
+                                  placeholder="Ресницы — это не просто красота...">@(aboutInfo?.Quote ?? "")</textarea>
+                        </div>
+
+                        @* Тексты *@
+                        <div class="form-group">
+                            <label class="form-label">Текст «Обо мне»</label>
+                            <textarea class="form-control" name="aboutText" rows="5"
+                                  placeholder="Расскажите о себе...">@(aboutInfo?.AboutText ?? "")</textarea>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">Образование</label>
+                            <textarea class="form-control" name="educationText" rows="5"
+                                  placeholder="Школа LashStudio (2019)&#10;Школа LashTime (2020)&#10;...">@(aboutInfo?.EducationText ?? "")</textarea>
+                        </div>
+
+                        @* Контакты *@
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label class="form-label">Адрес</label>
+                                <input type="text" class="form-control" name="address"
+                                       value="@(aboutInfo?.Address ?? "")" required
+                                       placeholder="г. Чита, ул. Журавлева, д. 72" />
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Часы работы</label>
+                                <input type="text" class="form-control" name="workingHours"
+                                       value="@(aboutInfo?.WorkingHours ?? "")" required
+                                       placeholder="Ежедневно с 9:00 до 18:00" />
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">Телефон</label>
+                            <input type="text" class="form-control" name="phone"
+                                   value="@(aboutInfo?.Phone ?? "")" required
+                                   placeholder="+7 (999) 410-38-01" />
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label class="form-label">WhatsApp ссылка</label>
+                                <input type="text" class="form-control" name="whatsAppLink"
+                                       value="@(aboutInfo?.WhatsAppLink ?? "")"
+                                       placeholder="https://wa.me/79994103801" />
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Telegram ссылка</label>
+                                <input type="text" class="form-control" name="telegramLink"
+                                       value="@(aboutInfo?.TelegramLink ?? "")"
+                                       placeholder="https://t.me/79994103801" />
+                            </div>
+                        </div>
+
+                        <div style="margin-top: 20px">
+                            <button type="submit" class="btn-primary">
+                                <i class="bi bi-check-lg"></i> Сохранить
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        }
     </div>@* /admin-content *@
 </div>@* /admin-container *@
 
@@ -2011,7 +2129,53 @@
             grid-template-columns: repeat(2, 1fr);
         }
     }
-</style>
+    /* О себе — форма в админке */
+    .about-admin-form {
+        max-width: 800px;
+    }
+
+        .about-admin-form .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+
+        .about-admin-form .form-group {
+            margin-bottom: 18px;
+        }
+
+        .about-admin-form .form-label {
+            display: block;
+            margin-bottom: 6px;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .about-admin-form .form-control {
+            width: 100%;
+            padding: 10px 14px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 0.95rem;
+            transition: border-color 0.2s;
+            box-sizing: border-box;
+        }
+
+            .about-admin-form .form-control:focus {
+                outline: none;
+                border-color: #555;
+            }
+
+        .about-admin-form textarea.form-control {
+            resize: vertical;
+        }
+
+    @@media screen and (max-width: 768px) {
+        .about-admin-form .form-row {
+            grid-template-columns: 1fr;
+        }
+    }
+    </style>
 
 @section Scripts {
     <script>

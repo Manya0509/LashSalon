@@ -26,7 +26,7 @@
 </div>
 
 <div class="booking-card">
-    <h2 class="booking-title">✏️ Онлайн запись</h2>
+    <h1 class="booking-title">✏️ Онлайн запись</h1>
 
     @if (!string.IsNullOrEmpty(message))
     {
@@ -81,13 +81,13 @@
                     if (s.Id == selectedServiceId)
                     {
                         <option value="@s.Id" selected>
-                            @s.Name — @s.Price.ToString("N2") ₽
+                            @s.Name — @s.Price.ToString("N0") ₽
                         </option>
                     }
                     else
                     {
                         <option value="@s.Id">
-                            @s.Name — @s.Price.ToString("N2") ₽
+                            @s.Name — @s.Price.ToString("N0") ₽
                         </option>
                     }
                 }

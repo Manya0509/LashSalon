@@ -18,6 +18,7 @@ public class ApplicationDbContext : DbContext
     public DbSet<Review> Reviews => Set<Review>();
     public DbSet<BlockedSlot> BlockedSlots { get; set; }
     public DbSet<GalleryPhoto> GalleryPhotos => Set<GalleryPhoto>();
+    public DbSet<AboutInfo> AboutInfos => Set<AboutInfo>();
     public DbSet<LogApplicationError> LogApplicationErrors { get; set; }  // таблица логов ошибок
 
     public LogApplicationError Insert(LogApplicationError logApplicationError) // сохраняет запись лога напрямую через контекст без репозитория
@@ -36,6 +37,7 @@ public class ApplicationDbContext : DbContext
         modelBuilder.ApplyConfiguration(new AppointmentConfiguration());
         modelBuilder.ApplyConfiguration(new ReviewConfiguration());
         modelBuilder.ApplyConfiguration(new GalleryPhotoConfiguration());
+        modelBuilder.ApplyConfiguration(new AboutInfoConfiguration());
         modelBuilder.Entity<LogApplicationError>().ToTable("LogApplicationError", t => t.ExcludeFromMigrations());
     }
 }

@@ -18,20 +18,22 @@ namespace LashBooking.Web.MVC.Controllers
         private readonly IRepository<Review> _reviews;
         private readonly IRepository<BlockedSlot> _blockedSlots;
         private readonly IRepository<GalleryPhoto> _galleryPhotos;
+        private readonly IRepository<AboutInfo> _aboutInfos;
         private readonly IWebHostEnvironment _env;
 
         private readonly string _adminPassword;
 
         public AdminController(
-    IRepository<Appointment> appointments,
-    IRepository<Client> clients,
-    IRepository<Service> services,
-    IRepository<Review> reviews,
-    IRepository<BlockedSlot> blockedSlots,
-    IRepository<GalleryPhoto> galleryPhotos,
-    IWebHostEnvironment env,
-    IConfiguration configuration,
-    ILogger logger) : base(logger)
+            IRepository<Appointment> appointments,
+            IRepository<Client> clients,
+            IRepository<Service> services,
+            IRepository<Review> reviews,
+            IRepository<BlockedSlot> blockedSlots,
+            IRepository<GalleryPhoto> galleryPhotos,
+            IRepository<AboutInfo> aboutInfos,
+            IWebHostEnvironment env,
+            IConfiguration configuration,
+            ILogger logger) : base(logger)
         {
             _appointments = appointments;
             _clients = clients;
@@ -39,6 +41,7 @@ namespace LashBooking.Web.MVC.Controllers
             _reviews = reviews;
             _blockedSlots = blockedSlots;
             _galleryPhotos = galleryPhotos;
+            _aboutInfos = aboutInfos;
             _env = env;
             _adminPassword = configuration["AdminPassword"]
                 ?? throw new InvalidOperationException("Пароль администратора не настроен.");
@@ -100,7 +103,7 @@ namespace LashBooking.Web.MVC.Controllers
                 else if (tab == "services") ViewBag.Services = allServices.OrderBy(s => s.Name).ToList();
                 else if (tab == "schedule") await LoadScheduleTab();
                 else if (tab == "gallery") await LoadGalleryTab();
-
+                else if (tab == "about") await LoadAboutTab();
 
                 if (TempData["Message"] != null)
                 {
@@ -575,8 +578,142 @@ namespace LashBooking.Web.MVC.Controllers
             }
         }
 
-        // ===== ГАЛЕРЕЯ =====
+        // ===== О СЕБЕ =====
+        private async Task LoadAboutTab()
+        {
+            var all = await _aboutInfos.GetAllAsync();
+            var info = all.FirstOrDefault();
 
+            // Если записи ещё нет — подставляем данные, которые сейчас захардкожены на сайте
+            if (info == null)
+            {
+                info = new AboutInfo
+                {
+                    MasterName = "Дарья Лукина",
+                    Role = "Мастер Lash-стилист",
+                    Experience = "Опыт работы 5+ лет",
+                    Quote = "Ресницы — это не просто красота, это искусство подчеркнуть вашу индивидуальность",
+                    AboutText = "Привет! Меня зовут Дарья. Я сертифицированный Lash-стилист с опытом работы более 5 лет. Моя специализация — создание натуральных и выразительных образов с помощью наращивания ресниц.\nЯ постоянно обучаюсь новым техникам, слежу за трендами и использую только премиальные материалы, чтобы каждая клиентка чувствовала себя уверенно и красиво.",
+                    EducationText = "Школа LashStudio (2019)\nШкола LashTime (2020)\nСертифицированный мастер бровист (2021)\nСертифицированный мастер по ламинированию бровей (2021)",
+                    Address = "г. Чита, ул. Журавлева, д. 72",
+                    WorkingHours = "Ежедневно с 9:00 до 18:00",
+                    Phone = "+7 (999) 410-38-01",
+                    WhatsAppLink = "https://wa.me/79994103801",
+                    TelegramLink = "https://t.me/79994103801"
+                };
+            }
+
+            ViewBag.AboutInfo = info;
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> SaveAboutInfo(
+        string masterName, string role, string experience,
+        string quote, string aboutText, string educationText,
+        string address, string workingHours, string phone,
+        string? whatsAppLink, string? telegramLink,
+        IFormFile? photo)
+        {
+            try
+            {
+                // Получаем все записи из таблицы (там 0 или 1 запись)
+                var all = await _aboutInfos.GetAllAsync();
+                var info = all.FirstOrDefault();
+
+                if (info == null)
+                {
+                    // Записи ещё нет — создаём новую
+                    info = new AboutInfo();
+                    // Заполняем все поля из формы
+                    info.MasterName = masterName;
+                    info.Role = role;
+                    info.Experience = experience;
+                    info.Quote = quote;
+                    info.AboutText = aboutText;
+                    info.EducationText = educationText;
+                    info.Address = address;
+                    info.WorkingHours = workingHours;
+                    info.Phone = phone;
+                    info.WhatsAppLink = whatsAppLink;
+                    info.TelegramLink = telegramLink;
+
+                    // Если загружено фото — сохраняем файл
+                    if (photo != null && photo.Length > 0)
+                    {
+                        var ext = Path.GetExtension(photo.FileName).ToLower();
+                        var fileName = $"{Guid.NewGuid()}{ext}";
+                        var filePath = Path.Combine(_env.WebRootPath, "images", fileName);
+
+                        using (var stream = new FileStream(filePath, FileMode.Create))
+                        {
+                            await photo.CopyToAsync(stream);
+                        }
+
+                        info.PhotoFileName = fileName;
+                    }
+
+                    await _aboutInfos.AddAsync(info);
+                }
+                else
+                {
+                    // Запись уже существует — обновляем поля
+                    info.MasterName = masterName;
+                    info.Role = role;
+                    info.Experience = experience;
+                    info.Quote = quote;
+                    info.AboutText = aboutText;
+                    info.EducationText = educationText;
+                    info.Address = address;
+                    info.WorkingHours = workingHours;
+                    info.Phone = phone;
+                    info.WhatsAppLink = whatsAppLink;
+                    info.TelegramLink = telegramLink;
+
+                    // Если загружено новое фото — заменяем
+                    if (photo != null && photo.Length > 0)
+                    {
+                        // Удаляем старое фото, если оно есть
+                        if (!string.IsNullOrEmpty(info.PhotoFileName))
+                        {
+                            var oldPath = Path.Combine(_env.WebRootPath, "images", info.PhotoFileName);
+                            if (System.IO.File.Exists(oldPath))
+                            {
+                                System.IO.File.Delete(oldPath);
+                            }
+                        }
+
+                        var ext = Path.GetExtension(photo.FileName).ToLower();
+                        var fileName = $"{Guid.NewGuid()}{ext}";
+                        var filePath = Path.Combine(_env.WebRootPath, "images", fileName);
+
+                        using (var stream = new FileStream(filePath, FileMode.Create))
+                        {
+                            await photo.CopyToAsync(stream);
+                        }
+
+                        info.PhotoFileName = fileName;
+                    }
+
+                    _aboutInfos.Update(info);
+                }
+
+                await _aboutInfos.SaveChangesAsync();
+
+                TempData["Message"] = "Информация сохранена.";
+                TempData["IsSuccess"] = true;
+                return RedirectToAction("Index", new { tab = "about" });
+            }
+            catch (Exception ex)
+            {
+                CatchException(ex, "AdminController/SaveAboutInfo", ErrorLevel.Error);
+                TempData["Message"] = "Ошибка при сохранении.";
+                TempData["IsSuccess"] = false;
+                return RedirectToAction("Index", new { tab = "about" });
+            }
+        }
+
+        // ===== ГАЛЕРЕЯ =====
         private async Task LoadGalleryTab()
         {
             var photos = await _galleryPhotos.GetAllAsync();
