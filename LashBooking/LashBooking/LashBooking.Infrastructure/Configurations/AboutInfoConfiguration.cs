@@ -54,6 +54,12 @@ namespace LashBooking.Infrastructure.Configurations
 
             builder.Property(a => a.PhotoFileName)
                 .HasMaxLength(255);                          // Имя файла фото
+
+            builder.Property(a => a.StudioName)
+                .HasMaxLength(200);            // Название студии
+
+            builder.Property(a => a.HeroPhotoFileName)
+                .HasMaxLength(255);            // Имя файла фото-фона 
         }
     }
 }

@@ -1,16 +1,25 @@
-﻿@{
+﻿@using LashBooking.Domain.Entities
+@{
     Layout = "~/Views/Shared/_Layout.cshtml";
     ViewBag.Title = "LashLukina — Студия наращивания ресниц";
 
     bool isAuthenticated = ViewBag.IsAuthenticated ?? false;
     string clientName = ViewBag.ClientName ?? "";
     bool isAdmin = Context.Session.GetString("IsAdmin") == "true";
-    string phoneNumber = "+7 (999) 410-38-01";
     decimal minPrice = ViewBag.MinPrice ?? 0;
+
+    var about = ViewBag.AboutInfo as AboutInfo;
+    string phoneNumber = about?.Phone ?? "+7 (999) 410-38-01";
+    string whatsAppLink = about?.WhatsAppLink ?? "https://wa.me/79994103801";
+    string telegramLink = about?.TelegramLink ?? "https://t.me/79994103801";
+    string masterName = about?.MasterName ?? "Дарья Лукина";
+    string studioName = about?.StudioName ?? "Студия LashLukina";
+    string address = about?.Address ?? "г. Чита, ул. Журавлева, д. 72";
+    string heroPhoto = about?.HeroPhotoFileName ?? "avatar.jpg";
 }
 
 <div class="avatar-wrapper-fullscreen">
-    <img src="/images/avatar.jpg" class="avatar-img-fullscreen" />
+    <img src="/images/@heroPhoto" class="avatar-img-fullscreen" />
 
     @if (isAdmin)
     {
@@ -49,9 +58,9 @@
     }
 
     <div class="overlay bottom-text">
-        <h1 class="name">Дарья Лукина</h1>
-        <h5 class="studio">Студия LashLukina</h5>
-        <h5 class="studio">г. Чита, ул. Журавлева, д. 72</h5>
+        <h1 class="name">@masterName</h1>
+        <h5 class="studio">@studioName</h5>
+        <h5 class="studio">@address</h5>
     </div>
 </div>
 
@@ -78,19 +87,25 @@
     <h5 class="mt-4 mb-3">Связаться со мной:</h5>
 
     <div class="contact-buttons">
-        <a href="https://wa.me/79994103801"
-           target="_blank"
-           class="contact-btn whatsapp">
-            <i class="bi bi-whatsapp"></i>
-            <span>WhatsApp</span>
-        </a>
+        @if (!string.IsNullOrEmpty(whatsAppLink))
+        {
+            <a href="@whatsAppLink"
+               target="_blank"
+               class="contact-btn whatsapp">
+                <i class="bi bi-whatsapp"></i>
+                <span>WhatsApp</span>
+            </a>
+        }
 
-        <a href="https://t.me/79994103801"
-           target="_blank"
-           class="contact-btn telegram">
-            <i class="bi bi-telegram"></i>
-            <span>Telegram</span>
-        </a>
+        @if (!string.IsNullOrEmpty(telegramLink))
+        {
+            <a href="@telegramLink"
+               target="_blank"
+               class="contact-btn telegram">
+                <i class="bi bi-telegram"></i>
+                <span>Telegram</span>
+            </a>
+        }
 
         <button class="contact-btn phone" onclick="showPhone()">
             <i class="bi bi-telephone-fill"></i>

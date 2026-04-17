@@ -599,7 +599,8 @@ namespace LashBooking.Web.MVC.Controllers
                     WorkingHours = "Ежедневно с 9:00 до 18:00",
                     Phone = "+7 (999) 410-38-01",
                     WhatsAppLink = "https://wa.me/79994103801",
-                    TelegramLink = "https://t.me/79994103801"
+                    TelegramLink = "https://t.me/79994103801",
+                    StudioName = "Студия LashLukina"
                 };
             }
 
@@ -609,11 +610,12 @@ namespace LashBooking.Web.MVC.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> SaveAboutInfo(
-        string masterName, string role, string experience,
-        string quote, string aboutText, string educationText,
-        string address, string workingHours, string phone,
-        string? whatsAppLink, string? telegramLink,
-        IFormFile? photo)
+    string masterName, string role, string experience,
+    string quote, string aboutText, string educationText,
+    string address, string workingHours, string phone,
+    string? whatsAppLink, string? telegramLink,
+    string? studioName,
+    IFormFile? photo, IFormFile? heroPhoto)
         {
             try
             {
@@ -637,6 +639,7 @@ namespace LashBooking.Web.MVC.Controllers
                     info.Phone = phone;
                     info.WhatsAppLink = whatsAppLink;
                     info.TelegramLink = telegramLink;
+                    info.StudioName = studioName;
 
                     // Если загружено фото — сохраняем файл
                     if (photo != null && photo.Length > 0)
@@ -651,6 +654,20 @@ namespace LashBooking.Web.MVC.Controllers
                         }
 
                         info.PhotoFileName = fileName;
+                    }
+                    // Если загружено фото фона главной
+                    if (heroPhoto != null && heroPhoto.Length > 0)
+                    {
+                        var heroExt = Path.GetExtension(heroPhoto.FileName).ToLower();
+                        var heroFileName = $"{Guid.NewGuid()}{heroExt}";
+                        var heroFilePath = Path.Combine(_env.WebRootPath, "images", heroFileName);
+
+                        using (var stream = new FileStream(heroFilePath, FileMode.Create))
+                        {
+                            await heroPhoto.CopyToAsync(stream);
+                        }
+
+                        info.HeroPhotoFileName = heroFileName;
                     }
 
                     await _aboutInfos.AddAsync(info);
@@ -669,6 +686,7 @@ namespace LashBooking.Web.MVC.Controllers
                     info.Phone = phone;
                     info.WhatsAppLink = whatsAppLink;
                     info.TelegramLink = telegramLink;
+                    info.StudioName = studioName;
 
                     // Если загружено новое фото — заменяем
                     if (photo != null && photo.Length > 0)
@@ -693,6 +711,29 @@ namespace LashBooking.Web.MVC.Controllers
                         }
 
                         info.PhotoFileName = fileName;
+                    }
+                    // Если загружено новое фото фона главной
+                    if (heroPhoto != null && heroPhoto.Length > 0)
+                    {
+                        if (!string.IsNullOrEmpty(info.HeroPhotoFileName))
+                        {
+                            var oldHeroPath = Path.Combine(_env.WebRootPath, "images", info.HeroPhotoFileName);
+                            if (System.IO.File.Exists(oldHeroPath))
+                            {
+                                System.IO.File.Delete(oldHeroPath);
+                            }
+                        }
+
+                        var heroExt = Path.GetExtension(heroPhoto.FileName).ToLower();
+                        var heroFileName = $"{Guid.NewGuid()}{heroExt}";
+                        var heroFilePath = Path.Combine(_env.WebRootPath, "images", heroFileName);
+
+                        using (var stream = new FileStream(heroFilePath, FileMode.Create))
+                        {
+                            await heroPhoto.CopyToAsync(stream);
+                        }
+
+                        info.HeroPhotoFileName = heroFileName;
                     }
 
                     _aboutInfos.Update(info);

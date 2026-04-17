@@ -823,6 +823,27 @@
                     @Html.AntiForgeryToken()
 
                     <div class="about-admin-form">
+                        @* Название студии *@
+                        <div class="form-group">
+                            <label class="form-label">Название студии</label>
+                            <input type="text" class="form-control" name="studioName"
+                                   value="@(aboutInfo?.StudioName ?? "")"
+                                   placeholder="Студия LashLukina" />
+                        </div>
+
+                        @* Фото фона главной *@
+                        <div class="form-group">
+                            <label class="form-label">Фото фона на главной</label>
+                            @if (!string.IsNullOrEmpty(aboutInfo?.HeroPhotoFileName))
+                            {
+                                <div style="margin-bottom: 10px">
+                                    <img src="/images/@aboutInfo.HeroPhotoFileName" alt="Фото главной"
+                                         style="max-width: 300px; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.1)" />
+                                </div>
+                            }
+                            <input type="file" class="form-control" name="heroPhoto" accept="image/*" />
+                            <small style="color: #888">Большое фото-фон на главной странице. Оставьте пустым, чтобы сохранить текущее</small>
+                        </div>
                         @* Фото мастера *@
                         <div class="form-group">
                             <label class="form-label">Фото мастера</label>

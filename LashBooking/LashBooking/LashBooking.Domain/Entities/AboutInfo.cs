@@ -21,5 +21,7 @@ namespace LashBooking.Domain.Entities
         public string? WhatsAppLink { get; set; }        // Ссылка на WhatsApp
         public string? TelegramLink { get; set; }        // Ссылка на Telegram
         public string? PhotoFileName { get; set; }        // Имя файла фото мастера 
+        public string? StudioName { get; set; }        // Название студии
+        public string? HeroPhotoFileName { get; set; }        // Имя файла фото-фона на главной странице
     }
 }
