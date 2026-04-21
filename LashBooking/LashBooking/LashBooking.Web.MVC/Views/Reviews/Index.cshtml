@@ -1,6 +1,6 @@
 ﻿@{
-    Layout = "~/Views/Shared/_Layout.cshtml";
-    ViewBag.Title = "Отзывы — LashLukina";
+    ViewBag.Title = "Отзывы клиентов — Студия LashLukina, Чита";
+    ViewBag.Description = "Реальные отзывы о работе мастера LashLukina. Наращивание ресниц в Чите — что говорят клиенты.";
 
     var reviews = ViewBag.Reviews as List<LashBooking.Domain.Entities.Review> ?? new();
     double averageRating = ViewBag.AverageRating ?? 0.0;

@@ -6,6 +6,13 @@
     string? errorMessage = ViewBag.ErrorMessage as string;
     string? successMessage = ViewBag.SuccessMessage as string;
 }
+@section Head {
+    <meta name="robots" content="noindex, nofollow" />
+}
+
+<div class="back-button-container">
+    <a href="/" class="back-btn">← На главную</a>
+</div>
 
 <div class="auth-container">
     <div class="auth-card">
@@ -109,6 +116,29 @@
 </div>
 
 <style>
+    .back-button-container {
+        max-width: 1200px;
+        margin: 20px auto 0;
+        padding: 0 20px;
+    }
+
+    .back-btn {
+        display: inline-block;
+        padding: 10px 24px;
+        background: transparent;
+        border: 2px solid #333;
+        border-radius: 30px;
+        color: #333;
+        text-decoration: none;
+        font-weight: 500;
+        transition: all 0.3s ease;
+    }
+
+        .back-btn:hover {
+            background: #333;
+            color: white;
+        }
+
     .auth-container {
         min-height: 100vh;
         display: flex;
@@ -309,6 +339,11 @@
 
         .toggle-btn {
             padding: 10px;
+        }
+
+        .auth-container {
+            align-items: flex-start;
+            padding-top: 20px;
         }
     }
 </style>

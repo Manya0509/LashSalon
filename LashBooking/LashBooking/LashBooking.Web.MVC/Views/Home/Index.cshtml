@@ -1,7 +1,8 @@
 ﻿@using LashBooking.Domain.Entities
 @{
     Layout = "~/Views/Shared/_Layout.cshtml";
-    ViewBag.Title = "LashLukina — Студия наращивания ресниц";
+    ViewBag.Title = "Наращивание ресниц в Чите — Студия LashLukina";
+    ViewBag.Description = "Студия LashLukina в Чите: наращивание ресниц (классика, 2D, 3D), коррекция. Опытный мастер, премиальные материалы. Запись онлайн.";
 
     bool isAuthenticated = ViewBag.IsAuthenticated ?? false;
     string clientName = ViewBag.ClientName ?? "";
@@ -19,7 +20,8 @@
 }
 
 <div class="avatar-wrapper-fullscreen">
-    <img src="/images/@heroPhoto" class="avatar-img-fullscreen" />
+    <img src="/images/@heroPhoto" class="avatar-img-fullscreen" alt="@masterName — 
+мастер по наращиванию ресниц в Чите, @studioName" />
 
     @if (isAdmin)
     {

@@ -29,6 +29,9 @@ try
     builder.Services.AddScoped<IScheduleService, ScheduleService>();
     builder.Services.AddScoped<IBookingService, BookingService>();
 
+    // Telegram-уведомления
+    builder.Services.AddHttpClient<ITelegramNotificationService, TelegramNotificationService>();
+
     // Сессии с настройками безопасности
     builder.Services.AddSession(options =>
     {

@@ -1,7 +1,7 @@
 ﻿@model LashBooking.Domain.Entities.AboutInfo
 @{
-    Layout = "~/Views/Shared/_Layout.cshtml";
-    ViewBag.Title = "Обо мне — LashLukina";
+    ViewBag.Title = "О мастере — Дарья Лукина, Lash-стилист в Чите";
+    ViewBag.Description = "Дарья Лукина — сертифицированный мастер по наращиванию ресниц в Чите. Опыт более 5 лет, сертификаты школ LashStudio и LashTime.";
 }
 
 <div class="back-button-container">
@@ -26,7 +26,7 @@ else
             <div class="profile-image-wrapper">
                 @if (!string.IsNullOrEmpty(Model.PhotoFileName))
                 {
-                    <img src="/images/@Model.PhotoFileName" alt="@Model.MasterName" class="profile-image" />
+                    <img src="/images/@Model.PhotoFileName" alt="@Model.MasterName — мастер по наращиванию ресниц в Чите" class="profile-image" />
                 }
                 else
                 {
@@ -93,25 +93,25 @@ else
         <h3 class="section-title">Мои сертификаты</h3>
 
         <div class="certificates-grid">
-            <div class="certificate-item">
+            <div class="certificate-item" onclick="openLightbox('/images/Certificate/cert1.jpg')">
                 <img src="/images/Certificate/cert1.jpg" alt="Сертификат 1" class="certificate-image" />
             </div>
-            <div class="certificate-item">
+            <div class="certificate-item" onclick="openLightbox('/images/Certificate/cert3.jpg')">
                 <img src="/images/Certificate/cert3.jpg" alt="Сертификат 2" class="certificate-image" />
             </div>
-            <div class="certificate-item">
+            <div class="certificate-item" onclick="openLightbox('/images/Certificate/cert2.jpg')">
                 <img src="/images/Certificate/cert2.jpg" alt="Сертификат 3" class="certificate-image" />
             </div>
-            <div class="certificate-item">
+            <div class="certificate-item" onclick="openLightbox('/images/Certificate/cert4.jpg')">
                 <img src="/images/Certificate/cert4.jpg" alt="Сертификат 4" class="certificate-image" />
             </div>
-            <div class="certificate-item">
+            <div class="certificate-item" onclick="openLightbox('/images/Certificate/cert5.jpg')">
                 <img src="/images/Certificate/cert5.jpg" alt="Сертификат 5" class="certificate-image" />
             </div>
         </div>
 
         <div class="certificate-row-full">
-            <div class="certificate-item certificate-horizontal">
+            <div class="certificate-item certificate-horizontal" onclick="openLightbox('/images/Certificate/cert6.jpg')">
                 <img src="/images/Certificate/cert6.jpg" alt="Сертификат 6" class="certificate-image-horizontal" />
             </div>
         </div>
@@ -150,6 +150,10 @@ else
             </div>
         </div>
 
+    </div>
+    <div class="lightbox-overlay" id="lightboxOverlay" onclick="closeLightbox()">
+        <button class="lightbox-close" onclick="closeLightbox()">✕</button>
+        <img class="lightbox-img" id="lightboxImg" src="" alt="Сертификат" onclick="event.stopPropagation()" />
     </div>
 }
 
@@ -628,6 +632,47 @@ else
             font-size: 1.5rem;
         }
     }
+
+    .lightbox-overlay {
+        display: none;
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.85);
+        z-index: 9999;
+        align-items: center;
+        justify-content: center;
+        cursor: zoom-out;
+    }
+
+        .lightbox-overlay.active {
+            display: flex;
+        }
+
+    .lightbox-img {
+        max-width: 90vw;
+        max-height: 90vh;
+        object-fit: contain;
+        border-radius: 10px;
+        box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+        cursor: default;
+    }
+
+    .lightbox-close {
+        position: absolute;
+        top: 20px;
+        right: 30px;
+        background: none;
+        border: none;
+        color: white;
+        font-size: 2rem;
+        cursor: pointer;
+        line-height: 1;
+        opacity: 0.8;
+    }
+
+        .lightbox-close:hover {
+            opacity: 1;
+        }
 </style>
 
 <script>
@@ -646,5 +691,20 @@ else
         if (!phoneBtn && !popup.contains(event.target)) {
             popup.classList.remove('show');
         }
+    });
+
+        function openLightbox(src) {
+        document.getElementById('lightboxImg').src = src;
+        document.getElementById('lightboxOverlay').classList.add('active');
+        document.body.style.overflow = 'hidden';
+    }
+
+    function closeLightbox() {
+        document.getElementById('lightboxOverlay').classList.remove('active');
+        document.body.style.overflow = '';
+    }
+
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') closeLightbox();
     });
 </script>

@@ -109,7 +109,7 @@ namespace LashBooking.Web.MVC.Services
                 {
                     Name = clientName,
                     Phone = clientPhone,
-                    CreatedAt = DateTime.Now
+                    CreatedAt = DateTime.UtcNow
                 };
                 await _clientRepo.AddAsync(client);
                 await _clientRepo.SaveChangesAsync();
@@ -122,7 +122,7 @@ namespace LashBooking.Web.MVC.Services
                 ServiceId = serviceId,
                 DateStart = time,
                 DateEnd = dateEnd,
-                CreatedAt = DateTime.Now
+                CreatedAt = DateTime.UtcNow
             };
 
             await _appointmentRepo.AddAsync(appointment);

@@ -2,8 +2,8 @@
 @using LashBooking.Domain.Models
 
 @{
-    Layout = "~/Views/Shared/_Layout.cshtml";
-    ViewBag.Title = "Онлайн запись — LashLukина";
+    ViewBag.Title = "Онлайн-запись — Наращивание ресниц Чита | LashLukina";
+    ViewBag.Description = "Записаться на наращивание ресниц в Чите онлайн. Выбери удобное время и услугу — всё за минуту.";
 
     var services = ViewBag.Services as List<LashBooking.Domain.Entities.Service> ?? new();
     int selectedServiceId = ViewBag.SelectedServiceId ?? 0;
@@ -182,13 +182,15 @@
     }
 
     .back-button-container {
+        margin-top: 20px;
         margin-bottom: 15px;
+        padding-left: 20px;
     }
 
     .back-btn {
-        background: #e8e8e8;
+        background: transparent;
         color: #444;
-        border: 2px solid #ccc;
+        border: 2px solid #333;
         border-radius: 30px;
         padding: 8px 20px;
         font-size: 1rem;
@@ -202,11 +204,9 @@
     }
 
         .back-btn:hover {
-            background: #d0d0d0;
-            color: #222;
-            border-color: #aaa;
+            background: #555;
+            color: white;
             transform: translateX(-3px);
-            box-shadow: 0 4px 10px rgba(0,0,0,0.15);
         }
 
     .back-icon {

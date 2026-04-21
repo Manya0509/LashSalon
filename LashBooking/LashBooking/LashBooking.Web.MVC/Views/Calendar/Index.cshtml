@@ -9,6 +9,9 @@
     int nextYear = ViewBag.NextYear;
     int nextMonth = ViewBag.NextMonth;
 }
+@section Head {
+    <meta name="robots" content="noindex, nofollow" />
+}
 
 <div class="back-button-container">
     <a href="/" class="back-btn"><span class="back-icon">←</span> Назад</a>
@@ -81,9 +84,10 @@
     }
 
     .back-button-container {
+        margin-top: 20px;
         margin-bottom: 15px;
+        padding-left: 20px;
     }
-
     .back-btn {
         background: transparent;
         color: #444;

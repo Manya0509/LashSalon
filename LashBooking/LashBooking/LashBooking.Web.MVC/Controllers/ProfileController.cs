@@ -3,6 +3,7 @@ using LashBooking.Domain.Entities;
 using LashBooking.Domain.Interfaces;
 using LashBooking.Domain.Constants;
 using LashBooking.Web.MVC.Filters;
+using LashBooking.Web.MVC.Services;
 
 namespace LashBooking.Web.MVC.Controllers
 {
@@ -189,8 +190,8 @@ namespace LashBooking.Web.MVC.Controllers
                         return View();
                     }
 
-                    if (client.Password != currentPassword)
-                    {
+                    if (!PasswordHasher.Verify(currentPassword, client.Password ?? ""))
+                        {
                         ViewBag.EditError = "Неверный текущий пароль";
                         ViewBag.ClientName = name;
                         ViewBag.ClientPhone = client.Phone;
@@ -198,7 +199,7 @@ namespace LashBooking.Web.MVC.Controllers
                         return View();
                     }
 
-                    client.Password = newPassword;
+                    client.Password = PasswordHasher.Hash(newPassword);
                 }
 
                 // Обновляем данные

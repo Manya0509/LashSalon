@@ -1,7 +1,7 @@
 ﻿@model List<LashBooking.Domain.Entities.GalleryPhoto>
 @{
-    Layout = "~/Views/Shared/_Layout.cshtml";
-    ViewBag.Title = "Фото работ — LashLukina";
+    ViewBag.Title = "О мастере — Дарья Лукина, Lash-стилист в Чите";
+    ViewBag.Description = "Дарья Лукина — сертифицированный мастер по наращиванию ресниц в Чите. Опыт более 5 лет, сертификаты школ LashStudio и LashTime.";
 
     var allPhotos = Model.Select(p => "/images/gallery/" + p.FileName).ToList();
 }

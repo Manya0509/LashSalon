@@ -3,6 +3,7 @@ using LashBooking.Domain.Interfaces;
 using LashBooking.Domain.Entities;
 using LashBooking.Domain.Constants;
 using LashBooking.Web.MVC.Models;
+using LashBooking.Web.MVC.Services;
 
 namespace LashBooking.Web.MVC.Controllers
 {
@@ -16,20 +17,22 @@ namespace LashBooking.Web.MVC.Controllers
         // Контроллер не считает слоты сам — просит сервис.
         private readonly IScheduleService _scheduleService;
         private readonly IBookingService _bookingService;
-
+        private readonly ITelegramNotificationService _telegram;
 
 
         public BookingController(
-            IRepository<Service> serviceRepo,
-            IRepository<Client> clientRepo,
-            IScheduleService scheduleService,
-            IBookingService bookingService,
-            ILogger logger) : base(logger)
+     IRepository<Service> serviceRepo,
+     IRepository<Client> clientRepo,
+     IScheduleService scheduleService,
+     IBookingService bookingService,
+     ITelegramNotificationService telegram,
+     ILogger logger) : base(logger)
         {
             _serviceRepo = serviceRepo;
             _clientRepo = clientRepo;
             _scheduleService = scheduleService;
             _bookingService = bookingService;
+            _telegram = telegram;
         }
 
         // GET: /Booking
@@ -213,6 +216,19 @@ namespace LashBooking.Web.MVC.Controllers
                     model.ClientName,
                     model.ClientPhone,
                     clientId);
+
+                // Если запись создана успешно — отправляем уведомление мастеру в Telegram
+                if (result.Success)
+                {
+                    var service = await _serviceRepo.GetByIdAsync(model.ServiceId);
+                    DateTime.TryParse(model.SelectedTime, out var appointmentDate);
+                    await _telegram.SendNewAppointmentAsync(
+                        model.ClientName,
+                        model.ClientPhone,
+                        service?.Name ?? "Услуга",
+                        appointmentDate,
+                        service?.Price ?? 0);
+                }
 
                 // Показываем результат пользователю
                 TempData["Message"] = result.Message;

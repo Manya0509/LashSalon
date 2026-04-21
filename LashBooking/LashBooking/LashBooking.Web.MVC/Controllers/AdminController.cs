@@ -271,6 +271,35 @@ namespace LashBooking.Web.MVC.Controllers
             }
         }
 
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> SaveClientNotes(int clientId, string? notes)
+        {
+            var client = await _clients.GetByIdAsync(clientId);
+            if (client == null)
+                return RedirectToAction("Index", new { tab = "clients" });
+
+            client.Notes = notes;
+            _clients.Update(client);
+            await _clients.SaveChangesAsync();
+
+            return RedirectToAction("Index", new { tab = "clients" });
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeleteClient(int clientId)
+        {
+            var client = await _clients.GetByIdAsync(clientId);
+            if (client == null)
+                return RedirectToAction("Index", new { tab = "clients" });
+
+            _clients.Delete(client);
+            await _clients.SaveChangesAsync();
+
+            return RedirectToAction("Index", new { tab = "clients" });
+        }
+
         // ===== ОТЗЫВЫ =====
 
         private void LoadReviewsTab(IEnumerable<Review> reviews, IEnumerable<Client> clients)
@@ -529,7 +558,7 @@ namespace LashBooking.Web.MVC.Controllers
                     Date = date.Date,
                     BlockedHour = hour == -1 ? null : hour,
                     Reason = reason,
-                    CreatedAt = DateTime.Now
+                    CreatedAt = DateTime.UtcNow
                 };
                 await _blockedSlots.AddAsync(blocked);
                 await _blockedSlots.SaveChangesAsync();

@@ -11,6 +11,9 @@
     string currentFilter = ViewBag.CurrentFilter as string ?? "upcoming";
     string? editSuccess = TempData["EditSuccess"] as string;
 }
+@section Head {
+    <meta name="robots" content="noindex, nofollow" />
+}
 
 @* Шапка с аватаром — как в Blazor *@
 <div class="avatar-wrapper-fullscreen">

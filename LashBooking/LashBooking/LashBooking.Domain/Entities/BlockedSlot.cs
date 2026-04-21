@@ -20,6 +20,6 @@ namespace LashBooking.Domain.Entities
         // Причина (необязательно)
         public string? Reason { get; set; }
 
-        public DateTime CreatedAt { get; set; } = DateTime.Now;
+        public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
     }
 }

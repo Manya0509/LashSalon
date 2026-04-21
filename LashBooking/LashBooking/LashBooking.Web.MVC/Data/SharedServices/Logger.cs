@@ -38,7 +38,7 @@ namespace LashBooking.Web.MVC.Data.SharedServices
                         ErrorContext = exception?.StackTrace ?? "",
                         BrowserInfo = login_state.Length > 2 ? login_state[2] : "",
                         AppVersion = GetAppTitle(),
-                        InsertDate = DateTime.Now
+                        InsertDate = DateTime.UtcNow
                     };
                     if (string.IsNullOrEmpty(message.ErrorMsg)) message.ErrorMsg = formatter(state, exception);
                     Pr.Enqueue(message);

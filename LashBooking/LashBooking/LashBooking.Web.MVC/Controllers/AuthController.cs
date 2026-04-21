@@ -4,6 +4,7 @@ using LashBooking.Domain.Entities;
 using LashBooking.Domain.Constants;
 using LashBooking.Web.MVC.Models;
 using System.Security.Cryptography;
+using LashBooking.Web.MVC.Services;
 
 namespace LashBooking.Web.MVC.Controllers
 {
@@ -57,7 +58,7 @@ namespace LashBooking.Web.MVC.Controllers
                 }
 
                 // Неверный пароль — Warning
-                if (!VerifyPassword(model.LoginPassword, client.Password ?? ""))
+                if (!PasswordHasher.Verify(model.LoginPassword, client.Password ?? ""))
                 {
                     TempData["ErrorMessage"] = "Неверный пароль";
                     return RedirectToAction("Login");
@@ -118,7 +119,7 @@ namespace LashBooking.Web.MVC.Controllers
 
                     // Пароля нет — клиент записывался без аккаунта
                     // Привязываем пароль и обновляем данные
-                    existingClient.Password = HashPassword(model.RegPassword);
+                    existingClient.Password = PasswordHasher.Hash(model.RegPassword);
                     existingClient.Name = model.RegName;
                     existingClient.Email = string.IsNullOrWhiteSpace(model.RegEmail) ? null : model.RegEmail;
                     _clientRepo.Update(existingClient);
@@ -139,9 +140,9 @@ namespace LashBooking.Web.MVC.Controllers
                     {
                         Name = model.RegName,
                         Phone = cleanPhone,
-                        Password = HashPassword(model.RegPassword),
+                        Password = PasswordHasher.Hash(model.RegPassword),
                         Email = string.IsNullOrWhiteSpace(model.RegEmail) ? null : model.RegEmail,
-                        CreatedAt = DateTime.Now
+                        CreatedAt = DateTime.UtcNow
                     };
 
                     await _clientRepo.AddAsync(newClient);
@@ -183,51 +184,8 @@ namespace LashBooking.Web.MVC.Controllers
                 return RedirectToAction("Index", "Home");
             }
         }
-
-        // ===== ВСПОМОГАТЕЛЬНЫЕ МЕТОДЫ =====
-
-        private string HashPassword(string password)
-        {
-            byte[] salt = new byte[16];
-            RandomNumberGenerator.Fill(salt);
-
-            using var pbkdf2 = new Rfc2898DeriveBytes(
-                password, salt, 100000, HashAlgorithmName.SHA256);
-            byte[] hash = pbkdf2.GetBytes(32);
-
-            byte[] hashBytes = new byte[48];
-            Buffer.BlockCopy(salt, 0, hashBytes, 0, 16);
-            Buffer.BlockCopy(hash, 0, hashBytes, 16, 32);
-
-            return Convert.ToBase64String(hashBytes);
-        }
-
-        private bool VerifyPassword(string password, string storedHash)
-        {
-            try
-            {
-                byte[] hashBytes = Convert.FromBase64String(storedHash);
-                if (hashBytes.Length != 48) return false;
-
-                byte[] salt = new byte[16];
-                Buffer.BlockCopy(hashBytes, 0, salt, 0, 16);
-
-                using var pbkdf2 = new Rfc2898DeriveBytes(
-                    password, salt, 100000, HashAlgorithmName.SHA256);
-                byte[] hash = pbkdf2.GetBytes(32);
-
-                for (int i = 0; i < 32; i++)
-                    if (hash[i] != hashBytes[i + 16]) return false;
-
-                return true;
-            }
-            catch
-            {
-                return false;
-            }
-        }
-
         private string CleanPhone(string phone) =>
-            new string(phone.Where(c => char.IsDigit(c) || c == '+').ToArray());
+    new string(phone.Where(c => char.IsDigit(c) || c == '+').ToArray());
     }
 }
+       

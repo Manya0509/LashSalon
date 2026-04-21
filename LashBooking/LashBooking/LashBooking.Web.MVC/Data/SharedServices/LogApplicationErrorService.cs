@@ -12,7 +12,7 @@ namespace LashBooking.Web.MVC.Data.SharedServices
             var _context = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
             var appRepo = _context.Insert(new LogApplicationError()
             {
-                InsertDate = DateTime.Now,
+                InsertDate = DateTime.UtcNow,
                 ErrorMsg = message.ErrorMsg,
                 ErrorLevel = message.ErrorLevel,
                 UserData = message.UserData,
