@@ -47,7 +47,7 @@ namespace LashBooking.Web.MVC.Controllers
                 }
 
                 var cleanPhone = CleanPhone(model.LoginPhone);
-                var clients = await _clientRepo.FindAsync(c => c.Phone == cleanPhone);
+                var clients = await _clientRepo.FindAsync(c => c.Phone == cleanPhone && !c.IsDeleted);
                 var client = clients.FirstOrDefault();
 
                 // Пользователь не найден — Warning, не ошибка приложения

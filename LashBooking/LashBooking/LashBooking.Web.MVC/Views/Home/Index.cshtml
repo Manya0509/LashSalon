@@ -93,7 +93,8 @@
         {
             <a href="@whatsAppLink"
                target="_blank"
-               class="contact-btn whatsapp">
+               class="contact-btn whatsapp"
+               onclick="if (typeof ymGoal === 'function') ymGoal('whatsapp_click');">
                 <i class="bi bi-whatsapp"></i>
                 <span>WhatsApp</span>
             </a>
@@ -638,7 +639,8 @@
 </style>
 
 <script>
-    function showPhone() {
+        function showPhone() {
+        if (typeof ymGoal === 'function') ymGoal('phone_click');
         document.getElementById('phonePopup').classList.add('show');
     }
 

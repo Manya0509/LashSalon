@@ -13,16 +13,19 @@ namespace LashBooking.Web.MVC.Controllers
         private readonly IRepository<Appointment> _appointmentRepo;
         private readonly IRepository<Service> _serviceRepo;
         private readonly IRepository<Client> _clientRepo;
+        private readonly ITelegramNotificationService _telegram;
 
         public ProfileController(
-            IRepository<Appointment> appointmentRepo,
-            IRepository<Service> serviceRepo,
-            IRepository<Client> clientRepo,
-            ILogger logger) : base(logger)
+    IRepository<Appointment> appointmentRepo,
+    IRepository<Service> serviceRepo,
+    IRepository<Client> clientRepo,
+    ITelegramNotificationService telegram,
+    ILogger logger) : base(logger)
         {
             _appointmentRepo = appointmentRepo;
             _serviceRepo = serviceRepo;
             _clientRepo = clientRepo;
+            _telegram = telegram;
         }
 
 
@@ -112,6 +115,24 @@ namespace LashBooking.Web.MVC.Controllers
                 appointment.Status = AppointmentStatus.Cancelled;
                 _appointmentRepo.Update(appointment);
                 await _appointmentRepo.SaveChangesAsync();
+
+                try
+                {
+                    var client = await _clientRepo.GetByIdAsync(clientId);
+                    var service = await _serviceRepo.GetByIdAsync(appointment.ServiceId);
+
+                    await _telegram.SendAppointmentCancelledAsync(
+                        client?.Name ?? "—",
+                        client?.Phone ?? "—",
+                        service?.Name ?? "—",
+                        appointment.DateStart,
+                        service?.Price ?? 0m);
+                }
+                catch (Exception telegramEx)
+                {
+                    // Не валим отмену из-за ошибки уведомления
+                    CatchException(telegramEx, "ProfileController/Cancel — Telegram", ErrorLevel.Warning);
+                }
 
                 TempData["CancelSuccess"] = "Запись успешно отменена";
                 return RedirectToAction("Index");

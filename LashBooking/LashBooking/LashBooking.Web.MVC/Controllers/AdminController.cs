@@ -94,7 +94,7 @@ namespace LashBooking.Web.MVC.Controllers
                 ViewBag.TodayAppointments = allAppointments.Count(a => a.DateStart.Date == today && a.Status != AppointmentStatus.Cancelled);
                 ViewBag.UpcomingAppointments = allAppointments.Count(a => a.DateStart.Date > today && a.Status != AppointmentStatus.Cancelled);
                 ViewBag.PendingReviews = allReviews.Count(r => !r.IsApproved);
-                ViewBag.TotalClients = allClients.Count();
+                ViewBag.TotalClients = allClients.Count(c => !c.IsDeleted);
                 ViewBag.ActiveTab = tab;
 
                 if (tab == "appointments") await LoadAppointmentsTab(allAppointments, allClients, allServices, "today", "");
@@ -136,7 +136,7 @@ namespace LashBooking.Web.MVC.Controllers
                 ViewBag.TodayAppointments = allAppointments.Count(a => a.DateStart.Date == today && a.Status != AppointmentStatus.Cancelled);
                 ViewBag.UpcomingAppointments = allAppointments.Count(a => a.DateStart.Date > today && a.Status != AppointmentStatus.Cancelled);
                 ViewBag.PendingReviews = allReviews.Count(r => !r.IsApproved);
-                ViewBag.TotalClients = allClients.Count();
+                ViewBag.TotalClients = allClients.Count(c => !c.IsDeleted);
                 ViewBag.ActiveTab = "appointments";
 
                 await LoadAppointmentsTab(allAppointments, allClients, allServices, filter, search);
@@ -168,7 +168,8 @@ namespace LashBooking.Web.MVC.Controllers
             if (!string.IsNullOrWhiteSpace(search))
             {
                 var s = search.ToLower();
-                var cIds = clients.Where(c => c.Name.ToLower().Contains(s) || c.Phone.Contains(s)).Select(c => c.Id).ToHashSet();
+                var cIds = clients.Where(c => c.Name.ToLower().Contains(s) || c.Phone.Contains(s))
+                   .Select(c => c.Id).ToHashSet();
                 var svIds = services.Where(sv => sv.Name.ToLower().Contains(s)).Select(sv => sv.Id).ToHashSet();
                 filtered = filtered.Where(a => cIds.Contains(a.ClientId) || svIds.Contains(a.ServiceId));
             }
@@ -286,17 +287,22 @@ namespace LashBooking.Web.MVC.Controllers
             return RedirectToAction("Index", new { tab = "clients" });
         }
 
-        [HttpPost]
-        [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteClient(int clientId)
         {
             var client = await _clients.GetByIdAsync(clientId);
-            if (client == null)
-                return RedirectToAction("Index", new { tab = "clients" });
+            if (client == null) { /* TempData ошибка, return */ }
 
-            _clients.Delete(client);
+            var allAppointments = await _appointments.GetAllAsync();
+            int apptCount = allAppointments.Count(a => a.ClientId == clientId);
+
+            client.IsDeleted = true;
+            _clients.Update(client);
             await _clients.SaveChangesAsync();
 
+            TempData["Message"] = apptCount > 0
+                ? $"Клиент «{client.Name}» удалён. {apptCount} записей сохранены в истории."
+                : $"Клиент «{client.Name}» удалён.";
+            TempData["IsSuccess"] = true;
             return RedirectToAction("Index", new { tab = "clients" });
         }
 
@@ -314,8 +320,15 @@ namespace LashBooking.Web.MVC.Controllers
                 ? list.Where(r => r.IsApproved).Average(r => r.Rating) : 0;
 
             ViewBag.AllReviews = list.OrderByDescending(r => r.CreatedAt).ToList();
-            ViewBag.PendingReviewsList = list.Where(r => !r.IsApproved).OrderByDescending(r => r.CreatedAt).ToList();
-            ViewBag.ApprovedReviewsList = list.Where(r => r.IsApproved).OrderByDescending(r => r.CreatedAt).ToList();
+            ViewBag.PendingReviewsList = list
+    .Where(r => !r.IsApproved && !r.IsRejected)
+    .OrderByDescending(r => r.CreatedAt).ToList();
+            ViewBag.ApprovedReviewsList = list
+                .Where(r => r.IsApproved)
+                .OrderByDescending(r => r.CreatedAt).ToList();
+            ViewBag.RejectedReviewsList = list
+                .Where(r => r.IsRejected)
+                .OrderByDescending(r => r.CreatedAt).ToList();
             ViewBag.AverageRating = avg;
         }
 
@@ -334,6 +347,7 @@ namespace LashBooking.Web.MVC.Controllers
                 }
 
                 r.IsApproved = true;
+                r.IsRejected = false;
                 _reviews.Update(r);
                 await _reviews.SaveChangesAsync();
                 TempData["Message"] = "Отзыв одобрен.";
@@ -364,11 +378,12 @@ namespace LashBooking.Web.MVC.Controllers
                 }
 
                 r.IsApproved = false;
+                r.IsRejected = true;
                 _reviews.Update(r);
                 await _reviews.SaveChangesAsync();
-                TempData["Message"] = "Отзыв снят с публикации.";
-                TempData["IsSuccess"] = true;
-                return RedirectToAction("Index", new { tab = "reviews" });
+                TempData["Message"] = "Отзыв отклонён.";
+                TempData["IsSuccess"] = true;                                     
+                return RedirectToAction("Index", new { tab = "reviews" });         
             }
             catch (Exception ex)
             {
@@ -408,6 +423,37 @@ namespace LashBooking.Web.MVC.Controllers
             }
         }
 
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> UnpublishReview(int reviewId)
+        {
+            try
+            {
+                var r = await _reviews.GetByIdAsync(reviewId);
+                if (r == null)
+                {
+                    TempData["Message"] = "Отзыв не найден.";
+                    TempData["IsSuccess"] = false;
+                    return RedirectToAction("Index", new { tab = "reviews" });
+                }
+
+                r.IsApproved = false;
+                r.IsRejected = false;   // возвращаем в «На модерации»
+                _reviews.Update(r);
+                await _reviews.SaveChangesAsync();
+                TempData["Message"] = "Отзыв возвращён на модерацию.";
+                TempData["IsSuccess"] = true;
+                return RedirectToAction("Index", new { tab = "reviews" });
+            }
+            catch (Exception ex)
+            {
+                CatchException(ex, "AdminController/UnpublishReview", ErrorLevel.Error);
+                TempData["Message"] = "Ошибка.";
+                TempData["IsSuccess"] = false;
+                return RedirectToAction("Index", new { tab = "reviews" });
+            }
+        }
+
         // ===== КЛИЕНТЫ =====
 
         [HttpGet]
@@ -441,7 +487,7 @@ namespace LashBooking.Web.MVC.Controllers
             IEnumerable<Appointment> appointments,
             string search)
         {
-            var list = clients.AsEnumerable();
+            var list = clients.Where(c => !c.IsDeleted);
             if (!string.IsNullOrWhiteSpace(search))
             {
                 var s = search.ToLower();
@@ -450,7 +496,7 @@ namespace LashBooking.Web.MVC.Controllers
             var counts = appointments.GroupBy(a => a.ClientId).ToDictionary(g => g.Key, g => g.Count());
             ViewBag.Clients = list.OrderBy(c => c.Name).ToList();
             ViewBag.AppointmentCounts = counts;
-            ViewBag.TotalClientsCount = clients.Count();
+            ViewBag.TotalClients = clients.Count(c => !c.IsDeleted);
             ViewBag.ClientSearch = search;
         }
 

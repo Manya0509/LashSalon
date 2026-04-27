@@ -538,6 +538,12 @@
 
 @section Scripts {
     <script>
+        // Yandex.Metrika: цель "Запись оформлена"
+        @if (isSuccess)
+        {
+                <text>if (typeof ymGoal === 'function') ymGoal('booking_submit');</text>
+        }
+
         const availableDates = @Html.Raw(JsonSerializer.Serialize(availableDates));
         let currentViewDate = new Date('@selectedDate');
         let selectedDateStr = '@selectedDate';

@@ -1,4 +1,5 @@
-﻿<!DOCTYPE html>
+﻿@inject Microsoft.Extensions.Configuration.IConfiguration Configuration
+<!DOCTYPE html>
 <html lang="ru">
 <head>
     <meta charset="utf-8" />
@@ -8,6 +9,35 @@
     <meta name="keywords" content="@(ViewBag.Keywords ?? "наращивание ресниц чита, классическое наращивание, 2d наращивание ресниц, 3d наращивание ресниц, коррекция ресниц чита, снятие нарощенных ресниц, салон красоты чита")" />
     <meta name="author" content="Студия LashLukina" />
     <meta name="robots" content="index, follow" />
+
+    @{
+        var ymId = Configuration["YandexMetrika:CounterId"];
+    }
+    @if (!string.IsNullOrWhiteSpace(ymId))
+    {
+        <!-- Yandex.Metrika counter -->
+        <script type="text/javascript">
+            (function(m,e,t,r,i,k,a){
+                m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
+                m[i].l=1*new Date();
+                for (var j = 0; j < document.scripts.length; j++) {if (document.scripts[j].src === r) { return; }}
+                k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)
+            })(window, document,'script','https://mc.yandex.ru/metrika/tag.js?id=@ymId', 'ym');
+
+            ym(@ymId, 'init', {ssr:true, webvisor:true, clickmap:true, accurateTrackBounce:true, trackLinks:true});
+        </script>
+        <noscript><div><img src="https://mc.yandex.ru/watch/@ymId" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
+        <!-- /Yandex.Metrika counter -->
+
+        <script>
+            window.ymGoal = function (name) {
+                if (typeof ym !== 'undefined') {
+                    ym(@ymId, 'reachGoal', name);
+                }
+            };
+        </script>
+    }
+
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="icon" href="/favicon.png" type="image/png" />

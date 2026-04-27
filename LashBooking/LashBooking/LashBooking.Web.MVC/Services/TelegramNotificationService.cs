@@ -2,9 +2,16 @@
 
 namespace LashBooking.Web.MVC.Services
 {
-    public interface ITelegramNotificationService // Интерфейс описывает «что умеет» сервис
+    public interface ITelegramNotificationService
     {
         Task SendNewAppointmentAsync(
+            string clientName,
+            string clientPhone,
+            string serviceName,
+            DateTime appointmentDate,
+            decimal price);
+
+        Task SendAppointmentCancelledAsync(
             string clientName,
             string clientPhone,
             string serviceName,
@@ -46,6 +53,30 @@ namespace LashBooking.Web.MVC.Services
 
             var message =
                 $"🎉 <b>Новая запись!</b>\n\n" +
+                $"👤 <b>Клиент:</b> {EscapeHtml(clientName)}\n" +
+                $"📞 <b>Телефон:</b> {EscapeHtml(clientPhone)}\n" +
+                $"💅 <b>Услуга:</b> {EscapeHtml(serviceName)}\n" +
+                $"📅 <b>Дата:</b> {appointmentDate:dd.MM.yyyy HH:mm}\n" +
+                $"💰 <b>Стоимость:</b> {price:N0} ₽";
+
+            await SendMessageAsync(message);
+        }
+
+        public async Task SendAppointmentCancelledAsync(
+    string clientName,
+    string clientPhone,
+    string serviceName,
+    DateTime appointmentDate,
+    decimal price)
+        {
+            if (string.IsNullOrWhiteSpace(_botToken) || string.IsNullOrWhiteSpace(_adminChatId))
+            {
+                _logger.LogWarning("Telegram уведомления не настроены — токен или chat_id пустые.");
+                return;
+            }
+
+            var message =
+                $"❌ <b>Клиент отменил запись</b>\n\n" +
                 $"👤 <b>Клиент:</b> {EscapeHtml(clientName)}\n" +
                 $"📞 <b>Телефон:</b> {EscapeHtml(clientPhone)}\n" +
                 $"💅 <b>Услуга:</b> {EscapeHtml(serviceName)}\n" +

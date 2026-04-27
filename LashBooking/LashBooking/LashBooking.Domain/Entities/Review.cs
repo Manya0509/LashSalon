@@ -18,5 +18,6 @@ namespace LashBooking.Domain.Entities
 
         public bool IsApproved { get; set; } = false;                   // Прошёл ли модерацию
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;      // Дата и время создания отзыва
+        public bool IsRejected { get; set; } = false;  // Отклонён ли модератором
     }
 }

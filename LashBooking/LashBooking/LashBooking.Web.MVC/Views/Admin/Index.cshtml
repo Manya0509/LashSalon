@@ -201,7 +201,7 @@
                                     int duration = apptService?.DurationMinutes ?? 0;
                                     decimal price = apptService?.Price ?? 0;
                                     string dateStr = appt.DateStart.ToString("yyyy-MM-ddTHH:mm");
-                                    string notes = (appt.Notes ?? "").Replace("'", "\\'").Replace("\n", " ");
+                                    string notes = (appt.Notes ?? "").Replace("\\", "\\\\").Replace("'", "\\'").Replace("\n", " ").Replace("\r", "");
 
                                     <tr class="appt-row"
                                         data-client="@clientName.ToLower()"
@@ -340,6 +340,7 @@
             var allReviews = ViewBag.AllReviews as List<Review> ?? new List<Review>();
             var pendingList = ViewBag.PendingReviewsList as List<Review> ?? new List<Review>();
             var approvedList = ViewBag.ApprovedReviewsList as List<Review> ?? new List<Review>();
+            var rejectedList = ViewBag.RejectedReviewsList as List<Review> ?? new List<Review>();   // ← добавить
             double avgRating = ViewBag.AverageRating != null ? (double)ViewBag.AverageRating : 0.0;
 
             <div class="management-section">
@@ -376,6 +377,13 @@
                             <span class="stat-label">Одобрено</span>
                         </div>
                     </div>
+                    <div class="stat-card-small">
+                        <div class="stat-icon">❌</div>
+                        <div class="stat-info">
+                            <span class="stat-value">@rejectedList.Count</span>
+                            <span class="stat-label">Отклонено</span>
+                        </div>
+                    </div>
                 </div>
 
                 <div class="reviews-tabs">
@@ -387,6 +395,9 @@
                         }
                     </button>
                     <button class="tab-btn" id="tabApproved" onclick="switchReviewTab('approved')">Одобренные</button>
+                    <button class="tab-btn" id="tabRejected" onclick="switchReviewTab('rejected')">
+                        Отклонённые
+                    </button>
                     <button class="tab-btn" id="tabAll" onclick="switchReviewTab('all')">Все</button>
                 </div>
 
@@ -429,6 +440,21 @@
                     else
                     {
                         @foreach (var r in allReviews)
+                        {
+                            @await Html.PartialAsync("_ReviewCard", r)
+                        }
+                    }
+                </div>
+
+                <div id="reviewsRejected" class="reviews-list" style="display:none">
+
+                    @if (!rejectedList.Any())
+                    {
+                        <div class="empty-state"><div class="empty-icon">📭</div><h4>Нет отклонённых отзывов</h4></div>
+                    }
+                    else
+                    {
+                        @foreach (var r in rejectedList)
                         {
                             @await Html.PartialAsync("_ReviewCard", r)
                         }
@@ -507,7 +533,16 @@
                                         <td>@(client.Email ?? "—")</td>
                                         <td><span class="count-badge">@apptCount</span></td>
                                         <td>@client.CreatedAt.ToString("dd.MM.yyyy")</td>
-                                        <td>@(client.Notes ?? "—")</td>
+                                        <td class="notes-cell">
+                                            @if (string.IsNullOrWhiteSpace(client.Notes))
+                                            {
+                                                <span>—</span>
+                                            }
+                                            else
+                                            {
+                                                <span class="notes-text" title="@client.Notes">@client.Notes</span>
+                                            }
+                                        </td>
                                         <td class="actions-cell">
                                             <button class="btn-icon edit"
                                                     onclick="openClientNotesModal(@client.Id, '@((client.Notes ?? "").Replace("'", "\\'"))')"
@@ -813,7 +848,7 @@
                                     <form method="post" action="/Admin/DeleteGalleryPhoto" style="display:inline">
                                         @Html.AntiForgeryToken()
                                         <input type="hidden" name="photoId" value="@photo.Id" />
-                                        <button type="submit" class="gallery-admin-delete" onclick="return confirm('Удалить это фото?')" title="Удалить">
+                                        <button type="button" class="gallery-admin-delete" onclick="confirmDeletePhoto(this)" title="Удалить">
                                             <i class="bi bi-trash"></i>
                                         </button>
                                     </form>
@@ -993,6 +1028,23 @@
             </div>
         }
     </div>@* /admin-content *@
+
+<div class="modal-overlay" id="confirmModal" style="display:none"
+     onclick="if(event.target===this)resolveConfirm(false)">
+    <div class="modal-content modal-content-sm">
+        <div class="modal-header">
+            <h3><i class="bi bi-exclamation-triangle text-danger"></i> Подтверждение</h3>
+            <button class="modal-close" onclick="resolveConfirm(false)">✕</button>
+        </div>
+        <div class="modal-body">
+            <p id="confirmModalText" style="margin: 0; font-size: 1rem;"></p>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn-secondary" onclick="resolveConfirm(false)">Отмена</button>
+            <button type="button" class="btn-danger" id="confirmModalOkBtn" onclick="resolveConfirm(true)">Удалить</button>
+        </div>
+    </div>
+</div>
 </div>@* /admin-container *@
 
 
@@ -1764,6 +1816,37 @@
             font-size: 0.95rem;
         }
 
+    .notes-cell {
+        width: 250px;
+        max-width: 250px;
+        overflow: hidden;
+        vertical-align: middle;
+    }
+
+    .notes-text {
+        display: block;
+        width: 100%;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    @@media (max-width: 768px) {
+        .notes-cell {
+            width: auto;
+            max-width: none;
+            overflow: visible;
+        }
+
+        .notes-text {
+            display: inline;
+            white-space: normal;
+            overflow: visible;
+            text-overflow: clip;
+            cursor: default;
+        }
+    }
+
     .count-badge {
         background: #e8e8e8;
         color: #333;
@@ -1790,6 +1873,28 @@
         justify-content: center;
         align-items: center;
         z-index: 1000;
+    }
+
+    .modal-content-sm {
+        max-width: 420px;
+    }
+
+    .btn-danger {
+        background: #dc3545;
+        color: white;
+        border: none;
+        padding: 8px 16px;
+        border-radius: 6px;
+        cursor: pointer;
+        font-size: 0.95rem;
+    }
+
+        .btn-danger:hover {
+            background: #c82333;
+        }
+
+    .text-danger {
+        color: #dc3545;
     }
 
     .modal-content {
@@ -2284,13 +2389,35 @@
             document.getElementById('editModal').style.display = 'none';
         }
 
-        function confirmDeleteAppt(id) {
-            if (confirm('Удалить эту запись? Действие нельзя отменить.')) {
+                async function confirmDeleteAppt(id) {
+            const ok = await showConfirm('Удалить эту запись? Действие нельзя отменить.');
+            if (ok) {
                 document.getElementById('deleteApptId').value = id;
                 document.getElementById('deleteApptForm').submit();
             }
+                }
+                    async function confirmDeletePhoto(btn) {
+            const ok = await showConfirm('Удалить это фото?');
+            if (ok) {
+                btn.closest('form').submit();
+            }
+                    }
+
+                            async function confirmDeleteReview(btn) {
+            const ok = await showConfirm('Удалить отзыв?');
+            if (ok) {
+                btn.closest('form').submit();
+            }
         }
 
+                    async function confirmDeleteReview(btn) {
+            const ok = await showConfirm('Удалить отзыв?');
+            if (ok) {
+                btn.closest('form').submit();
+            }
+        }
+        
+        
                 // ===== ЗАПИСИ СОРТИРОВКА =====
         let apptSortState = { col: null, asc: true };
 
@@ -2335,6 +2462,7 @@
             document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
             var map = { pending: 'tabPending', approved: 'tabApproved', all: 'tabAll' };
             document.getElementById(map[tab])?.classList.add('active');
+            document.getElementById('reviewsRejected').style.display = tab === 'rejected' ? 'flex' : 'none';
         }
 
         // ===== КЛИЕНТЫ =====
@@ -2360,8 +2488,9 @@
             document.getElementById('clientNotesModal').style.display = 'none';
         }
 
-        function confirmDeleteClient(id) {
-            if (confirm('Удалить клиента? Это действие нельзя отменить.')) {
+                async function confirmDeleteClient(id) {
+            const ok = await showConfirm('Удалить клиента? Это действие нельзя отменить.');
+            if (ok) {
                 document.getElementById('deleteClientId').value = id;
                 document.getElementById('deleteClientForm').submit();
             }
@@ -2464,6 +2593,31 @@
             if (!wrapper) {
                 var menu = document.getElementById('reportsMenu');
                 if (menu) menu.style.display = 'none';
+            }
+        });
+
+                // ===== Универсальное подтверждение =====
+        let _confirmResolve = null;
+
+        function showConfirm(text, options = {}) {
+            document.getElementById('confirmModalText').textContent = text;
+            const okBtn = document.getElementById('confirmModalOkBtn');
+            okBtn.textContent = options.okText || 'Удалить';
+            document.getElementById('confirmModal').style.display = 'flex';
+            return new Promise(resolve => { _confirmResolve = resolve; });
+        }
+
+        function resolveConfirm(answer) {
+            document.getElementById('confirmModal').style.display = 'none';
+            if (_confirmResolve) {
+                _confirmResolve(answer);
+                _confirmResolve = null;
+            }
+        }
+
+        document.addEventListener('keydown', e => {
+            if (e.key === 'Escape' && document.getElementById('confirmModal').style.display === 'flex') {
+                resolveConfirm(false);
             }
         });
 
