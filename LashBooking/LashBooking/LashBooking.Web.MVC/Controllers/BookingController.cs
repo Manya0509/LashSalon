@@ -126,14 +126,17 @@ namespace LashBooking.Web.MVC.Controllers
         // GET: /Booking/GetSlotsByDate?date=2026-03-15&serviceId=1
         // AJAX-запрос — возвращает слоты в формате JSON.
         // Вызывается когда клиент выбирает другую дату в календаре.
+        [HttpGet]
         public async Task<IActionResult> GetSlotsByDate(string date, int serviceId)
         {
             try
             {
-                if (!DateTime.TryParse(date, out DateTime selectedDate))
-                    return Json(new List<object>());
+                if (string.IsNullOrWhiteSpace(date) || serviceId <= 0)
+                    return BadRequest("Укажите дату и услугу");
 
-                // Одна строка вместо дублирования логики
+                if (!DateTime.TryParse(date, out DateTime selectedDate))
+                    return BadRequest("Невалидная дата");
+
                 var slots = await _scheduleService
                     .GetSlotsAsync(selectedDate, serviceId);
 
@@ -154,6 +157,7 @@ namespace LashBooking.Web.MVC.Controllers
 
         // GET: /Booking/GetAvailableDatesAction?serviceId=1
         // AJAX-запрос — возвращает доступные даты для подсветки в календаре.
+        [HttpGet]
         public async Task<IActionResult> GetAvailableDatesAction(int serviceId)
         {
             try
@@ -243,10 +247,5 @@ namespace LashBooking.Web.MVC.Controllers
                 return RedirectToAction("Index");
             }
         }
-
-        // Убрали:
-        // — private async Task<List<Slot>> GetSlots(...)     → теперь в ScheduleService
-        // — private async Task<List<DateTime>> GetAvailableDates(...) → теперь в ScheduleService
-        // — public class Slot { ... }                        → теперь SlotInfo в Domain
     }
 }

@@ -74,7 +74,9 @@ namespace LashBooking.Web.MVC.Controllers
 
                 // Навигация: стрелки "предыдущий/следующий месяц"
                 ViewBag.Weeks = weeks;
-                ViewBag.MonthLabel = currentMonth.ToString("MMMM yyyy");
+                var ruMonths = new[] { "Январь","Февраль","Март","Апрель","Май","Июнь",
+                       "Июль","Август","Сентябрь","Октябрь","Ноябрь","Декабрь" };
+                ViewBag.MonthLabel = ruMonths[currentMonth.Month - 1] + " " + currentMonth.Year;
                 ViewBag.PrevYear = currentMonth.AddMonths(-1).Year;
                 ViewBag.PrevMonth = currentMonth.AddMonths(-1).Month;
                 ViewBag.NextYear = currentMonth.AddMonths(1).Year;
