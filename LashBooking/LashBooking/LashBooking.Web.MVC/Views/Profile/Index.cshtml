@@ -26,7 +26,7 @@
         </div>
     </div>
 
-    <a href="/Auth/Logout" class="logout-btn-link">
+    <a href="/auth/kogout" class="logout-btn-link">
         <div class="btn-logout">
             <i class="bi bi-box-arrow-right"></i>
             <span>Выйти</span>
@@ -43,15 +43,15 @@
     <div class="profile-header">
         <h3>Мои записи</h3>
         <div class="profile-header-actions">
-            <a href="/Profile/Edit" class="btn-edit-profile">Редактировать профиль</a>
+            <a href="/profile/edit" class="btn-edit-profile">Редактировать профиль</a>
             <a href="/" class="btn-back-to-main">← На главную</a>
         </div>
     </div>
 
     <div class="filter-tabs">
-        <a href="/Profile?filter=upcoming" class="filter-tab @(currentFilter == "upcoming" ? "active" : "")">Предстоящие</a>
-        <a href="/Profile?filter=past" class="filter-tab @(currentFilter == "past" ? "active" : "")">Прошлые</a>
-        <a href="/Profile?filter=all" class="filter-tab @(currentFilter == "all" ? "active" : "")">Все</a>
+        <a href="/profile?filter=upcoming" class="filter-tab @(currentFilter == "upcoming" ? "active" : "")">Предстоящие</a>
+        <a href="/profile?filter=past" class="filter-tab @(currentFilter == "past" ? "active" : "")">Прошлые</a>
+        <a href="/profile?filter=all" class="filter-tab @(currentFilter == "all" ? "active" : "")">Все</a>
     </div>
 
 
@@ -76,7 +76,7 @@
             <div class="empty-icon">📅</div>
             <h4>У вас пока нет записей</h4>
             <p>Запишитесь онлайн прямо сейчас!</p>
-            <a href="/Booking" class="btn-book">Записаться онлайн</a>
+            <a href="/booking" class="btn-book">Записаться онлайн</a>
         </div>
     }
     else
@@ -136,7 +136,7 @@
         <p>Вы уверены, что хотите отменить запись?</p>
         <div class="modal-actions">
             <button class="btn-secondary" onclick="hideCancelModal()">Нет</button>
-            <form method="post" action="/Profile/Cancel" id="cancelForm">
+            <form method="post" action="/profile/cancel" id="cancelForm">
                 @Html.AntiForgeryToken()
                 <input type="hidden" name="appointmentId" id="cancelAppointmentId" value="0" />
                 <button type="submit" class="btn-danger">Да, отменить</button>

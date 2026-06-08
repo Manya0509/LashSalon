@@ -41,14 +41,14 @@
         @* На модерации: одобрить / отклонить / удалить *@
         @if (!Model.IsApproved && !Model.IsRejected)
         {
-            <form method="post" action="/Admin/ApproveReview" style="display:inline">
+            <form method="post" action="/admin/approveReview" style="display:inline">
                 @Html.AntiForgeryToken()
                 <input type="hidden" name="reviewId" value="@Model.Id" />
                 <button type="submit" class="btn-approve">
                     <i class="bi bi-check-circle"></i> Одобрить
                 </button>
             </form>
-            <form method="post" action="/Admin/RejectReview" style="display:inline">
+            <form method="post" action="/admin/rejectReview" style="display:inline">
                 @Html.AntiForgeryToken()
                 <input type="hidden" name="reviewId" value="@Model.Id" />
                 <button type="submit" class="btn-reject">
@@ -60,7 +60,7 @@
         @* Одобренный: снять с публикации / удалить *@
         @if (Model.IsApproved)
         {
-            <form method="post" action="/Admin/UnpublishReview" style="display:inline">
+            <form method="post" action="/admin/unpublishReview" style="display:inline">
                 @Html.AntiForgeryToken()
                 <input type="hidden" name="reviewId" value="@Model.Id" />
                 <button type="submit" class="btn-reject">
@@ -72,7 +72,7 @@
         @* Отклонённый: одобрить (вернуть) / удалить *@
         @if (Model.IsRejected)
         {
-            <form method="post" action="/Admin/ApproveReview" style="display:inline">
+            <form method="post" action="/admin/approveReview" style="display:inline">
                 @Html.AntiForgeryToken()
                 <input type="hidden" name="reviewId" value="@Model.Id" />
                 <button type="submit" class="btn-approve">
@@ -82,7 +82,7 @@
         }
 
         @* Удалить — везде *@
-        <form method="post" action="/Admin/DeleteReview" style="display:inline">
+        <form method="post" action="/admin/deleteReview" style="display:inline">
             @Html.AntiForgeryToken()
             <input type="hidden" name="reviewId" value="@Model.Id" />
             <button type="button" class="btn-delete"
@@ -92,3 +92,6 @@
         </form>
     </div>
 </div>
+
+
+

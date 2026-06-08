@@ -15,6 +15,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LashBooking.Web.MVC", "Lash
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LashBooking.Reports", "LashBooking.Reports\LashBooking.Reports.csproj", "{A0320210-D034-471F-9A98-C245B2659D43}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LashBooking.Tests", "LashBooking.Tests\LashBooking.Tests.csproj", "{2F6D8B4A-1F35-424D-961D-C68E1CB318BD}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -45,6 +47,10 @@ Global
 		{A0320210-D034-471F-9A98-C245B2659D43}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A0320210-D034-471F-9A98-C245B2659D43}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A0320210-D034-471F-9A98-C245B2659D43}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2F6D8B4A-1F35-424D-961D-C68E1CB318BD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2F6D8B4A-1F35-424D-961D-C68E1CB318BD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2F6D8B4A-1F35-424D-961D-C68E1CB318BD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2F6D8B4A-1F35-424D-961D-C68E1CB318BD}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -26,7 +26,7 @@
     @if (isAdmin)
     {
         <div class="admin-login-header">
-            <a href="/Admin" class="btn-admin-header">
+            <a href="/admin" class="btn-admin-header">
                 <i class="bi bi-shield-lock"></i>
                 <span>Админ-панель</span>
             </a>
@@ -43,7 +43,7 @@
         </div>
 
         <div class="profile-btn">
-            <a href="/Profile" class="btn-profile">
+            <a href="/profile" class="btn-profile">
                 <i class="bi bi-journal-text"></i>
                 <span>Мои записи</span>
             </a>
@@ -52,7 +52,7 @@
     else
     {
         <div class="admin-login-btn">
-            <a href="/Auth/Login" class="btn-login">
+            <a href="/auth/login" class="btn-login">
                 <i class="bi bi-person-circle"></i>
                 <span>Вход</span>
             </a>
@@ -69,19 +69,19 @@
 <div class="main-content text-center mt-3">
 
     <div class="d-flex justify-content-center mb-4 flex-wrap gap-2">
-        <a href="/Services" class="btn btn-outline-primary">Услуги и цены</a>
-        <a href="/Calendar" class="btn btn-outline-primary">Календарь</a>
-        <a href="/Gallery" class="btn btn-outline-primary">Фото работ</a>
-        <a href="/Reviews" class="btn btn-outline-primary">Отзывы</a>
-        <a href="/About" class="btn btn-outline-primary">Обо мне</a>
+        <a href="/services" class="btn btn-outline-primary">Услуги и цены</a>
+        <a href="/calendar" class="btn btn-outline-primary">Календарь</a>
+        <a href="/gallery" class="btn btn-outline-primary">Фото работ</a>
+        <a href="/reviews" class="btn btn-outline-primary">Отзывы</a>
+        <a href="/about" class="btn btn-outline-primary">Обо мне</a>
     </div>
 
     <div class="services-line">
         <span>Услуги от @minPrice.ToString("N0") ₽</span>
-        <a href="/Services" class="services-link">Подробнее →</a>
+        <a href="/services" class="services-link">Подробнее →</a>
     </div>
 
-    <a href="/Booking" class="btn btn-success mt-2 mb-4">
+    <a href="/booking" class="btn btn-success mt-2 mb-4">
         Записаться онлайн
     </a>
 

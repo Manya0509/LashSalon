@@ -17,6 +17,8 @@ try
 
     // MVC
     builder.Services.AddControllersWithViews();
+    builder.Services.Configure<RouteOptions>(options =>
+    options.LowercaseUrls = true);
 
     // DbContext
     builder.Services.AddDbContext<ApplicationDbContext>(options =>

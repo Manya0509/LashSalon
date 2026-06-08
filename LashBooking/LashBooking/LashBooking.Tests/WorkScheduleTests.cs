@@ -5,18 +5,34 @@ namespace LashBooking.Tests
     public class WorkScheduleTests
     {
         [Fact]
-        public void IsWeekend_Saturday_ReturnsTrue() // Проверка: суббота определяется как выходной день
+        public void IsWeekend_Sunday_ReturnsTrue()
         {
-            var saturday = new DateTime(2026, 5, 9);
+            var sunday = new DateTime(2026, 5, 24);
+            var result = WorkSchedule.IsWeekend(sunday);
+            Assert.True(result);
+        }
+
+        [Fact]
+        public void IsWeekend_Saturday_ReturnsTrue()
+        {
+            var saturday = new DateTime(2026, 5, 23);
             var result = WorkSchedule.IsWeekend(saturday);
             Assert.True(result);
         }
 
         [Fact]
-        public void IsWeekend_Monday_ReturnsFalse() // Проверка: понедельник не является выходным днем
+        public void IsWeekend_Monday_ReturnsFalse()
         {
-            var monday = new DateTime(2026, 5, 11);
+            var monday = new DateTime(2026, 5, 25);
             var result = WorkSchedule.IsWeekend(monday);
+            Assert.False(result);
+        }
+
+        [Fact]
+        public void IsWeekend_Friday_ReturnsFalse() // Проверка: пятница не является выходным днем    +
+        {
+            var friday = new DateTime(2026, 5, 15);
+            var result = WorkSchedule.IsWeekend(friday);
             Assert.False(result);
         }
 
@@ -58,7 +74,7 @@ namespace LashBooking.Tests
         [InlineData(9)]
         [InlineData(12)]
         [InlineData(17)]
-        public void IsWithinWorkingHours_HourTime_ReturnsTrue(int hour)
+        public void IsWithinWorkingHours_HourTime_ReturnsTrue(int hour)  //+
         {
             // Act
             var result = WorkSchedule.IsWithinWorkingHours(hour);
@@ -72,7 +88,7 @@ namespace LashBooking.Tests
         [InlineData(8)]
         [InlineData(18)]
         [InlineData(23)]
-        public void IsWithinWorkingHours_HourTime_ReturnsFalse(int hour)
+        public void IsWithinWorkingHours_HourTime_ReturnsFalse(int hour) //+
         {
             // Act
             var result = WorkSchedule.IsWithinWorkingHours(hour);
@@ -80,6 +96,8 @@ namespace LashBooking.Tests
             // Assert
             Assert.False(result);
         }
+
+
 
         // [Fact] — пометка что это тест
         // public void ЧтоТестируем_Условие_ЧтоОжидаем()
@@ -96,5 +114,6 @@ namespace LashBooking.Tests
         //     Assert.True(x)          // ожидаем true
         //     Assert.Equal(5, result) // ожидаем конкретное значение
         // }
+
     }
 }

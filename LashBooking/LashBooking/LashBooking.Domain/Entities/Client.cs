@@ -18,3 +18,7 @@ namespace LashBooking.Domain.Entities
         public virtual ICollection<Review> Reviews { get; set; } = new List<Review>();
     }
 }
+
+
+
+

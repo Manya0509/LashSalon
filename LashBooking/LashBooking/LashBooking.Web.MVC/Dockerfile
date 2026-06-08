@@ -6,3 +6,6 @@ RUN apt-get update && apt-get install -y libfontconfig1 && rm -rf /var/lib/apt/l
 
 COPY publish/ .
 ENTRYPOINT ["dotnet", "LashBooking.Web.MVC.dll"]
+
+
+

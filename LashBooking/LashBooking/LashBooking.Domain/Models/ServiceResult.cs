@@ -6,10 +6,7 @@ using System.Threading.Tasks;
 
 namespace LashBooking.Domain.Models
 {
-    // "Конвертик" с результатом операции.
-    // Сервис не знает про веб (TempData, Redirect и т.д.),
-    // поэтому возвращает результат через этот класс.
-    // Контроллер читает Success и Message и решает что показать пользователю.
+        // Контроллер читает Success и Message и решает что показать пользователю.
     public class ServiceResult
     {
         // Успешна ли операция

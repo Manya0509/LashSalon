@@ -26,10 +26,10 @@
 
         @* Переключатель Вход / Регистрация *@
         <div class="auth-toggle">
-            <a href="/Auth/Login" class="toggle-btn @(isLoginMode ? "active" : "")">
+            <a href="/auth/login" class="toggle-btn @(isLoginMode ? "active" : "")">
                 Вход
             </a>
-            <a href="/Auth/Login?mode=register" class="toggle-btn @(!isLoginMode ? "active" : "")">
+            <a href="/auth/login?mode=register" class="toggle-btn @(!isLoginMode ? "active" : "")">
                 Регистрация
             </a>
         </div>
@@ -37,7 +37,7 @@
         @* ===== ФОРМА ВХОДА ===== *@
         @if (isLoginMode)
         {
-            <form method="post" action="/Auth/HandleLogin" class="auth-form">
+            <form method="post" action="/auth/handleLogin" class="auth-form">
                 @Html.AntiForgeryToken()
 
                 <div class="form-group">
@@ -58,7 +58,7 @@
         else
         {
             @* ===== ФОРМА РЕГИСТРАЦИИ ===== *@
-            <form method="post" action="/Auth/HandleRegister" class="auth-form">
+            <form method="post" action="/auth/handleRegister" class="auth-form">
                 @Html.AntiForgeryToken()
 
                 <div class="form-group">

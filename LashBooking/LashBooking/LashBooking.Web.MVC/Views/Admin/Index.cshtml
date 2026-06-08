@@ -20,7 +20,7 @@
 
 <div class="back-button-container">
     <a href="/" class="back-btn"><span class="back-icon">←</span> На сайт</a>
-    <a href="/Admin/Logout" class="logout-admin-btn">
+    <a href="/admin/logout" class="logout-admin-btn">
         <i class="bi bi-box-arrow-right"></i> Выйти
     </a>
 </div>
@@ -39,28 +39,28 @@
 
     @* Статистика *@
     <div class="stats-grid">
-        <a href="/Admin/Index?tab=appointments" class="stat-card">
+        <a href="/admin/index?tab=appointments" class="stat-card">
             <div class="stat-icon">📅</div>
             <div class="stat-content">
                 <span class="stat-value">@todayAppointments</span>
                 <span class="stat-label">Записей на сегодня</span>
             </div>
         </a>
-        <a href="/Admin/Index?tab=appointments" class="stat-card">
+        <a href="/admin/index?tab=appointments" class="stat-card">
             <div class="stat-icon">⏳</div>
             <div class="stat-content">
                 <span class="stat-value">@upcomingAppointments</span>
                 <span class="stat-label">Предстоящих записей</span>
             </div>
         </a>
-        <a href="/Admin/Index?tab=reviews" class="stat-card">
+        <a href="/admin/index?tab=reviews" class="stat-card">
             <div class="stat-icon">📝</div>
             <div class="stat-content">
                 <span class="stat-value">@pendingReviews</span>
                 <span class="stat-label">Отзывов на модерации</span>
             </div>
         </a>
-        <a href="/Admin/Index?tab=clients" class="stat-card">
+        <a href="/admin/index?tab=clients" class="stat-card">
             <div class="stat-icon">👥</div>
             <div class="stat-content">
                 <span class="stat-value">@totalClients</span>
@@ -71,33 +71,33 @@
 
     @* Навигация *@
     <div class="admin-nav">
-        <a href="/Admin/Index?tab=appointments" class="nav-btn @(activeTab == "appointments" ? "active" : "")">
+        <a href="/admin/index?tab=appointments" class="nav-btn @(activeTab == "appointments" ? "active" : "")">
             <i class="bi bi-calendar-check"></i> Записи
             @if (todayAppointments > 0)
             {
                 <span class="badge">@todayAppointments</span>
             }
         </a>
-        <a href="/Admin/Index?tab=reviews" class="nav-btn @(activeTab == "reviews" ? "active" : "")">
+        <a href="/admin/index?tab=reviews" class="nav-btn @(activeTab == "reviews" ? "active" : "")">
             <i class="bi bi-star"></i> Отзывы
             @if (pendingReviews > 0)
             {
                 <span class="badge warning">@pendingReviews</span>
             }
         </a>
-        <a href="/Admin/Index?tab=clients" class="nav-btn @(activeTab == "clients" ? "active" : "")">
+        <a href="/admin/index?tab=clients" class="nav-btn @(activeTab == "clients" ? "active" : "")">
             <i class="bi bi-people"></i> Клиенты
         </a>
-        <a href="/Admin/Index?tab=services" class="nav-btn @(activeTab == "services" ? "active" : "")">
+        <a href="/admin/index?tab=services" class="nav-btn @(activeTab == "services" ? "active" : "")">
             <i class="bi bi-grid"></i> Услуги
         </a>
-        <a href="/Admin/Index?tab=schedule" class="nav-btn @(activeTab == "schedule" ? "active" : "")">
+        <a href="/admin/index?tab=schedule" class="nav-btn @(activeTab == "schedule" ? "active" : "")">
             <i class="bi bi-calendar-x"></i> Расписание
         </a>
-        <a href="/Admin/Index?tab=gallery" class="nav-btn @(activeTab == "gallery" ? "active" : "")">
+        <a href="/admin/index?tab=gallery" class="nav-btn @(activeTab == "gallery" ? "active" : "")">
             <i class="bi bi-image"></i> Галерея
         </a>
-        <a href="/Admin/Index?tab=about" class="nav-btn @(activeTab == "about" ? "active" : "")">
+        <a href="/admin/index?tab=about" class="nav-btn @(activeTab == "about" ? "active" : "")">
             <i class="bi bi-person-badge"></i> О себе
         </a>
     </div>
@@ -117,11 +117,11 @@
                 <div class="section-header">
                     <h2><i class="bi bi-calendar-check"></i> Управление записями</h2>
                     <div class="header-actions">
-                        <a href="/Admin/FilterAppointments?filter=today" class="filter-btn @(apptFilter == "today" ? "active" : "")">Сегодня</a>
-                        <a href="/Admin/FilterAppointments?filter=tomorrow" class="filter-btn @(apptFilter == "tomorrow" ? "active" : "")">Завтра</a>
-                        <a href="/Admin/FilterAppointments?filter=week" class="filter-btn @(apptFilter == "week" ? "active" : "")">Неделя</a>
-                        <a href="/Admin/FilterAppointments?filter=all" class="filter-btn @(apptFilter == "all" ? "active" : "")">Все</a>
-                        <a href="/Admin/ExportAppointments" class="filter-btn" title="Экспорт в Excel">
+                        <a href="/admin/filterAppointments?filter=today" class="filter-btn @(apptFilter == "today" ? "active" : "")">Сегодня</a>
+                        <a href="/admin/filterAppointments?filter=tomorrow" class="filter-btn @(apptFilter == "tomorrow" ? "active" : "")">Завтра</a>
+                        <a href="/admin/filterAppointments?filter=week" class="filter-btn @(apptFilter == "week" ? "active" : "")">Неделя</a>
+                        <a href="/admin/filterAppointments?filter=all" class="filter-btn @(apptFilter == "all" ? "active" : "")">Все</a>
+                        <a href="/admin/exportAppointments" class="filter-btn" title="Экспорт в Excel">
                             <i class="bi bi-file-earmark-excel"></i> Excel
                         </a>
                         <div class="dropdown-wrapper">
@@ -129,10 +129,10 @@
                                 <i class="bi bi-file-earmark-pdf"></i> Отчёты ▾
                             </button>
                             <div class="dropdown-menu-reports" id="reportsMenu" style="display:none">
-                                <a href="/Admin/ReportAppointments" class="dropdown-item-report">
+                                <a href="/admin/reportAppointments" class="dropdown-item-report">
                                     <i class="bi bi-calendar-check"></i> Отчёт за период
                                 </a>
-                                <a href="/Admin/ReportRevenue" class="dropdown-item-report">
+                                <a href="/admin/reportRevenue" class="dropdown-item-report">
                                     <i class="bi bi-graph-up"></i> Выручка по месяцам
                                 </a>
                             </div>
@@ -296,7 +296,7 @@
                         <h3><i class="bi bi-pencil-square"></i> Редактирование записи</h3>
                         <button class="modal-close" onclick="closeEditModal()">✕</button>
                     </div>
-                    <form method="post" action="/Admin/SaveAppointment">
+                    <form method="post" action="/admin/saveAppointment">
                         @Html.AntiForgeryToken()
                         <input type="hidden" name="appointmentId" id="editAppointmentId" />
                         <div class="modal-body">
@@ -328,7 +328,7 @@
             </div>
 
             @* Скрытая форма удаления *@
-            <form method="post" action="/Admin/DeleteAppointment" id="deleteApptForm" style="display:none">
+            <form method="post" action="/admin/deleteAppointment" id="deleteApptForm" style="display:none">
                 @Html.AntiForgeryToken()
                 <input type="hidden" name="appointmentId" id="deleteApptId" />
             </form>
@@ -474,7 +474,7 @@
             <div class="management-section">
                 <div class="section-header">
                     <h2><i class="bi bi-people"></i> Управление клиентами</h2>
-                    <a href="/Admin/Index?tab=clients" class="refresh-btn" title="Обновить">
+                    <a href="/admin/index?tab=clients" class="refresh-btn" title="Обновить">
                         <i class="bi bi-arrow-repeat"></i>
                     </a>
                 </div>
@@ -541,6 +541,7 @@
                                             else
                                             {
                                                 <span class="notes-text" title="@client.Notes">@client.Notes</span>
+                                                // полный текст в title (всплывающая подсказка)
                                             }
                                         </td>
                                         <td class="actions-cell">
@@ -569,7 +570,7 @@
                         <h3><i class="bi bi-pencil-square"></i> Заметка о клиенте</h3>
                         <button class="modal-close" onclick="closeClientNotesModal()">✕</button>
                     </div>
-                    <form method="post" action="/Admin/SaveClientNotes">
+                    <form method="post" action="/admin/saveClientNotes">
                         @Html.AntiForgeryToken()
                         <input type="hidden" name="clientId" id="editClientId" />
                         <div class="modal-body">
@@ -587,7 +588,7 @@
                 </div>
             </div>
 
-            <form method="post" action="/Admin/DeleteClient" id="deleteClientForm" style="display:none">
+            <form method="post" action="/admin/deleteClient" id="deleteClientForm" style="display:none">
                 @Html.AntiForgeryToken()
                 <input type="hidden" name="clientId" id="deleteClientId" />
             </form>
@@ -605,7 +606,7 @@
                         <button class="filter-btn" onclick="openServiceModal(0,'','','0','60')">
                             <i class="bi bi-plus-lg"></i> Добавить услугу
                         </button>
-                        <a href="/Admin/Index?tab=services" class="refresh-btn" title="Обновить">
+                        <a href="/admin/index?tab=services" class="refresh-btn" title="Обновить">
                             <i class="bi bi-arrow-repeat"></i>
                         </a>
                     </div>
@@ -657,7 +658,7 @@
                                                     title="Редактировать">
                                                 <i class="bi bi-pencil"></i>
                                             </button>
-                                            <form method="post" action="/Admin/ToggleService" style="display:inline">
+                                            <form method="post" action="/admin/toggleService" style="display:inline">
                                                 @Html.AntiForgeryToken()
                                                 <input type="hidden" name="serviceId" value="@svc.Id" />
                                                 <button type="submit" class="btn-icon delete" title="@(svc.IsActive ? "Деактивировать" : "Активировать")">
@@ -680,7 +681,7 @@
                         <h3 id="serviceModalTitle"><i class="bi bi-grid"></i> Услуга</h3>
                         <button class="modal-close" onclick="closeServiceModal()">✕</button>
                     </div>
-                    <form method="post" action="/Admin/SaveService">
+                    <form method="post" action="/admin/saveService">
                         @Html.AntiForgeryToken()
                         <input type="hidden" name="serviceId" id="serviceId" />
                         <div class="modal-body">
@@ -722,7 +723,7 @@
                 @* Форма блокировки *@
                 <div class="schedule-form">
                     <h3 class="schedule-form-title">Заблокировать время</h3>
-                    <form method="post" action="/Admin/BlockSlot">
+                    <form method="post" action="/admin/blockSlot">
                         @Html.AntiForgeryToken()
                         <div class="schedule-form-row">
                             <div class="form-group">
@@ -791,7 +792,7 @@
                                         </td>
                                         <td>@(slot.Reason ?? "—")</td>
                                         <td>
-                                            <form method="post" action="/Admin/UnblockSlot" style="display:inline">
+                                            <form method="post" action="/admin/unblockSlot" style="display:inline">
                                                 @Html.AntiForgeryToken()
                                                 <input type="hidden" name="slotId" value="@slot.Id" />
                                                 <button type="submit" class="btn-icon delete" title="Снять блокировку">
@@ -845,7 +846,7 @@
                                         }
                                         <span class="gallery-admin-date">@photo.UploadedAt.ToString("dd.MM.yyyy")</span>
                                     </div>
-                                    <form method="post" action="/Admin/DeleteGalleryPhoto" style="display:inline">
+                                    <form method="post" action="/admin/deleteGalleryPhoto" style="display:inline">
                                         @Html.AntiForgeryToken()
                                         <input type="hidden" name="photoId" value="@photo.Id" />
                                         <button type="button" class="gallery-admin-delete" onclick="confirmDeletePhoto(this)" title="Удалить">
@@ -869,7 +870,7 @@
                         <h3><i class="bi bi-image"></i> Добавить фото</h3>
                         <button class="modal-close" onclick="document.getElementById('galleryModal').style.display='none'">✕</button>
                     </div>
-                    <form method="post" action="/Admin/UploadGalleryPhoto" enctype="multipart/form-data">
+                    <form method="post" action="/admin/uploadGalleryPhoto" enctype="multipart/form-data">
                         @Html.AntiForgeryToken()
                         <div class="modal-body">
                             <div class="form-group">
@@ -899,7 +900,7 @@
                     <h2><i class="bi bi-person-badge"></i> Информация «О себе»</h2>
                 </div>
 
-                <form method="post" action="/Admin/SaveAboutInfo" enctype="multipart/form-data">
+                <form method="post" action="/admin/saveAboutInfo" enctype="multipart/form-data">
                     @Html.AntiForgeryToken()
 
                     <div class="about-admin-form">
@@ -1027,21 +1028,21 @@
                 </form>
             </div>
         }
-    </div>@* /admin-content *@
+    </div>@* /admin-content *@   
 
-<div class="modal-overlay" id="confirmModal" style="display:none"
-     onclick="if(event.target===this)resolveConfirm(false)">
-    <div class="modal-content modal-content-sm">
-        <div class="modal-header">
-            <h3><i class="bi bi-exclamation-triangle text-danger"></i> Подтверждение</h3>
-            <button class="modal-close" onclick="resolveConfirm(false)">✕</button>
+<div class="modal-overlay" id="confirmModal" style="display:none"     <!-- тёмная подложка на весь экран, скрыта по умолчанию -->
+     onclick="if(event.target===this)resolveConfirm(false)">          <!-- клик по фону = Отмена -->
+    <div class="modal-content modal-content-sm">                      <!-- само окно, маленького размера -->
+        <div class="modal-header">                                    <!-- шапка окна -->
+            <h3><i class="bi bi-exclamation-triangle text-danger"></i> Подтверждение</h3>  <!-- красная иконка + заголовок -->
+            <button class="modal-close" onclick="resolveConfirm(false)">✕</button>         <!-- крестик закрытия = Отмена -->
         </div>
-        <div class="modal-body">
-            <p id="confirmModalText" style="margin: 0; font-size: 1rem;"></p>
+        <div class="modal-body">                                      <!-- тело окна -->
+            <p id="confirmModalText" style="margin: 0; font-size: 1rem;"></p>  <!-- сюда JS подставит текст вопроса -->
         </div>
-        <div class="modal-footer">
-            <button type="button" class="btn-secondary" onclick="resolveConfirm(false)">Отмена</button>
-            <button type="button" class="btn-danger" id="confirmModalOkBtn" onclick="resolveConfirm(true)">Удалить</button>
+        <div class="modal-footer">                                    <!-- подвал с кнопками -->
+            <button type="button" class="btn-secondary" onclick="resolveConfirm(false)">Отмена</button>   <!-- серая кнопка Отмена -->
+            <button type="button" class="btn-danger" id="confirmModalOkBtn" onclick="resolveConfirm(true)">Удалить</button>  <!-- красная кнопка подтверждения -->
         </div>
     </div>
 </div>
@@ -1816,19 +1817,19 @@
             font-size: 0.95rem;
         }
 
-    .notes-cell {
-        width: 250px;
+    ..notes-cell {
+        width: 250px; /* фиксированная ширина колонки */
         max-width: 250px;
-        overflow: hidden;
+        overflow: hidden; /* всё, что не влезает — прячем */
         vertical-align: middle;
     }
 
     .notes-text {
         display: block;
         width: 100%;
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
+        white-space: nowrap; /* текст в одну строку, без переноса */
+        overflow: hidden; /* лишнее обрезаем */
+        text-overflow: ellipsis; /* в конце ставим многоточие "…" */
     }
 
     @@media (max-width: 768px) {

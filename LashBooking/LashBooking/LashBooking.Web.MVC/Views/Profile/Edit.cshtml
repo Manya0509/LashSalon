@@ -11,7 +11,7 @@
 <div class="main-content">
     <div class="edit-header">
         <h3>Редактировать профиль</h3>
-        <a href="/Profile" class="btn-back">← Назад к записям</a>
+        <a href="/profile" class="btn-back">← Назад к записям</a>
     </div>
 
     @if (!string.IsNullOrEmpty(editError))
@@ -20,7 +20,7 @@
     }
 
     <div class="edit-card">
-        <form method="post" action="/Profile/Edit">
+        <form method="post" action="/profile/edit">
             @Html.AntiForgeryToken()
 
             <div class="form-group">
@@ -55,7 +55,7 @@
             </div>
 
             <div class="form-actions">
-                <a href="/Profile" class="btn-cancel-edit">Отмена</a>
+                <a href="/profile" class="btn-cancel-edit">Отмена</a>
                 <button type="submit" class="btn-save">Сохранить</button>
             </div>
         </form>
